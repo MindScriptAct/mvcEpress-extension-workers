@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="mvcEpress-extension-workers">
     <configurations>
-      <configuration name="mvcEpress-extension-workers" main-class="com.mindScriptAct.workerTest.MainWorkerTest" output-file="mvcEpress-extension-workers.swf" output-folder="$MODULE_DIR$/bin">
+      <configuration name="mvcEpress-extension-workers" main-class="com.mindScriptAct.workerTest.MainWorkerTestModule" output-file="mvcEpress-extension-workers.swf" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.4">
           <entries>
             <entry library-id="a056714c-5dae-4103-a957-14ff5d03e02e">

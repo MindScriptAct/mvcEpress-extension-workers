@@ -2,130 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libs/MinimalComps_0_9_10.swc" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/assets/pf_ronda_seven.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/mvc/Command.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/CommandMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/Console.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/msg/ConsoleDataMsg.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/model/ConsoleLogProxy.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/view/ConsoleMediator.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/msg/ConsoleMsg.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/msg/ConsoleViewMsg.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/msg/DataMsg.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/utils/ExpressAssert.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/FlexMediatorMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/globalMessages/GlobalDataMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/globalMessages/GlobalMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/globalMessages/GlobalViewMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/controller/HandleInputCommand.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/messenger/HandlerVO.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/interfaces/IMediatorMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/interfaces/IProxyMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/interfaces/testProxy/IReadOnlyTestProxy.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/inject/InjectRuleVO.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTest.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/mvc/Mediator.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/MediatorMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/messenger/Messenger.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/ModularSample.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/view/ModularSampleMediator.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/ModuleBase.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/modules/ModuleCore.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/ModuleManager.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/modules/ModuleMovieClip.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/ModuleNames.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/modules/ModuleSprite.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/msg/Msg.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/MvcExpress.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/screens/MvcExpressLogScreen.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/MvcExpressLogger.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/screens/MvcExpressVisualizerScreen.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/MvcTraceActions.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_CheckBox.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_Component.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_InputText.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_Label.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_NumericStepper.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_Panel.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_PushButton.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_ScrollBar.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_Slider.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_Style.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_Text.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_TextArea.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_VScrollBar.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/minimalComps/components/Mvce_Window.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/inject/PendingInject.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/mvc/PooledCommand.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/live/Process.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/ProcessMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/mvc/Proxy.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/ProxyMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/constants/ScopeNames.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/live/Task.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/taskTest/TaskTestVO.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/inject/TestRuleVO.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/commandMap/TraceCommandMap_execute.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/commandMap/TraceCommandMap_handleCommandExecute.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/commandMap/TraceCommandMap_map.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/commandMap/TraceCommandMap_unmap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/command/TraceCommand_sendMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/command/TraceCommand_sendScopeMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/mediatorMap/TraceMediatorMap_map.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/mediatorMap/TraceMediatorMap_mediate.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/mediatorMap/TraceMediatorMap_unmap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/mediatorMap/TraceMediatorMap_unmediate.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/mediator/TraceMediator_addHandler.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/mediator/TraceMediator_sendMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/mediator/TraceMediator_sendScopeMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/messenger/TraceMessenger_addHandler.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/messenger/TraceMessenger_removeHandler.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/messenger/TraceMessenger_send.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/messenger/TraceMessenger_send_handler.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/moduleBase/TraceModuleBase_sendMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/moduleBase/TraceModuleBase_sendScopeMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/moduleManager/TraceModuleManager_createModule.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/moduleManager/TraceModuleManager_disposeModule.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/moduleManager/TraceModuleManager_registerScope.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/moduleManager/TraceModuleManager_unregisterScope.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/TraceObj.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/TraceObj_SendMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/processMap/TraceProcessMap_provide.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/processMap/TraceProcessMap_unprovide.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_addFirstTask.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_addHandler.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_addTask.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_addTaskAfter.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_disableTask.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_enableTask.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_removeAllTasks.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/live/process/TraceProcess_removeTask.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/TraceProcess_sendMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_injectPending.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_injectStuff.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_lazyMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_map.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_scopeMap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_scopeUnmap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_scopedInjectPending.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxyMap/TraceProxyMap_unmap.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxy/TraceProxy_sendMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/traceObjects/proxy/TraceProxy_sendScopeMessage.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/msg/ViewMsg.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/visualizer/VisualizerManager.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/utils/checkClassStringConstants.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/utils/checkClassSuperclass.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/flexCompiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcEpress-extension-workers.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/namespace/pureLegsCore.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mvcExpressLogger/org/mvcexpress/core/namespace/pureLegsCore.as" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libSrc/org/mvcexpress/core/inject/testInject.as" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/modules/ChildWorkerModule.as" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTestModule.as" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleWorkerLive.as" />
+      <change type="DELETED" beforePath="C:\Users\rbanevicius\Dropbox\!intelliSpace\mvcEpress-extension-workers\sampleProjects\com\mindScriptAct\workerTest\MainWorkerTest.as" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mvcEpress-extension-workers.iml" afterPath="$PROJECT_DIR$/mvcEpress-extension-workers.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="mvcEpress-extension-workers.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369301340014" ignored="false" />
-    <file path="/fragment.js2" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369301758826" ignored="false" />
+    <file path="/fragment.js2" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369306508898" ignored="false" />
+    <file path="/HelloWorldWorker.as" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369303020767" ignored="false" />
+    <file path="/MainWorkerTestModule.as" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369306586034" ignored="false" />
+    <file path="/MainWorkerTest.as" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369306072692" ignored="false" />
+    <file path="/ChildWorkerModule.as" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369306571783" ignored="false" />
+    <file path="/ChildWorker.as" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369305034919" ignored="false" />
+    <file path="/ModuleWorkerLive.as" changelist="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" time="1369306264524" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,37 +80,8 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Msg.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/msg/Msg.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="40" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainWorkerTest.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTest.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="37" selection-start="168" selection-end="168" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ModularSample.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/ModularSample.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="4" selection-start="840" selection-end="840" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#42#102#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MvcExpressLogScreen.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/screens/MvcExpressLogScreen.as">
+      <file leaf-file-name="ModuleWorkerLive.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleWorkerLive.as">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
@@ -224,28 +89,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Proxy.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libSrc/org/mvcexpress/mvc/Proxy.as">
+      <file leaf-file-name="MainWorkerTestModule.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTestModule.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="1" column="60" selection-start="99" selection-end="99" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ModularSampleMediator.as" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/view/ModularSampleMediator.as">
+      <file leaf-file-name="ChildWorkerModule.as" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/modules/ChildWorkerModule.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="28" selection-start="862" selection-end="862" vertical-scroll-proportion="0.21997622">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConsoleMsg.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modules/console/msg/ConsoleMsg.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="17" column="0" selection-start="364" selection-end="364" vertical-scroll-proportion="0.5838384">
               <folding />
             </state>
           </provider>
@@ -269,7 +125,16 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/HelloWorldWorker.as" />
+        <option value="$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleMainWorker.as" />
+        <option value="$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleMainWorkerLive.as" />
+        <option value="$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleChildWorker.as" />
+        <option value="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/modules/ChildWorker.as" />
         <option value="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTest.as" />
+        <option value="$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleSprite.as" />
+        <option value="$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleWorkerLive.as" />
+        <option value="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/modules/ChildWorkerModule.as" />
+        <option value="$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTestModule.as" />
       </list>
     </option>
   </component>
@@ -336,22 +201,8 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sampleProjects" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mindScriptAct" />
+              <option name="myItemId" value="modules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -370,6 +221,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="mindScriptAct" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="workerTest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcEpress-extension-workers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcEpress-extension-workers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sampleProjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mindScriptAct" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="workerTest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -394,12 +271,26 @@
               <option name="myItemId" value="mindScriptAct" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
+              <option name="myItemId" value="mvcEpress-extension-workers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcEpress-extension-workers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="console" />
+              <option name="myItemId" value="sampleProjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mindScriptAct" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modularSample" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -421,69 +312,47 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="helloWorker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcEpress-extension-workers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcEpress-extension-workers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="libSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcexpress" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcEpress-extension-workers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcEpress-extension-workers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="libSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mvcexpress" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="msg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcExpressLogger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcExpressLogger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcExpressLogger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcEpress-extension-workers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcExpressLogger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mvcExpressLogger" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="screens" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -511,6 +380,8 @@
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.lastSelected" value="flex.compiler" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/libs/MinimalComps_0_9_10.swc!/" />
@@ -521,19 +392,26 @@
     <property name="restartRequiresConfirmation" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CreateActionScriptClassDialog.DESTINATION_PACKAGE_RECENT_KEY">
+      <recent name="com.mindScriptAct.workerTest.modules" />
       <recent name="com.mindScriptAct.workerTest" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\rbanevicius\Dropbox\!intelliSpace\mvcEpress-extension-workers\src\org\mvcexpress\extensions\workers\modules" />
       <recent name="C:\Users\rbanevicius\Dropbox\!intelliSpace\mvcEpress-extension-workers\libs" />
       <recent name="C:\Users\rbanevicius\Dropbox\!intelliSpace\mvcEpress-extension-workers" />
       <recent name="C:\Users\rbanevicius\Dropbox\!intelliSpace\mvcEpress-extension-workers\sampleProjects\com\mindScriptAct" />
       <recent name="C:\Users\rbanevicius\Dropbox\!intelliSpace\mvcEpress-extension-workers\libSrc" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rbanevicius\Dropbox\!intelliSpace\mvcEpress-extension-workers\sampleProjects\com\mindScriptAct\helloWorker" />
+    </key>
   </component>
-  <component name="RunManager" selected="Flash App.ModularSample">
+  <component name="RunManager" selected="Flash App.mvcEpress-extension-workers">
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -688,9 +566,46 @@
       <ConfigurationWrapper RunnerId="FlexDebugRunner" />
       <method />
     </configuration>
-    <list size="2">
+    <configuration default="false" name="HelloWorldWorker" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="mvcEpress-extension-workers" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="flex_air_sdk_3.7" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browserFamily" value="FIREFOX" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="playerPath" value="FlashPlayerDebugger.exe" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="mvcEpress-extension-workers" />
+      <option name="overriddenMainClass" value="com.mindScriptAct.helloWorker.HelloWorldWorker" />
+      <option name="overriddenOutputFileName" value="HelloWorldWorker.swf" />
+      <option name="overrideMainClass" value="true" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <RunnerSettings RunnerId="FlexDebugRunner" />
+      <ConfigurationWrapper RunnerId="FlexDebugRunner" />
+      <method />
+    </configuration>
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Flash App.mvcEpress-extension-workers" />
       <item index="1" class="java.lang.String" itemvalue="Flash App.ModularSample" />
+      <item index="2" class="java.lang.String" itemvalue="Flash App.HelloWorldWorker" />
     </list>
     <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
       <option name="MAIN_CLASS_NAME" />
@@ -713,6 +628,23 @@
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="e48d5c9e-340d-4fbc-b41c-0e4111506dc1" name="Default" comment="" />
@@ -727,9 +659,10 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298731" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39907727" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39907727" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -741,7 +674,6 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -805,7 +737,9 @@
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="5" />
+    </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -814,14 +748,7 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/msg/Msg.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="40" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTest.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="37" selection-start="168" selection-end="168" vertical-scroll-proportion="0.0">
+        <state line="10" column="1" selection-start="157" selection-end="157" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -840,15 +767,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/ModularSample.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="4" selection-start="840" selection-end="840" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#42#102#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mvcExpressLogger/com/mindscriptact/mvcExpressLogger/screens/MvcExpressLogScreen.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -858,7 +776,60 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/view/ModularSampleMediator.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="28" selection-start="862" selection-end="862" vertical-scroll-proportion="0.21997622">
+        <state line="25" column="28" selection-start="862" selection-end="862" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libSrc/org/mvcexpress/modules/ModuleCore.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/helloWorker/HelloWorldWorker.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="57" selection-start="553" selection-end="553" vertical-scroll-proportion="0.196195">
+          <folding>
+            <element signature="e#40#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/modularSample/ModularSample.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="21" selection-start="732" selection-end="732" vertical-scroll-proportion="0.31272295">
+          <folding>
+            <element signature="e#42#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/flex_sdk_4.9.1/frameworks/libs/player/11.4/playerglobal.swc!/library.swf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1497" column="32" selection-start="64399" selection-end="64412" vertical-scroll-proportion="0.2693727">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/mvcexpress/extensions/workers/modules/ModuleWorkerLive.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/MainWorkerTestModule.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="60" selection-start="99" selection-end="99" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sampleProjects/com/mindScriptAct/workerTest/modules/ChildWorkerModule.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="364" selection-end="364" vertical-scroll-proportion="0.5838384">
           <folding />
         </state>
       </provider>
