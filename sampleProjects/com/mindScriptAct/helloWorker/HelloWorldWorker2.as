@@ -6,13 +6,13 @@ import flash.system.Worker;
 import flash.system.WorkerDomain;
 import flash.utils.setInterval;
 
-public class HelloWorldWorker extends Sprite {
+public class HelloWorldWorker2 extends Sprite {
 	protected var mainToWorker:MessageChannel;
 	protected var workerToMain:MessageChannel;
 
 	protected var worker:Worker;
 
-	public function HelloWorldWorker() {
+	public function HelloWorldWorker2() {
 		/**
 		 * Start Main thread
 		 **/

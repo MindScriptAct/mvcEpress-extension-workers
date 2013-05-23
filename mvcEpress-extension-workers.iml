@@ -8,6 +8,9 @@
             <entry library-id="a056714c-5dae-4103-a957-14ff5d03e02e">
               <dependency linkage="Merged" />
             </entry>
+            <entry library-id="ecb49158-2c37-47fd-8c96-449a56525675">
+              <dependency linkage="Merged" />
+            </entry>
           </entries>
           <sdk name="flex_sdk_4.9.1" />
         </dependencies>
@@ -36,6 +39,16 @@
         <properties id="a056714c-5dae-4103-a957-14ff5d03e02e" />
         <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/MinimalComps_0_9_10.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="ecb49158-2c37-47fd-8c96-449a56525675" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/MonsterDebugger.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

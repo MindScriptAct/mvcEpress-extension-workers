@@ -1,26 +1,34 @@
 package com.mindScriptAct.workerTest {
+
+import com.demonsters.debugger.MonsterDebugger;
 import com.mindScriptAct.workerTest.modules.ChildWorkerModule;
 
-import org.mvcexpress.extensions.workers.modules.ModuleWorkerLive;
+import flash.utils.setTimeout;
 
-/**
- * TODO:CLASS COMMENT
- * @author rbanevicius
- */
-public class MainWorkerTestModule extends ModuleWorkerLive {
+import org.mvcexpress.extensions.workers.modules.ModuleWorker;
+import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
+
+public class MainWorkerTestModule extends ModuleWorker {
 
 	public function MainWorkerTestModule() {
 		super("MainWorkerTestModule");
 	}
 
 	override protected function onInit():void {
-		trace(this);
-		var childModule:ChildWorkerModule = new ChildWorkerModule();
-		this.addChild(childModule);
+		//MonsterDebugger.initialize(this);
+		trace("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:onInit();");
+
+		startWorkerModule(ChildWorkerModule);
+
+		traceModule();
 	}
 
-	override protected function onDispose():void {
+	private function traceModule():void {
+		trace("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:traceModule();");
+		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:traceModule();");
 
+		setTimeout(traceModule, 5000);
 	}
+
 }
 }
