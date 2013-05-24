@@ -1,7 +1,5 @@
 package com.mindScriptAct.workerTest.modules {
-import com.demonsters.debugger.MonsterDebugger;
-
-import flash.utils.setTimeout;
+import com.mindScriptAct.workerTest.WorkerIds;
 
 import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
@@ -13,22 +11,18 @@ import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 public class ChildWorkerModule extends ModuleWorker {
 
 	public function ChildWorkerModule() {
-		super("ChildWorkerModule");
+		super(WorkerIds.CHILD_WORKER_MODULE);
 	}
 
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
-		trace("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:onInit();");
+		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:onInit();");
 
-		traceModule();
+
+		mediatorMap.mediateWith(this, ChildWorkerModuleMediator);
+
 	}
 
-	private function traceModule():void {
-		trace("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
-		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
-
-		setTimeout(traceModule, 5000);
-	}
 
 }
 }

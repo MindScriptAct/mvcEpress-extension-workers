@@ -32,8 +32,8 @@ import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 		 * @param	autoInit	if set to false framework is not initialized for this module. If you want to use framework features you will have to manually init() it first.
 		 * @param	initOnStage	defines if module should init only then it is added to stage or not. By default it will wait for Event.ADDED_TO_STAGE before calling onInit(). If autoInit is set to false, this parameters is ignored.
 		 */
-		public function ModuleWorker(moduleName:String = null, autoInit:Boolean = true, initOnStage:Boolean = true) {
-			trace("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ModuleWorker: try to create module.");
+		public function ModuleWorker(moduleName:String, autoInit:Boolean = true, initOnStage:Boolean = true) {
+			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ModuleWorker: try to create module.");
 
 			use namespace pureLegsCore;
 			if (super.checkWorker(moduleName)) {
@@ -41,7 +41,7 @@ import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 				    initOnStage = false;
 				}
 
-				trace("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ModuleWorker: Create module!");
+				trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ModuleWorker: Create module!");
 				moduleBase = ModuleManager.createModule(moduleName, autoInit);
 				//
 				if (autoInit) {
