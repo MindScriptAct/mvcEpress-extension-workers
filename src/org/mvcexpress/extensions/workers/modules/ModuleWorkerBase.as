@@ -101,7 +101,7 @@ public class ModuleWorkerBase extends Sprite {
 			thisWorker.addEventListener(Event.WORKER_STATE, workerStateHandler);
 			thisWorker.setSharedProperty(MODULE_CLASS_NAME_KEY, getQualifiedClassName(workerModuleClass));
 			//
-			connectChildWorker(thisWorker);
+			connectRemoteWorker(thisWorker);
 			//
 			thisWorker.start();
 		} else {
@@ -123,9 +123,13 @@ public class ModuleWorkerBase extends Sprite {
 	}
 
 
-	private function connectChildWorker(childWorker:Worker):void {
+	private var debug_1:MessageChannel;
+	private var debug_2:MessageChannel;
+
+
+	private function connectRemoteWorker(remoteWorker:Worker):void {
 		var workers:Vector.<Worker> = WorkerDomain.current.listWorkers();
-		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "connectChildWorker " + childWorker, "with", workers);
+		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "connectChildWorker " + remoteWorker, "with", workers);
 		for (var i:int = 0; i < workers.length; i++) {
 			var worker:Worker = workers[i];
 			// get model name from worker.
@@ -133,11 +137,14 @@ public class ModuleWorkerBase extends Sprite {
 			worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 			//
 			if (!messageSendChannelsRegistry[workerModuleName]) {
-				debug_mainToWorker = worker.createMessageChannel(childWorker);
-				debug_workerToMain = childWorker.createMessageChannel(worker);
+				var debug_mainToWorker:MessageChannel = worker.createMessageChannel(remoteWorker);
+				var debug_workerToMain:MessageChannel = remoteWorker.createMessageChannel(worker);
 
-				childWorker.setSharedProperty("FROM_" + workerModuleName, debug_mainToWorker);
-				childWorker.setSharedProperty("TO_" + workerModuleName, debug_workerToMain);
+				debug_1 = debug_mainToWorker;
+				debug_2 = debug_workerToMain;
+
+				remoteWorker.setSharedProperty("FROM_" + workerModuleName, debug_mainToWorker);
+				remoteWorker.setSharedProperty("TO_" + workerModuleName, debug_workerToMain);
 
 				//Listen to the response from our worker
 				debug_workerToMain.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
@@ -177,8 +184,8 @@ public class ModuleWorkerBase extends Sprite {
 
 					workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
-					debug_mainToWorker = workerToThis;
-					debug_workerToMain = thisToWorker;
+//					debug_mainToWorker = workerToThis;
+//					debug_workerToMain = thisToWorker;
 
 
 					worker.setSharedProperty("FROM_" + moduleName, thisToWorker);
@@ -229,8 +236,8 @@ public class ModuleWorkerBase extends Sprite {
 			var thisToWorker:MessageChannel = thisWorker.getSharedProperty("TO_" + remoteModuleName);
 
 
-			trace(thisToWorker == debug_mainToWorker);
-			trace(workerToThis == debug_workerToMain);
+//			trace(thisToWorker == debug_mainToWorker);
+//			trace(workerToThis == debug_workerToMain);
 
 
 			messageSendChannelsRegistry[remoteModuleName] = thisToWorker;
@@ -238,8 +245,6 @@ public class ModuleWorkerBase extends Sprite {
 			sendMessageChannels.push(thisToWorker);
 			receiveMessageChannels.push(workerToThis);
 			messageChannelsWorkerNames.push(remoteModuleName);
-
-
 
 
 		}
@@ -252,10 +257,6 @@ public class ModuleWorkerBase extends Sprite {
 			sendMessageChannels[i].send(obj);
 		}
 	}
-
-
-	public var debug_mainToWorker:MessageChannel;
-	public var debug_workerToMain:MessageChannel;
 
 //	public var childWorker:Worker;
 
