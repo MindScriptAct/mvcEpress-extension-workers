@@ -86,7 +86,7 @@ public class ModuleWorkerBase extends Sprite {
 				setUpRemoteWorkerCommunication();
 
 				// todo: debug
-				setInterval(debug_CommunicationWorker, 1000);
+//				setInterval(debug_CommunicationWorker, 1000);
 			}
 		}
 		return true;
@@ -146,14 +146,14 @@ public class ModuleWorkerBase extends Sprite {
 				tempChannelStorage.push(remoteToWorker);
 
 				//
-				remoteWorker.setSharedProperty("FROM_" + workerModuleName, workerToRemote);
-				remoteWorker.setSharedProperty("TO_" + workerModuleName, remoteToWorker);
+				remoteWorker.setSharedProperty("workerToRemote_" + workerModuleName, workerToRemote);
+				remoteWorker.setSharedProperty("remoteToWorker_" + workerModuleName, remoteToWorker);
 
 				//Listen to the response from our worker
 				remoteToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 				// todo : debug
-				setTimeout(debug_initChildDebug, 500);
+//				setTimeout(debug_initChildDebug, 500);
 			}
 		}
 	}
@@ -177,8 +177,8 @@ public class ModuleWorkerBase extends Sprite {
 				worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 				//trace(workerModuleName);
 				if (!messageSendChannelsRegistry[workerModuleName]) {
-					var workerToThis:MessageChannel = thisWorker.getSharedProperty("FROM_" + workerModuleName);
-					var thisToWorker:MessageChannel = thisWorker.getSharedProperty("TO_" + workerModuleName);
+					var workerToThis:MessageChannel = thisWorker.getSharedProperty("workerToRemote_" + workerModuleName);
+					var thisToWorker:MessageChannel = thisWorker.getSharedProperty("remoteToWorker_" + workerModuleName);
 					//
 					messageSendChannelsRegistry[workerModuleName] = thisToWorker;
 
@@ -188,8 +188,8 @@ public class ModuleWorkerBase extends Sprite {
 
 					workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
-					worker.setSharedProperty("FROM2_" + debug_moduleName, thisToWorker);
-					worker.setSharedProperty("TO2_" + debug_moduleName, workerToThis);
+					worker.setSharedProperty("thisToWorker_" + debug_moduleName, thisToWorker);
+					worker.setSharedProperty("workerToThis_" + debug_moduleName, workerToThis);
 
 					thisToWorker.send(INIT_REMOTE_WORKER);
 					thisToWorker.send(debug_moduleName);
@@ -213,8 +213,8 @@ public class ModuleWorkerBase extends Sprite {
 
 			var thisWorker:Worker = Worker.current;
 
-			var workerToThis:MessageChannel = thisWorker.getSharedProperty("FROM2_" + remoteModuleName);
-			var thisToWorker:MessageChannel = thisWorker.getSharedProperty("TO2_" + remoteModuleName);
+			var workerToThis:MessageChannel = thisWorker.getSharedProperty("thisToWorker_" + remoteModuleName);
+			var thisToWorker:MessageChannel = thisWorker.getSharedProperty("workerToThis_" + remoteModuleName);
 
 			messageSendChannelsRegistry[remoteModuleName] = thisToWorker;
 
