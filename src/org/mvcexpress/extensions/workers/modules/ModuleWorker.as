@@ -36,7 +36,7 @@ import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ModuleWorker: try to create module.");
 
 			use namespace pureLegsCore;
-			if (super.checkWorker(moduleName)) {
+			if (super.handleWorker(moduleName)) {
 				if (ModuleWorkerBase.canInitChildModule) {
 				    initOnStage = false;
 				}
