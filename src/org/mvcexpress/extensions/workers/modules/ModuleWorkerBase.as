@@ -9,6 +9,7 @@ import flash.utils.Dictionary;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 import flash.utils.setInterval;
+import flash.utils.setTimeout;
 
 import org.mvcexpress.core.namespace.pureLegsCore;
 
@@ -29,7 +30,7 @@ public class ModuleWorkerBase extends Sprite {
 	pureLegsCore static var canInitChildModule:Boolean = false;
 
 	private var sendMessageChannels:Vector.<MessageChannel> = new <MessageChannel>[];
-	private var messageChannelsRegistry:Dictionary = new Dictionary();
+	private var messageSendChannelsRegistry:Dictionary = new Dictionary();
 
 
 	pureLegsCore function checkWorker(moduleName:String):Boolean {
@@ -73,7 +74,7 @@ public class ModuleWorkerBase extends Sprite {
 				setUpWorkerChildCommunication();
 
 
-				setInterval(debug_CommunicationWorker, 500);
+				setInterval(debug_CommunicationWorker, 1000);
 
 			}
 		}
@@ -84,16 +85,18 @@ public class ModuleWorkerBase extends Sprite {
 	public var debug_mainToWorker:MessageChannel;
 	public var debug_workerToMain:MessageChannel;
 
-	public var childWorker:Worker;
+//	public var childWorker:Worker;
 
 	public function debug_CommunicationMain():void {
 		trace("MAIN TEST");
-		debug_mainToWorker.send("Main > worker...")
+		debug_mainToWorker.send("Main > worker...");
+		demo_sendMessage("Main > worker...");
 	}
 
 	public function debug_CommunicationWorker():void {
 		trace("WORKER TEST");
-		debug_workerToMain.send("Worker > main...")
+		debug_workerToMain.send("Worker > main...");
+		demo_sendMessage("Worker > main...");
 	}
 
 //	//Main >> Worker
@@ -145,7 +148,7 @@ public class ModuleWorkerBase extends Sprite {
 			var workerModuleName:String = worker.getSharedProperty(MODULE_NAME_KEY);
 			worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 			//
-			if (!messageChannelsRegistry[workerModuleName]) {
+			if (!messageSendChannelsRegistry[workerModuleName]) {
 //				var workerToChild:MessageChannel = worker.createMessageChannel(childWorker);
 //				var childToWorker:MessageChannel = childWorker.createMessageChannel(worker);
 				debug_mainToWorker = worker.createMessageChannel(childWorker);
@@ -167,11 +170,16 @@ public class ModuleWorkerBase extends Sprite {
 				debug_workerToMain.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 				//Set an interval that will ask the worker thread to do some math
-				setInterval(debug_CommunicationMain, 500);
+				setTimeout(initChildDebug, 500);
+
 			}
 		}
 
 
+	}
+
+	private function initChildDebug():void {
+		setInterval(debug_CommunicationMain, 1000);
 	}
 
 
@@ -193,7 +201,7 @@ public class ModuleWorkerBase extends Sprite {
 		debug_mainToWorker = Worker.current.getSharedProperty("mainToWorker");
 		debug_workerToMain = Worker.current.getSharedProperty("workerToMain");
 		//Listen for messages from the mian thread
-		debug_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
+//		debug_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 		var childWorker:Worker = Worker.current;
 		for (var i:int = 0; i < workers.length; i++) {
@@ -203,13 +211,13 @@ public class ModuleWorkerBase extends Sprite {
 				var workerModuleName:String = worker.getSharedProperty(MODULE_NAME_KEY);
 				worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 				//trace(workerModuleName);
-				if (!messageChannelsRegistry[workerModuleName]) {
+				if (!messageSendChannelsRegistry[workerModuleName]) {
 					var workerToThis:MessageChannel = childWorker.getSharedProperty("FROM_" + workerModuleName);
 					var thisToWorker:MessageChannel = childWorker.getSharedProperty("TO_" + workerModuleName);
 //					//
 					workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 					sendMessageChannels.push(thisToWorker);
-					messageChannelsRegistry[workerModuleName] = thisToWorker;
+					messageSendChannelsRegistry[workerModuleName] = thisToWorker;
 
 
 					trace(debug_mainToWorker == workerToThis);
@@ -231,8 +239,8 @@ public class ModuleWorkerBase extends Sprite {
 		/**
 		 * Start Worker thread
 		 **/
-			//Inside of our worker, we can use static methods to
-			//access the shared messgaeChannel's
+		//Inside of our worker, we can use static methods to
+		//access the shared messgaeChannel's
 
 	}
 
@@ -244,10 +252,11 @@ public class ModuleWorkerBase extends Sprite {
 	}
 
 
-//	protected function demo_sendMessage(obj:Object):void {
-//		for (var i:int = 0; i < sendMessageChannels.length; i++) {
-//			sendMessageChannels[i].send(obj);
-//		}
-//	}
+	protected function demo_sendMessage(obj:Object):void {
+		trace("demo_sendMessage", obj);
+		for (var i:int = 0; i < sendMessageChannels.length; i++) {
+			sendMessageChannels[i].send(obj);
+		}
+	}
 }
 }

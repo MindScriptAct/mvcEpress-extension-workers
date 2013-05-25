@@ -22,7 +22,7 @@ public class MainWorkerTestModuleMediator extends Mediator {
 		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]" + "MainWorkerTestModule:traceModule();", "Debug module name: " + view.debug_getModuleName());
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:traceModule();");
 
-		setTimeout(traceModule, 2000);
+//		setTimeout(traceModule, 2000);
 	}
 
 	override public function onRemove():void {
