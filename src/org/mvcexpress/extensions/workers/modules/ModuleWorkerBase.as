@@ -96,15 +96,15 @@ public class ModuleWorkerBase extends Sprite {
 		debug_workerToMain.send("Worker > main...")
 	}
 
-	//Main >> Worker
-	public function debug_onMainToWorker(event:Event):void {
-		trace("[Worker] " + debug_mainToWorker.receive());
-	}
-
-	//Worker >> Main
-	public function debug_onWorkerToMain(event:Event):void {
-		trace("[Worker] " + debug_workerToMain.receive());
-	}
+//	//Main >> Worker
+//	public function debug_onMainToWorker(event:Event):void {
+//		trace("[Worker] " + debug_mainToWorker.receive());
+//	}
+//
+//	//Worker >> Main
+//	public function debug_onWorkerToMain(event:Event):void {
+//		trace("[Worker] " + debug_workerToMain.receive());
+//	}
 
 	// TODO : consider creating it as static public funcion.
 	protected function startWorkerModule(workerModuleClass:Class):void {
@@ -164,7 +164,7 @@ public class ModuleWorkerBase extends Sprite {
 				childWorker.setSharedProperty("workerToMain", debug_workerToMain);
 
 				//Listen to the response from our worker
-				debug_workerToMain.addEventListener(Event.CHANNEL_MESSAGE, debug_onWorkerToMain);
+				debug_workerToMain.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 				//Set an interval that will ask the worker thread to do some math
 				setInterval(debug_CommunicationMain, 500);
@@ -189,6 +189,12 @@ public class ModuleWorkerBase extends Sprite {
 	private function setUpWorkerChildCommunication():void {
 		var workers:Vector.<Worker> = WorkerDomain.current.listWorkers();
 		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "setUpWorkerCommunication " + workers);
+
+		debug_mainToWorker = Worker.current.getSharedProperty("mainToWorker");
+		debug_workerToMain = Worker.current.getSharedProperty("workerToMain");
+		//Listen for messages from the mian thread
+		debug_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
+
 		var childWorker:Worker = Worker.current;
 		for (var i:int = 0; i < workers.length; i++) {
 			var worker:Worker = workers[i];
@@ -206,6 +212,9 @@ public class ModuleWorkerBase extends Sprite {
 					messageChannelsRegistry[workerModuleName] = thisToWorker;
 
 
+					trace(debug_mainToWorker == workerToThis);
+					trace(debug_workerToMain == thisToWorker);
+
 
 //					//
 //					//workerToThis.send("Child with name:" + moduleName + " is set up!");
@@ -218,10 +227,7 @@ public class ModuleWorkerBase extends Sprite {
 //		var mainChanel:MessageChannel = Worker.current.getSharedProperty("testSharedChannel") as MessageChannel;
 //		//mainChanel.send("WTF...");
 //
-		debug_mainToWorker = Worker.current.getSharedProperty("mainToWorker");
-		debug_workerToMain = Worker.current.getSharedProperty("workerToMain");
-		//Listen for messages from the mian thread
-		debug_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, debug_onMainToWorker);
+
 		/**
 		 * Start Worker thread
 		 **/
