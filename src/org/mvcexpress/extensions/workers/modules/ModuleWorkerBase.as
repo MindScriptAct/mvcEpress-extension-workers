@@ -12,12 +12,14 @@ import flash.utils.setInterval;
 import flash.utils.setTimeout;
 
 import org.mvcexpress.core.namespace.pureLegsCore;
+import org.mvcexpress.extensions.workers.vo.InitWorkerVO;
 
 public class ModuleWorkerBase extends Sprite {
 
 
 	private static const MODULE_NAME_KEY:String = "$_moduleName_$";
 	private static const MODULE_CLASS_NAME_KEY:String = "$_moduleClassName_$";
+	private static const INIT_REMOTE_WORKER:String = "$_init_remote_worker_$";
 
 	public static const debug_coreId:int = Math.random() * 100000000;
 
@@ -30,6 +32,12 @@ public class ModuleWorkerBase extends Sprite {
 	pureLegsCore static var canInitChildModule:Boolean = false;
 
 	private var sendMessageChannels:Vector.<MessageChannel> = new <MessageChannel>[];
+
+	// todo : check if needed.
+	private var receiveMessageChannels:Vector.<MessageChannel> = new <MessageChannel>[];
+	// todo : check if needed.
+	private var messageChannelsWorkerNames:Vector.<String> = new <String>[];
+
 	private var messageSendChannelsRegistry:Dictionary = new Dictionary();
 
 
@@ -71,6 +79,7 @@ public class ModuleWorkerBase extends Sprite {
 			} else {
 				// not primordial child module.
 				Worker.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+
 				setUpWorkerChildCommunication();
 
 
@@ -82,44 +91,20 @@ public class ModuleWorkerBase extends Sprite {
 	}
 
 
-	public var debug_mainToWorker:MessageChannel;
-	public var debug_workerToMain:MessageChannel;
-
-//	public var childWorker:Worker;
-
-	public function debug_CommunicationMain():void {
-		trace("MAIN TEST");
-		debug_mainToWorker.send("Main > worker...");
-		demo_sendMessage("Main > worker...");
-	}
-
-	public function debug_CommunicationWorker():void {
-		trace("WORKER TEST");
-		debug_workerToMain.send("Worker > main...");
-		demo_sendMessage("Worker > main...");
-	}
-
-//	//Main >> Worker
-//	public function debug_onMainToWorker(event:Event):void {
-//		trace("[Worker] " + debug_mainToWorker.receive());
-//	}
-//
-//	//Worker >> Main
-//	public function debug_onWorkerToMain(event:Event):void {
-//		trace("[Worker] " + debug_workerToMain.receive());
-//	}
-
 	// TODO : consider creating it as static public funcion.
 	protected function startWorkerModule(workerModuleClass:Class):void {
+		// TODO : check extended form workerModule class.
+
+		//
 		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + Worker.current.isPrimordial);
 		if (Worker.current.isPrimordial) {
-			var childWorker:Worker = WorkerDomain.current.createWorker($primordialBytes);
-			childWorker.addEventListener(Event.WORKER_STATE, workerStateHandler);
-			childWorker.setSharedProperty(MODULE_CLASS_NAME_KEY, getQualifiedClassName(workerModuleClass));
+			var thisWorker:Worker = WorkerDomain.current.createWorker($primordialBytes);
+			thisWorker.addEventListener(Event.WORKER_STATE, workerStateHandler);
+			thisWorker.setSharedProperty(MODULE_CLASS_NAME_KEY, getQualifiedClassName(workerModuleClass));
 			//
-			connectChildWorker(childWorker);
+			connectChildWorker(thisWorker);
 			//
-			childWorker.start();
+			thisWorker.start();
 		} else {
 			throw Error("Starting child workers from other child workers not supported yet.)");
 		}
@@ -149,33 +134,19 @@ public class ModuleWorkerBase extends Sprite {
 			worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 			//
 			if (!messageSendChannelsRegistry[workerModuleName]) {
-//				var workerToChild:MessageChannel = worker.createMessageChannel(childWorker);
-//				var childToWorker:MessageChannel = childWorker.createMessageChannel(worker);
 				debug_mainToWorker = worker.createMessageChannel(childWorker);
 				debug_workerToMain = childWorker.createMessageChannel(worker);
-//				//
+
 				childWorker.setSharedProperty("FROM_" + workerModuleName, debug_mainToWorker);
 				childWorker.setSharedProperty("TO_" + workerModuleName, debug_workerToMain);
-//				//
-//				childToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
-//
-//				workerToChild.send("debug_MAIN->CHILD");
-
-
-				//Inject messaging channels as a shared property
-				childWorker.setSharedProperty("mainToWorker", debug_mainToWorker);
-				childWorker.setSharedProperty("workerToMain", debug_workerToMain);
 
 				//Listen to the response from our worker
 				debug_workerToMain.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 				//Set an interval that will ask the worker thread to do some math
 				setTimeout(initChildDebug, 500);
-
 			}
 		}
-
-
 	}
 
 	private function initChildDebug():void {
@@ -183,27 +154,11 @@ public class ModuleWorkerBase extends Sprite {
 	}
 
 
-//		var testChannel:MessageChannel = Worker.current.createMessageChannel(childWorker);
-////		var testChannel:MessageChannel = childWorker.createMessageChannel(Worker.current);
-//		testChannel.addEventListener(Event.CHANNEL_MESSAGE, handleTest);
-//		childWorker.setSharedProperty("testSharedChannel", testChannel);
-//	}
-
-//	private function handleTest(event:Event):void {
-//		trace("oooooooooooooooooooooooooo...................");
-//	}
-
-
 	private function setUpWorkerChildCommunication():void {
 		var workers:Vector.<Worker> = WorkerDomain.current.listWorkers();
 		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "setUpWorkerCommunication " + workers);
 
-		debug_mainToWorker = Worker.current.getSharedProperty("mainToWorker");
-		debug_workerToMain = Worker.current.getSharedProperty("workerToMain");
-		//Listen for messages from the mian thread
-//		debug_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
-
-		var childWorker:Worker = Worker.current;
+		var thisWorker:Worker = Worker.current;
 		for (var i:int = 0; i < workers.length; i++) {
 			var worker:Worker = workers[i];
 			// TODO : decide what to do with self send messages...
@@ -212,20 +167,31 @@ public class ModuleWorkerBase extends Sprite {
 				worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 				//trace(workerModuleName);
 				if (!messageSendChannelsRegistry[workerModuleName]) {
-					var workerToThis:MessageChannel = childWorker.getSharedProperty("FROM_" + workerModuleName);
-					var thisToWorker:MessageChannel = childWorker.getSharedProperty("TO_" + workerModuleName);
+					var workerToThis:MessageChannel = thisWorker.getSharedProperty("FROM_" + workerModuleName);
+					var thisToWorker:MessageChannel = thisWorker.getSharedProperty("TO_" + workerModuleName);
 //					//
-					workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
-					sendMessageChannels.push(thisToWorker);
 					messageSendChannelsRegistry[workerModuleName] = thisToWorker;
+
+					sendMessageChannels.push(thisToWorker);
+					receiveMessageChannels.push(workerToThis);
+					messageChannelsWorkerNames.push(workerModuleName);
+
+					workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 
 					trace(debug_mainToWorker == workerToThis);
 					trace(debug_workerToMain == thisToWorker);
 
 
-//					//
-//					//workerToThis.send("Child with name:" + moduleName + " is set up!");
+					debug_mainToWorker = workerToThis;
+					debug_workerToMain = thisToWorker;
+
+
+					worker.setSharedProperty("FROM_" + moduleName, thisToWorker);
+					worker.setSharedProperty("TO_" + moduleName, workerToThis);
+
+					thisToWorker.send(INIT_REMOTE_WORKER);
+					thisToWorker.send(new InitWorkerVO(moduleName));
 				} else {
 					throw Error("2 workers with same name should not exist.");
 				}
@@ -244,11 +210,43 @@ public class ModuleWorkerBase extends Sprite {
 
 	}
 
+//	private function handleChannelMessage(event:Event):void {
+//		var channel:MessageChannel = event.target as MessageChannel;
+//		var data:Object = channel.receive();
+//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "handleChannelMessage " + event, data);
+//	}
 
 	private function handleChannelMessage(event:Event):void {
 		var channel:MessageChannel = event.target as MessageChannel;
-		var data:Object = channel.receive();
-		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "handleChannelMessage " + event, data);
+		var messageType:Object = channel.receive();
+		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "handleChannelMessage " + event, messageType);
+
+
+//		var remoteModelName:String = data.moduleName;
+//		trace(remoteModelName);
+		if (messageType == INIT_REMOTE_WORKER) {
+			var initData:Object = channel.receive());
+
+			//
+//			trace(initData);
+//			if (messageType is InitWorkerVO) {
+//
+//				trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "handle child module init! ", initData.moduleName);
+//
+//				var thisWorker:Worker = Worker.current;
+//
+//				var workerToThis:MessageChannel = thisWorker.getSharedProperty("FROM_" + initData.moduleName);
+//				var thisToWorker:MessageChannel = thisWorker.getSharedProperty("TO_" + initData.moduleName);
+//
+//
+//				trace(workerToThis == debug_mainToWorker);
+//				trace(thisToWorker == debug_mainToWorker);
+//				trace(workerToThis == debug_workerToMain);
+//				trace(thisToWorker == debug_workerToMain);
+//
+//
+//			}
+		}
 	}
 
 
@@ -258,5 +256,24 @@ public class ModuleWorkerBase extends Sprite {
 			sendMessageChannels[i].send(obj);
 		}
 	}
+
+
+	public var debug_mainToWorker:MessageChannel;
+	public var debug_workerToMain:MessageChannel;
+
+//	public var childWorker:Worker;
+
+	public function debug_CommunicationMain():void {
+		trace("MAIN TEST");
+		debug_mainToWorker.send("Main > worker...");
+//		demo_sendMessage("Main > worker...");
+	}
+
+	public function debug_CommunicationWorker():void {
+		trace("WORKER TEST");
+		debug_workerToMain.send("Worker > main...");
+//		demo_sendMessage("Worker > main...");
+	}
+
 }
 }
