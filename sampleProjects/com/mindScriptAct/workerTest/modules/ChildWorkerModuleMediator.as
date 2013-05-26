@@ -20,7 +20,7 @@ public class ChildWorkerModuleMediator extends Mediator {
 
 		// traceModule();
 
-//		setTimeout(traceModule, 2000);
+		setTimeout(traceModule, 2000);
 	}
 
 

@@ -19,7 +19,7 @@ public class MainWorkerTestModuleMediator extends Mediator {
 		// TODO : breaks.. permissions are not added at this point as remote worker not created yet.
 		//traceModule();
 
-//		setTimeout(traceModule, 2000);
+		setTimeout(traceModule, 2000);
 	}
 
 

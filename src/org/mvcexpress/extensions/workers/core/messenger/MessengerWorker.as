@@ -13,7 +13,7 @@ public class MessengerWorker extends Messenger {
 	override public function send(type:String, params:Object = null):void {
 		//super.send(type, params);
 
-		trace("send", type, params);
+		trace("    MessengerWorker     send", type, params);
 		use namespace pureLegsCore;
 		ModuleWorkerBase.demo_sendMessage(type, params);
 	}

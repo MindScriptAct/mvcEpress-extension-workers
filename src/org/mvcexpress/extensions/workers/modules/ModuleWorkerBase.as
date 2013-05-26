@@ -66,9 +66,6 @@ public class ModuleWorkerBase extends Sprite {
 					}
 				}
 				Worker.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
-				//
-				// init custom scoped messenger
-				ModuleManager.getScopeMessenger(moduleName, MessengerWorker);
 			}
 		} else {
 			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ModuleWorkerBase: can init child module?:", ModuleWorkerBase.canInitChildModule);
@@ -191,6 +188,8 @@ public class ModuleWorkerBase extends Sprite {
 				// handle communication permissions
 				use namespace pureLegsCore;
 
+				// init custom scoped messenger
+				ModuleManager.getScopeMessenger(workerModuleName, MessengerWorker);
 				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
 				//
 				if (!messageSendChannelsRegistry[workerModuleName]) {
@@ -221,10 +220,8 @@ public class ModuleWorkerBase extends Sprite {
 	private function handleChannelMessage(event:Event):void {
 		var channel:MessageChannel = event.target as MessageChannel;
 		var messageType:String = channel.receive();
-		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handleChannelMessage " + event, messageType);
 		if (messageType) {
-
-
+			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handleChannelMessage " + event, messageType);
 			if (messageType == INIT_REMOTE_WORKER) {
 				var remoteModuleName:String = channel.receive();
 
@@ -232,8 +229,6 @@ public class ModuleWorkerBase extends Sprite {
 
 				// init custom scoped messenger
 				ModuleManager.getScopeMessenger(remoteModuleName, MessengerWorker);
-				//ModuleManager.getScopeMessenger(remoteModuleName, MessengerWorker);
-
 				ModuleManager.registerScope(debug_moduleName, remoteModuleName, true, true, false);
 
 				trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName);
@@ -260,13 +255,9 @@ public class ModuleWorkerBase extends Sprite {
 					}
 				}
 			} else {
-				trace("HANDLE SIMPLE MESSAGE");
-				trace(messageType);
 				var params:Object = channel.receive();
-				trace(params);
+				trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
 			}
-		} else {
-			trace("WARNING !!!  null received... why?");
 		}
 	}
 
@@ -274,9 +265,9 @@ public class ModuleWorkerBase extends Sprite {
 	static pureLegsCore function demo_sendMessage(type:String, params:Object = null):void {
 		trace("demo_sendMessage", type, params);
 		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
-			trace("   " + $sendMessageChannels[i]);
+//			trace("   " + $sendMessageChannels[i]);
 			$sendMessageChannels[i].send(type);
-			if(params){
+			if (params) {
 				$sendMessageChannels[i].send(params);
 			}
 		}
