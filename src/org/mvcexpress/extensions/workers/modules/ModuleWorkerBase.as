@@ -191,6 +191,8 @@ public class ModuleWorkerBase extends Sprite {
 				// init custom scoped messenger
 				ModuleManager.getScopeMessenger(workerModuleName, MessengerWorker);
 				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+				ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 				//
 				if (!messageSendChannelsRegistry[workerModuleName]) {
 					var workerToThis:MessageChannel = thisWorker.getSharedProperty("workerToRemote_" + workerModuleName);
@@ -230,6 +232,8 @@ public class ModuleWorkerBase extends Sprite {
 				// init custom scoped messenger
 				ModuleManager.getScopeMessenger(remoteModuleName, MessengerWorker);
 				ModuleManager.registerScope(debug_moduleName, remoteModuleName, true, true, false);
+				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+				ModuleManager.registerScope(remoteModuleName, remoteModuleName, true, true, false);
 
 				trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName);
 
@@ -257,6 +261,8 @@ public class ModuleWorkerBase extends Sprite {
 			} else {
 				var params:Object = channel.receive();
 				trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
+				var messageTypeSplite:Array = messageType.split("_^~_");
+				ModuleManager.sendScopeMessage(debug_moduleName, debug_moduleName, messageTypeSplite[1], params);
 			}
 		}
 	}

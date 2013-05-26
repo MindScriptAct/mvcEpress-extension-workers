@@ -20,6 +20,12 @@ public class MainWorkerTestModuleMediator extends Mediator {
 		//traceModule();
 
 		setTimeout(traceModule, 2000);
+
+		setTimeout(addHandlerTest, 5000)
+	}
+
+	private function addHandlerTest():void {
+		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN, handleWorkerMessage);
 	}
 
 
@@ -28,8 +34,13 @@ public class MainWorkerTestModuleMediator extends Mediator {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:traceModule();");
 
 
-		sendScopeMessage(WorkerIds.CHILD_WORKER_MODULE, Messages.DEMO_2, "MAIN > CHILD");
+
+		sendScopeMessage(WorkerIds.CHILD_WORKER_MODULE, Messages.MAIN_CHILD, "MAIN > CHILD");
 		setTimeout(traceModule, 2000);
+	}
+
+	private function handleWorkerMessage(params:Object):void {
+		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! MainWorkerTestModuleMediator received message:", params);
 	}
 
 	override public function onRemove():void {
