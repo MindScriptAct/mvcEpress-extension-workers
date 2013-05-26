@@ -1,4 +1,7 @@
 package com.mindScriptAct.workerTest.modules {
+import com.mindScriptAct.workerTest.WorkerIds;
+import com.mindScriptAct.workerTest.messages.Messages;
+
 import flash.utils.setTimeout;
 
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
@@ -25,6 +28,8 @@ public class ChildWorkerModuleMediator extends Mediator {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
 //		setTimeout(traceModule, 2000);
+
+		//sendScopeMessage(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.DEMO_1, "test data");
 	}
 
 	override public function onRemove():void {

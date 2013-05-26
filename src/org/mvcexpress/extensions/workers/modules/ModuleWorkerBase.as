@@ -11,7 +11,11 @@ import flash.utils.getQualifiedClassName;
 import flash.utils.setInterval;
 import flash.utils.setTimeout;
 
+import org.mvcexpress.core.ModuleBase;
+import org.mvcexpress.core.ModuleManager;
+
 import org.mvcexpress.core.namespace.pureLegsCore;
+import org.mvcexpress.extensions.workers.core.messenger.MessengerWorker;
 
 public class ModuleWorkerBase extends Sprite {
 
@@ -41,6 +45,7 @@ public class ModuleWorkerBase extends Sprite {
 	private var debug_moduleName:String;
 	public static const debug_coreId:int = Math.random() * 100000000;
 	public var debug_objectID:int = Math.random() * 100000000;
+	private var debug_doDebugging:Boolean = true;
 
 
 	pureLegsCore function handleWorker(moduleName:String):Boolean {
@@ -61,6 +66,9 @@ public class ModuleWorkerBase extends Sprite {
 					}
 				}
 				Worker.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+				//
+				// init custom scoped messenger
+				ModuleManager.getScopeMessenger(moduleName, MessengerWorker);
 			}
 		} else {
 			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ModuleWorkerBase: can init child module?:", ModuleWorkerBase.canInitChildModule);
@@ -86,7 +94,9 @@ public class ModuleWorkerBase extends Sprite {
 				setUpRemoteWorkerCommunication();
 
 				// todo: debug
-//				setInterval(debug_CommunicationWorker, 1000);
+				if(debug_doDebugging){
+					setInterval(debug_CommunicationWorker, 1000);
+				}
 			}
 		}
 		return true;
@@ -153,7 +163,9 @@ public class ModuleWorkerBase extends Sprite {
 				remoteToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 				// todo : debug
-//				setTimeout(debug_initChildDebug, 500);
+				if(debug_doDebugging){
+					setTimeout(debug_initChildDebug, 500);
+				}
 			}
 		}
 	}
@@ -208,6 +220,9 @@ public class ModuleWorkerBase extends Sprite {
 
 		if (messageType == INIT_REMOTE_WORKER) {
 			var remoteModuleName:String = channel.receive();
+			use namespace pureLegsCore;
+			// init custom scoped messenger
+			ModuleManager.getScopeMessenger(remoteModuleName, MessengerWorker);
 
 			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName);
 
@@ -254,5 +269,11 @@ public class ModuleWorkerBase extends Sprite {
 		demo_sendMessage("Worker > main...");
 	}
 
+
+	private function demo_custom_scope():void {
+		var moduleBase:ModuleBase
+		use namespace pureLegsCore;
+		ModuleManager.registerScope("", "_moduleName", true, true, true);
+	}
 }
 }
