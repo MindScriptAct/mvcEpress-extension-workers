@@ -18,8 +18,9 @@ public class ChildWorkerModuleMediator extends Mediator {
 
 	override public function onRegister():void {
 
-		traceModule();
+		// traceModule();
 
+//		setTimeout(traceModule, 2000);
 	}
 
 
@@ -27,9 +28,9 @@ public class ChildWorkerModuleMediator extends Mediator {
 		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]" + "ChildWorkerModule:traceModule();", "Debug module name: " + view.debug_getModuleName());
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
-//		setTimeout(traceModule, 2000);
 
-		//sendScopeMessage(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.DEMO_1, "test data");
+		sendScopeMessage(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.DEMO_1, "CHILD > MAIN");
+		setTimeout(traceModule, 2000);
 	}
 
 	override public function onRemove():void {

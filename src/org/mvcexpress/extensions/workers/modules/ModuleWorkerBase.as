@@ -13,7 +13,6 @@ import flash.utils.setTimeout;
 
 import org.mvcexpress.core.ModuleBase;
 import org.mvcexpress.core.ModuleManager;
-
 import org.mvcexpress.core.namespace.pureLegsCore;
 import org.mvcexpress.extensions.workers.core.messenger.MessengerWorker;
 
@@ -31,7 +30,7 @@ public class ModuleWorkerBase extends Sprite {
 	pureLegsCore static var canInitChildModule:Boolean = false;
 
 	// channels for all remote workres to send data to them.
-	private var sendMessageChannels:Vector.<MessageChannel> = new <MessageChannel>[];
+	private static var $sendMessageChannels:Vector.<MessageChannel> = new <MessageChannel>[];
 
 	// todo : check if needed.
 	private var receiveMessageChannels:Vector.<MessageChannel> = new <MessageChannel>[];
@@ -45,12 +44,13 @@ public class ModuleWorkerBase extends Sprite {
 	private var debug_moduleName:String;
 	public static const debug_coreId:int = Math.random() * 100000000;
 	public var debug_objectID:int = Math.random() * 100000000;
-	private var debug_doDebugging:Boolean = true;
+	private var debug_doDebugging:Boolean = false;
 
 
 	pureLegsCore function handleWorker(moduleName:String):Boolean {
 
 		use namespace pureLegsCore;
+
 		this.debug_moduleName = moduleName;
 		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", Worker.current.isPrimordial);
 		//
@@ -94,7 +94,7 @@ public class ModuleWorkerBase extends Sprite {
 				setUpRemoteWorkerCommunication();
 
 				// todo: debug
-				if(debug_doDebugging){
+				if (debug_doDebugging) {
 					setInterval(debug_CommunicationWorker, 1000);
 				}
 			}
@@ -163,7 +163,7 @@ public class ModuleWorkerBase extends Sprite {
 				remoteToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
 				// todo : debug
-				if(debug_doDebugging){
+				if (debug_doDebugging) {
 					setTimeout(debug_initChildDebug, 500);
 				}
 			}
@@ -188,13 +188,18 @@ public class ModuleWorkerBase extends Sprite {
 				var workerModuleName:String = worker.getSharedProperty(MODULE_NAME_KEY);
 				worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 				//trace(workerModuleName);
+				// handle communication permissions
+				use namespace pureLegsCore;
+
+				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+				//
 				if (!messageSendChannelsRegistry[workerModuleName]) {
 					var workerToThis:MessageChannel = thisWorker.getSharedProperty("workerToRemote_" + workerModuleName);
 					var thisToWorker:MessageChannel = thisWorker.getSharedProperty("remoteToWorker_" + workerModuleName);
 					//
 					messageSendChannelsRegistry[workerModuleName] = thisToWorker;
 
-					sendMessageChannels.push(thisToWorker);
+					$sendMessageChannels.push(thisToWorker);
 					receiveMessageChannels.push(workerToThis);
 					messageChannelsWorkerNames.push(workerModuleName);
 
@@ -215,65 +220,93 @@ public class ModuleWorkerBase extends Sprite {
 
 	private function handleChannelMessage(event:Event):void {
 		var channel:MessageChannel = event.target as MessageChannel;
-		var messageType:Object = channel.receive();
+		var messageType:String = channel.receive();
 		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handleChannelMessage " + event, messageType);
+		if (messageType) {
 
-		if (messageType == INIT_REMOTE_WORKER) {
-			var remoteModuleName:String = channel.receive();
-			use namespace pureLegsCore;
-			// init custom scoped messenger
-			ModuleManager.getScopeMessenger(remoteModuleName, MessengerWorker);
 
-			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName);
+			if (messageType == INIT_REMOTE_WORKER) {
+				var remoteModuleName:String = channel.receive();
 
-			var thisWorker:Worker = Worker.current;
+				use namespace pureLegsCore;
 
-			var workerToThis:MessageChannel = thisWorker.getSharedProperty("thisToWorker_" + remoteModuleName);
-			var thisToWorker:MessageChannel = thisWorker.getSharedProperty("workerToThis_" + remoteModuleName);
+				// init custom scoped messenger
+				ModuleManager.getScopeMessenger(remoteModuleName, MessengerWorker);
+				//ModuleManager.getScopeMessenger(remoteModuleName, MessengerWorker);
 
-			messageSendChannelsRegistry[remoteModuleName] = thisToWorker;
+				ModuleManager.registerScope(debug_moduleName, remoteModuleName, true, true, false);
 
-			sendMessageChannels.push(thisToWorker);
-			receiveMessageChannels.push(workerToThis);
-			messageChannelsWorkerNames.push(remoteModuleName);
+				trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName);
 
-			// remove channels from temporal storage.
-			for (var i:int = 0; i < tempChannelStorage.length; i++) {
-				if (tempChannelStorage[i] == thisToWorker) {
-					tempChannelStorage.splice(i, 1);
-					i--;
-				} else if (tempChannelStorage[i] == workerToThis) {
-					tempChannelStorage.splice(i, 1);
-					i--;
+				var thisWorker:Worker = Worker.current;
+
+				var workerToThis:MessageChannel = thisWorker.getSharedProperty("thisToWorker_" + remoteModuleName);
+				var thisToWorker:MessageChannel = thisWorker.getSharedProperty("workerToThis_" + remoteModuleName);
+
+				messageSendChannelsRegistry[remoteModuleName] = thisToWorker;
+
+				$sendMessageChannels.push(thisToWorker);
+				receiveMessageChannels.push(workerToThis);
+				messageChannelsWorkerNames.push(remoteModuleName);
+
+				// remove channels from temporal storage.
+				for (var i:int = 0; i < tempChannelStorage.length; i++) {
+					if (tempChannelStorage[i] == thisToWorker) {
+						tempChannelStorage.splice(i, 1);
+						i--;
+					} else if (tempChannelStorage[i] == workerToThis) {
+						tempChannelStorage.splice(i, 1);
+						i--;
+					}
 				}
+			} else {
+				trace("HANDLE SIMPLE MESSAGE");
+				trace(messageType);
+				var params:Object = channel.receive();
+				trace(params);
 			}
+		} else {
+			trace("WARNING !!!  null received... why?");
 		}
 	}
 
 
-	protected function demo_sendMessage(obj:Object):void {
-		trace("demo_sendMessage", obj);
-		for (var i:int = 0; i < sendMessageChannels.length; i++) {
-			sendMessageChannels[i].send(obj);
+	static pureLegsCore function demo_sendMessage(type:String, params:Object = null):void {
+		trace("demo_sendMessage", type, params);
+		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
+			trace("   " + $sendMessageChannels[i]);
+			$sendMessageChannels[i].send(type);
+			if(params){
+				$sendMessageChannels[i].send(params);
+			}
 		}
 	}
 
 
 	public function debug_CommunicationMain():void {
 		trace("MAIN TEST");
+
+		use namespace pureLegsCore;
+
 		demo_sendMessage("Main > worker...");
 	}
 
 	public function debug_CommunicationWorker():void {
 		trace("WORKER TEST");
+
+		use namespace pureLegsCore;
+
 		demo_sendMessage("Worker > main...");
 	}
 
 
 	private function demo_custom_scope():void {
 		var moduleBase:ModuleBase
+
 		use namespace pureLegsCore;
-		ModuleManager.registerScope("", "_moduleName", true, true, true);
+
+		//ModuleManager.registerScope("", "_moduleName", true, true, true);
+		//moduleBase.registerScope()
 	}
 }
 }
