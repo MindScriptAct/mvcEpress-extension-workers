@@ -34,13 +34,13 @@ public class MainWorkerTestModuleMediator extends Mediator {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:traceModule();");
 
 
-
 		sendScopeMessage(WorkerIds.CHILD_WORKER_MODULE, Messages.MAIN_CHILD, "MAIN > CHILD");
 		setTimeout(traceModule, 2000);
 	}
 
 	private function handleWorkerMessage(params:Object):void {
-		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! MainWorkerTestModuleMediator received message:", params);
+//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! MainWorkerTestModuleMediator received message:", params);
+		trace(params, "!!!!!!!!!!!!!!!! MainWorkerTestModuleMediator received message:", "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	override public function onRemove():void {

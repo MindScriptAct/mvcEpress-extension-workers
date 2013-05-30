@@ -223,7 +223,7 @@ public class ModuleWorkerBase extends Sprite {
 		var channel:MessageChannel = event.target as MessageChannel;
 		var messageType:String = channel.receive();
 		if (messageType) {
-			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handleChannelMessage " + event, messageType);
+//			trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + debug_moduleName + "]" + "handleChannelMessage " + event, messageType);
 			if (messageType == INIT_REMOTE_WORKER) {
 				var remoteModuleName:String = channel.receive();
 
@@ -260,7 +260,7 @@ public class ModuleWorkerBase extends Sprite {
 				}
 			} else {
 				var params:Object = channel.receive();
-				trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
+//				trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
 				var messageTypeSplite:Array = messageType.split("_^~_");
 				ModuleManager.sendScopeMessage(debug_moduleName, debug_moduleName, messageTypeSplite[1], params);
 			}
@@ -269,7 +269,7 @@ public class ModuleWorkerBase extends Sprite {
 
 
 	static pureLegsCore function demo_sendMessage(type:String, params:Object = null):void {
-		trace("demo_sendMessage", type, params);
+//		trace("demo_sendMessage", type, params);
 		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
 //			trace("   " + $sendMessageChannels[i]);
 			$sendMessageChannels[i].send(type);
