@@ -1,16 +1,22 @@
 package com.mindScriptAct.helloWorker {
+import com.mindScriptAct.binaryTest.DemoWorkerProxy;
+
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.net.registerClassAlias;
 import flash.system.MessageChannel;
 import flash.system.Worker;
 import flash.system.WorkerDomain;
-import flash.utils.setInterval;
+import flash.utils.ByteArray;
+import flash.utils.setTimeout;
 
 public class HelloWorldWorker extends Sprite {
 	protected var debug_mainToWorker:MessageChannel;
 	protected var debug_workerToMain:MessageChannel;
 
 	protected var debugf_worker:Worker;
+
+	private var proxyTest:DemoWorkerProxy;
 
 	public function HelloWorldWorker() {
 		trace("hi");
@@ -37,8 +43,14 @@ public class HelloWorldWorker extends Sprite {
 			debugf_worker.start();
 
 
+			registerClassAlias('com.mindScriptAct.helloWorker.HelloDataVO', HelloDataVO);
+
+			registerClassAlias("com.mindScriptAct.binaryTest.DemoWorkerProxy", DemoWorkerProxy);
+
 			//Set an interval that will ask the worker thread to do some math
-			setInterval(debugCommunicationMain, 2000);
+			setTimeout(debugCommunicationMain, 1000);
+
+			setTimeout(initSharedProxy, 500);
 
 		} else {
 			/**
@@ -51,28 +63,70 @@ public class HelloWorldWorker extends Sprite {
 			//Listen for messages from the mian thread
 			debug_mainToWorker.addEventListener(Event.CHANNEL_MESSAGE, onMainToWorker);
 
-			setInterval(debugCommunicationWorker, 2000);
+			setTimeout(debugCommunicationWorker, 2000);
+
+			registerClassAlias('com.mindScriptAct.helloWorker.HelloDataVO', HelloDataVO);
 		}
 	}
 
+
+	private function initSharedProxy():void {
+		proxyTest = new DemoWorkerProxy();
+		proxyTest.publicVar = "data1";
+		proxyTest.getSetVar = "data2";
+		proxyTest.setCustomGetterSetterVar("data3");
+
+		var testBytes:ByteArray = new ByteArray();
+		testBytes.writeObject(proxyTest);
+		testBytes.shareable = true;
+
+
+		debug_mainToWorker.send("SHARED_PPROXY_COMMING");
+		debug_mainToWorker.send(proxyTest);
+
+	}
+
 	private function debugCommunicationMain():void {
-		trace("MAIN TEST");
-		debug_mainToWorker.send("Main > worker...")
+//		debug_mainToWorker.send("Main > worker...");
+		var mainData:HelloDataVO = new HelloDataVO();
+		mainData.data = "Main > worker...";
+		trace("MAIN SEND>", mainData);
+//		registerClassAlias('com.mindScriptAct.helloWorker.HelloDataVO', HelloDataVO);
+		debug_mainToWorker.send(mainData);
+
+		setTimeout(debugCommunicationMain, 2000);
 	}
 
 	private function debugCommunicationWorker():void {
-		trace("WORKER TEST");
-		debug_workerToMain.send("Worker > main...")
+//		debug_workerToMain.send("Worker > main...")
+		var mainData:HelloDataVO = new HelloDataVO();
+		mainData.data = "Worker > main...";
+		trace("WORKER SEND>", mainData);
+//		registerClassAlias('com.mindScriptAct.helloWorker.HelloDataVO', HelloDataVO);
+		debug_workerToMain.send(mainData);
+
+		setTimeout(debugCommunicationWorker, 2000);
 	}
 
 	//Main >> Worker
 	protected function onMainToWorker(event:Event):void {
-		trace("[Worker] " + debug_mainToWorker.receive());
+		var obj:Object = debug_mainToWorker.receive();
+		if (obj != null) {
+			if (obj == "SHARED_PPROXY_COMMING") {
+				var testProxy:Object = debug_mainToWorker.receive();
+				var biteProxy:Object = debug_mainToWorker.receive();
+				proxyTest = testProxy as DemoWorkerProxy;
+				trace("Proxy data... ", testProxy);
+				trace("Proxy received... ", proxyTest);
+			} else {
+				trace("[Worker] " + obj);
+			}
+		}
 	}
 
 	//Worker >> Main
 	protected function onWorkerToMain(event:Event):void {
-		trace("[Worker] " + debug_workerToMain.receive());
+		trace("[Main] " + debug_workerToMain.receive());
 	}
 }
 }

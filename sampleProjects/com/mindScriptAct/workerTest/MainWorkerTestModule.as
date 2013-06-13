@@ -1,7 +1,11 @@
 package com.mindScriptAct.workerTest {
 
-import com.mindScriptAct.workerTest.modules.ChildWorkerModule;
+import com.mindScriptAct.modules.childModule.ChildWorkerModule;
+import com.mindScriptAct.modules.childModule.data.ChildDataSwapTestVO;
+import com.mindScriptAct.modules.testModule.TestWorkerModule;
+import com.mindScriptAct.modules.testModule.data.TestDataSwapTestVO;
 
+import flash.net.registerClassAlias;
 import flash.utils.setTimeout;
 
 import org.mvcexpress.extensions.workers.modules.ModuleWorker;
@@ -15,16 +19,32 @@ public class MainWorkerTestModule extends ModuleWorker {
 
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
-		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:onInit();");
+		trace("[" + moduleName + "]" + "MainWorkerTestModule:onInit();"
+				+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+		registerClassAlias("com.mindScriptAct.modules.childModule.data.ChildDataSwapVO", ChildDataSwapTestVO);
+		registerClassAlias("com.mindScriptAct.modules.testModule.data.TestDataSwapVO", TestDataSwapTestVO);
+
+
+		startWorkerModule(ChildWorkerModule, WorkerIds.CHILD_WORKER_MODULE);
+
+		startWorkerModule(TestWorkerModule, WorkerIds.TEST2_WORKER_MODULE);
 
 		mediatorMap.mediateWith(this, MainWorkerTestModuleMediator);
 
-		setTimeout(startTest, 1000);
 
+		setTimeout(doStopTestModule, 16000+100);
+		setTimeout(doStartTestModule, 32000+100);
 	}
 
-	private function startTest():void {
-		startWorkerModule(ChildWorkerModule);
+
+
+	private function doStopTestModule():void {
+		stopWorkerModule(WorkerIds.TEST2_WORKER_MODULE);
+	}
+
+	private function doStartTestModule():void {
+		startWorkerModule(TestWorkerModule, WorkerIds.TEST2_WORKER_MODULE);
 	}
 
 
