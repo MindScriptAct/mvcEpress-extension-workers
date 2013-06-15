@@ -39,7 +39,9 @@ public class MessengerWorker extends Messenger {
 
 			use namespace pureLegsCore;
 
-			ModuleWorkerBase.demo_sendMessage(type, params);
+
+
+			ModuleWorkerBase.sendMessageToAll(type, params);
 
 		} else {
 			pendingTypes.push(type);

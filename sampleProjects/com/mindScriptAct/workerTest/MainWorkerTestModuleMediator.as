@@ -9,6 +9,7 @@ import com.mindScriptAct.workerTest.data.MainDataNestVO;
 import com.mindScriptAct.workerTest.data.MainDataSwapVO;
 import com.mindScriptAct.workerTest.data.MainDataVO;
 import com.mindScriptAct.workerTest.messages.Messages;
+import com.mindScriptAct.workerTest.model.TestBitProxy;
 
 import flash.text.TextField;
 import flash.utils.setTimeout;
@@ -28,7 +29,16 @@ public class MainWorkerTestModuleMediator extends Mediator {
 
 	private var debugTextField:TextField;
 
+	[Inject]
+	public var testBitProxy:TestBitProxy;
+
+
+
 	override public function onRegister():void {
+
+
+		testBitProxy.writeString("Some test data!!!");
+
 
 		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN, handleWorkerString);
 		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN_OBJECT, handleWorkerObject);

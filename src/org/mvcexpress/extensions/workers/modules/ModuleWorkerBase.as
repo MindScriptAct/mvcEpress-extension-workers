@@ -40,10 +40,11 @@ public class ModuleWorkerBase extends Sprite {
 	// channels for all remote workres to send data to them.
 	private static var $sendMessageChannels:Vector.<Object> = new <Object>[];
 
+	private static var $messageSendChannelsRegistry:Dictionary = new Dictionary();
+	private static var $messageChannelsWorkerNames:Vector.<String> = new <String>[];
+
 	// todo : check if needed.
-	private var receiveMessageChannels:Vector.<Object> = new <Object>[];
-	private var messageSendChannelsRegistry:Dictionary = new Dictionary();
-	private var messageChannelsWorkerNames:Vector.<String> = new <String>[];
+	private static var $receiveMessageChannels:Vector.<Object> = new <Object>[];
 
 	// store messageChannels so they don't get garbage collected while they are handled by remote worker.
 	private var tempChannelStorage:Vector.<Object> = new <Object>[];
@@ -157,9 +158,9 @@ public class ModuleWorkerBase extends Sprite {
 				// todo : get this naime better.
 				var workerModuleName:String = WorkerIds.MAIN_WORKER_TEST_MODULE;
 
-				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-				ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, true);
+				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, true);
+				ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, true);
 			}
 
 		}
@@ -197,9 +198,9 @@ public class ModuleWorkerBase extends Sprite {
 				var messengerWorker:MessengerWorker = ModuleManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker;
 				pendingWorkerMessengers[workerModuleName] = messengerWorker;
 
-				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-				ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, true);
+				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, true);
+				ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, true);
 
 
 				//
@@ -213,9 +214,9 @@ public class ModuleWorkerBase extends Sprite {
 		} else {
 //			throw  Error("TODO");
 
-			ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-			ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-			ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+			ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, true);
+			ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, true);
+			ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, true);
 
 			ModuleWorkerBase.canInitChildModule = true;
 			var childModule:ModuleWorker = new workerModuleClass();
@@ -237,15 +238,15 @@ public class ModuleWorkerBase extends Sprite {
 			if (worker) {
 
 				// remove channels from this module.
-				for (var i:int = 0; i < messageChannelsWorkerNames.length; i++) {
-					if (messageChannelsWorkerNames[i] == workerModuleName) {
+				for (var i:int = 0; i < $messageChannelsWorkerNames.length; i++) {
+					if ($messageChannelsWorkerNames[i] == workerModuleName) {
 						var thisToWorker:Object = $sendMessageChannels.splice(i, 1)[0];
 						thisToWorker.close();
-						var workerToThis:Object = receiveMessageChannels.splice(i, 1)[0];
+						var workerToThis:Object = $receiveMessageChannels.splice(i, 1)[0];
 						workerToThis.removeEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 						workerToThis.close();
 
-						messageChannelsWorkerNames.splice(i, 1);
+						$messageChannelsWorkerNames.splice(i, 1);
 						break;
 					}
 				}
@@ -297,7 +298,7 @@ public class ModuleWorkerBase extends Sprite {
 			var workerModuleName:String = worker.getSharedProperty(MODULE_NAME_KEY);
 			worker.setSharedProperty(MODULE_NAME_KEY, workerModuleName);
 			//
-			if (!messageSendChannelsRegistry[workerModuleName]) {
+			if (!$messageSendChannelsRegistry[workerModuleName]) {
 				var workerToRemote:Object = worker.createMessageChannel(remoteWorker);
 				var remoteToWorker:Object = remoteWorker.createMessageChannel(worker);
 
@@ -347,19 +348,19 @@ public class ModuleWorkerBase extends Sprite {
 
 					// init custom scoped messenger
 					(ModuleManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker).ready();
-					ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-					ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-					ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+					ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, true);
+					ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, true);
+					ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, true);
 					//
-					if (!messageSendChannelsRegistry[workerModuleName]) {
+					if (!$messageSendChannelsRegistry[workerModuleName]) {
 						var workerToThis:Object = thisWorker.getSharedProperty("workerToRemote_" + workerModuleName);
 						var thisToWorker:Object = thisWorker.getSharedProperty("remoteToWorker_" + workerModuleName);
 						//
-						messageSendChannelsRegistry[workerModuleName] = thisToWorker;
+						$messageSendChannelsRegistry[workerModuleName] = thisToWorker;
 
 						$sendMessageChannels.push(thisToWorker);
-						receiveMessageChannels.push(workerToThis);
-						messageChannelsWorkerNames.push(workerModuleName);
+						$receiveMessageChannels.push(workerToThis);
+						$messageChannelsWorkerNames.push(workerModuleName);
 
 						workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
@@ -388,8 +389,8 @@ public class ModuleWorkerBase extends Sprite {
 
 			var communicationType:Object = channel.receive();
 
-//			trace("--[" + debug_moduleName + "]" + "handleChannelMessage : ", communicationType
-//					+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			trace("--[" + debug_moduleName + "]" + "handleChannelMessage : ", communicationType
+					+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			if (communicationType == INIT_REMOTE_WORKER) {
 				// handle special communication for initialization of new worker.
@@ -405,11 +406,11 @@ public class ModuleWorkerBase extends Sprite {
 				var workerToThis:Object = thisWorker.getSharedProperty("thisToWorker_" + remoteModuleName);
 				var thisToWorker:Object = thisWorker.getSharedProperty("workerToThis_" + remoteModuleName);
 
-				messageSendChannelsRegistry[remoteModuleName] = thisToWorker;
+				$messageSendChannelsRegistry[remoteModuleName] = thisToWorker;
 
 				$sendMessageChannels.push(thisToWorker);
-				receiveMessageChannels.push(workerToThis);
-				messageChannelsWorkerNames.push(remoteModuleName);
+				$receiveMessageChannels.push(workerToThis);
+				$messageChannelsWorkerNames.push(remoteModuleName);
 
 				// send pending messages.
 				pendingWorkerMessengers[remoteModuleName].ready();
@@ -469,15 +470,15 @@ public class ModuleWorkerBase extends Sprite {
 
 
 	static pureLegsCore function startClassRegistration(classFullName:String):void {
-//		trace(" !! startClassRegistration", classFullName);
+		trace(" !! startClassRegistration", classFullName);
 		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
 			$sendMessageChannels[i].send(REGISTER_CLASS_ALIAS);
 			$sendMessageChannels[i].send(classFullName);
 		}
 	}
 
-	static pureLegsCore function demo_sendMessage(type:String, params:Object = null):void {
-//		trace(" !! demo_sendMessage", type, params);
+	static pureLegsCore function sendMessageToAll(type:String, params:Object = null):void {
+		trace(" !! sendMessageToAll", type, params);
 		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
 			var msgChannel:Object = $sendMessageChannels[i];
 //			trace("   " + msgChannel);
@@ -489,29 +490,35 @@ public class ModuleWorkerBase extends Sprite {
 		}
 	}
 
+	static pureLegsCore function sendMessageToWorker(workerName:String, type:String, params:Object = null):void {
+		trace(" !! sendMessageToWorker", workerName, type, params);
+		var msgChannel:Object = $messageSendChannelsRegistry[workerName];
+		if (msgChannel) {
+			msgChannel.send(SEND_WORKER_MESSAGE);
+			msgChannel.send(type);
+			if (params) {
+				msgChannel.send(params);
+			}
+		}
+	}
+
 
 	public function debug_CommunicationMain():void {
 		trace("MAIN TEST");
-
 		use namespace pureLegsCore;
-
-		demo_sendMessage("Main > worker...");
+		sendMessageToAll("Main > worker...");
 	}
 
 	public function debug_CommunicationWorker():void {
 		trace("WORKER TEST");
-
 		use namespace pureLegsCore;
-
-		demo_sendMessage("Worker > main...");
+		sendMessageToAll("Worker > main...");
 	}
 
 
 	private function demo_custom_scope():void {
 		var moduleBase:ModuleBase
-
 		use namespace pureLegsCore;
-
 		//ModuleManager.registerScope("", "_moduleName", true, true, true);
 		//moduleBase.registerScope()
 	}

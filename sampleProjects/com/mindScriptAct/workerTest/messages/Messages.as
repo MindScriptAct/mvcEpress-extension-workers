@@ -37,5 +37,8 @@ public class Messages {
 	public static const MAIN_TEST2_CALC:String = "MAIN_TEST2_CALC";
 	public static const CHILD_MAIN_CALC:String = "CHILD_MAIN_CALC";
 	public static const TEST2_MAIN_CALC:String = "TEST2_MAIN_CALC";
+
+
+	public static const TEST_DATA_CHANGE:String = "TEST_DATA_CHANGE";
 }
 }

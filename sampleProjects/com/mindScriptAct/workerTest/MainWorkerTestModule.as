@@ -4,6 +4,7 @@ import com.mindScriptAct.modules.childModule.ChildWorkerModule;
 import com.mindScriptAct.modules.childModule.data.ChildDataSwapTestVO;
 import com.mindScriptAct.modules.testModule.TestWorkerModule;
 import com.mindScriptAct.modules.testModule.data.TestDataSwapTestVO;
+import com.mindScriptAct.workerTest.model.TestBitProxy;
 
 import flash.net.registerClassAlias;
 import flash.utils.setTimeout;
@@ -26,17 +27,22 @@ public class MainWorkerTestModule extends ModuleWorker {
 		registerClassAlias("com.mindScriptAct.modules.testModule.data.TestDataSwapVO", TestDataSwapTestVO);
 
 
+
+
 		startWorkerModule(ChildWorkerModule, WorkerIds.CHILD_WORKER_MODULE);
 
 		startWorkerModule(TestWorkerModule, WorkerIds.TEST2_WORKER_MODULE);
 
+		var testBitProxy:TestBitProxy = new TestBitProxy()
+		proxyMap.map(testBitProxy);
+//		proxyMap.scopeMap(WorkerIds.CHILD_WORKER_MODULE, testBitProxy);
+
 		mediatorMap.mediateWith(this, MainWorkerTestModuleMediator);
 
 
-		setTimeout(doStopTestModule, 16000+100);
-		setTimeout(doStartTestModule, 32000+100);
+		setTimeout(doStopTestModule, 16000 + 100);
+		setTimeout(doStartTestModule, 32000 + 100);
 	}
-
 
 
 	private function doStopTestModule():void {
