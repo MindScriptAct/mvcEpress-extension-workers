@@ -39,9 +39,9 @@ public class MessengerWorker extends Messenger {
 
 			use namespace pureLegsCore;
 
+			var messageTypeSplite:Array = type.split("_^~_");
 
-
-			ModuleWorkerBase.sendMessageToAll(type, params);
+			ModuleWorkerBase.sendMessageToWorker(messageTypeSplite[0], messageTypeSplite[1], params);
 
 		} else {
 			pendingTypes.push(type);

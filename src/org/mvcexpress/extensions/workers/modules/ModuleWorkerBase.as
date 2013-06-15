@@ -246,6 +246,8 @@ public class ModuleWorkerBase extends Sprite {
 						workerToThis.removeEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 						workerToThis.close();
 
+						$messageSendChannelsRegistry
+
 						$messageChannelsWorkerNames.splice(i, 1);
 						break;
 					}
@@ -255,7 +257,8 @@ public class ModuleWorkerBase extends Sprite {
 
 				worker.terminate();
 
-				delete workerRegistry[workerModuleName]
+				delete workerRegistry[workerModuleName];
+				delete $messageSendChannelsRegistry[workerModuleName];
 			}
 		} else {
 			if (workerRegistry[workerModuleName]) {
@@ -434,8 +437,8 @@ public class ModuleWorkerBase extends Sprite {
 				var messageType:String = channel.receive(true) as String;
 				var params:Object = channel.receive(true);
 //				trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
-				var messageTypeSplite:Array = messageType.split("_^~_");
-				ModuleManager.sendScopeMessage(debug_moduleName, debug_moduleName, messageTypeSplite[1], params);
+
+				ModuleManager.sendScopeMessage(debug_moduleName, debug_moduleName, messageType, params);
 			} else {
 				throw Error("ModuleWorkerBase can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
 			}
@@ -477,18 +480,18 @@ public class ModuleWorkerBase extends Sprite {
 		}
 	}
 
-	static pureLegsCore function sendMessageToAll(type:String, params:Object = null):void {
-		trace(" !! sendMessageToAll", type, params);
-		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
-			var msgChannel:Object = $sendMessageChannels[i];
-//			trace("   " + msgChannel);
-			msgChannel.send(SEND_WORKER_MESSAGE);
-			msgChannel.send(type);
-			if (params) {
-				msgChannel.send(params);
-			}
-		}
-	}
+//	static pureLegsCore function sendMessageToAll(type:String, params:Object = null):void {
+//		trace(" !! sendMessageToAll", type, params);
+//		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
+//			var msgChannel:Object = $sendMessageChannels[i];
+////			trace("   " + msgChannel);
+//			msgChannel.send(SEND_WORKER_MESSAGE);
+//			msgChannel.send(type);
+//			if (params) {
+//				msgChannel.send(params);
+//			}
+//		}
+//	}
 
 	static pureLegsCore function sendMessageToWorker(workerName:String, type:String, params:Object = null):void {
 		trace(" !! sendMessageToWorker", workerName, type, params);
@@ -505,20 +508,26 @@ public class ModuleWorkerBase extends Sprite {
 
 	public function debug_CommunicationMain():void {
 		trace("MAIN TEST");
+
 		use namespace pureLegsCore;
-		sendMessageToAll("Main > worker...");
+
+//		sendMessageToAll("Main > worker...");
 	}
 
 	public function debug_CommunicationWorker():void {
 		trace("WORKER TEST");
+
 		use namespace pureLegsCore;
-		sendMessageToAll("Worker > main...");
+
+//		sendMessageToAll("Worker > main...");
 	}
 
 
 	private function demo_custom_scope():void {
 		var moduleBase:ModuleBase
+
 		use namespace pureLegsCore;
+
 		//ModuleManager.registerScope("", "_moduleName", true, true, true);
 		//moduleBase.registerScope()
 	}
