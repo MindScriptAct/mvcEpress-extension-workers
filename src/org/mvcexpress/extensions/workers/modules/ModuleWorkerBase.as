@@ -13,7 +13,6 @@ import flash.utils.setInterval;
 import flash.utils.setTimeout;
 
 import mvcexpress.core.namespace.pureLegsCore;
-
 import mvcexpress.extensions.scoped.core.ScopeManager;
 
 import org.mvcexpress.extensions.workers.core.messenger.MessengerWorker;
@@ -24,6 +23,7 @@ import org.mvcexpress.extensions.workers.data.ClassAliasRegistry;
 //import flash.system.WorkerDomain;
 public class ModuleWorkerBase extends Sprite {
 
+	static private var rootBytes:ByteArray;
 
 	private static const MODULE_NAME_KEY:String = "$_moduleName_$";
 	private static const MODULE_CLASS_NAME_KEY:String = "$_moduleClassName_$";
@@ -104,7 +104,7 @@ public class ModuleWorkerBase extends Sprite {
 					throw Error("Only first(main) ModuleWorker can be instantiated. Use createWorker(MyBackgroundWorkerModule) to create background workers. ");
 				} else {
 					// PRIMORDIAL, MAIN.
-					$primordialBytes = this.loaderInfo.bytes;
+					$primordialBytes = rootBytes;
 					CONFIG::debug {
 						if (!moduleName) {
 							throw Error("Worker must have not empty moduleName. (It is used for module to module communication.)");
@@ -515,6 +515,10 @@ public class ModuleWorkerBase extends Sprite {
 
 		//ScopeManager.registerScope("", "_moduleName", true, true, true);
 		//moduleBase.registerScope()
+	}
+
+	public static function setRootSwfBytes(rootSwfBytes:ByteArray):void {
+		rootBytes = rootSwfBytes;
 	}
 
 

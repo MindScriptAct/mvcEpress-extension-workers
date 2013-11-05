@@ -1,7 +1,5 @@
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 package org.mvcexpress.extensions.workers.modules {
-import flash.events.Event;
-
 import mvcexpress.core.CommandMap;
 import mvcexpress.core.MediatorMap;
 import mvcexpress.core.ProxyMap;
@@ -32,41 +30,25 @@ public class ModuleWorker extends ModuleWorkerBase {
 	 * @param    autoInit    if set to false framework is not initialized for this module. If you want to use framework features you will have to manually init() it first.
 	 * @param    initOnStage    defines if module should init only then it is added to stage or not. By default it will wait for Event.ADDED_TO_STAGE before calling onInit(). If autoInit is set to false, this parameters is ignored.
 	 */
-	public function ModuleWorker(moduleName:String, autoInit:Boolean = true, initOnStage:Boolean = true) {
+	public function ModuleWorker(moduleName:String) {
 		trace("-----[" + moduleName + "]" + "ModuleWorker: try to create module." + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		use namespace pureLegsCore;
 
 		if (super.handleWorker(moduleName)) {
-			if (ModuleWorkerBase.canInitChildModule) {
-				initOnStage = false;
-			}
 
 			trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!" + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 			moduleBase = new ModuleScoped(moduleName);
 			//
-			if (autoInit) {
-				proxyMap = moduleBase.proxyMap;
-				mediatorMap = moduleBase.mediatorMap;
-				commandMap = moduleBase.commandMap;
-				//
-				if (initOnStage) {
-					if (stage) {
-						onInit();
-					} else {
-						addEventListener(Event.ADDED_TO_STAGE, handleModuleAddedToStage, false, 0, true);
-					}
-				} else {
-					onInit();
-				}
-			}
-		}
-	}
 
-	// inits module after it is added to stage.
-	private function handleModuleAddedToStage(event:Event):void {
-		removeEventListener(Event.ADDED_TO_STAGE, handleModuleAddedToStage);
-		onInit();
+			proxyMap = moduleBase.proxyMap;
+			mediatorMap = moduleBase.mediatorMap;
+			commandMap = moduleBase.commandMap;
+			//
+
+			onInit();
+
+		}
 	}
 
 	/**
@@ -159,9 +141,9 @@ public class ModuleWorker extends ModuleWorkerBase {
 		moduleBase.unregisterScope(scopeName);
 	}
 
-	//----------------------------------
-	//     Debug
-	//----------------------------------
+//----------------------------------
+//     Debug
+//----------------------------------
 
 	/**
 	 * List all message mappings.
