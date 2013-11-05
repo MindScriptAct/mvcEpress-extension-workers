@@ -19,7 +19,7 @@ public class MainWorkerTestModule extends ModuleWorker {
 
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
-		trace("[" + moduleName + "]" + "MainWorkerTestModule:onInit();"
+		trace("---[" + moduleName + "]" + "MainWorkerTestModule:onInit();"
 				+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		registerClassAlias("com.mindScriptAct.modules.childModule.data.ChildDataSwapVO", ChildDataSwapTestVO);

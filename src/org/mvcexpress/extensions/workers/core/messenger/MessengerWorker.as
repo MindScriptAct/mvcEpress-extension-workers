@@ -4,8 +4,9 @@ import flash.utils.describeType;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 
-import org.mvcexpress.core.messenger.Messenger;
-import org.mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.core.messenger.Messenger;
+import mvcexpress.core.namespace.pureLegsCore;
+
 import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 
@@ -63,7 +64,7 @@ public class MessengerWorker extends Messenger {
 
 		qualifiedName = getQualifiedClassName(paramClass).replace("::", ".");
 
-		trace("start registration ... ", qualifiedName);
+		//trace("start registration ... ", qualifiedName);
 		registerClassAlias(qualifiedName, paramClass);
 
 		ModuleWorkerBase.$classAliasRegistry.classes[paramClass] = qualifiedName;

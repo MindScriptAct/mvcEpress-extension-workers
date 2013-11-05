@@ -12,9 +12,10 @@ import flash.utils.getQualifiedClassName;
 import flash.utils.setInterval;
 import flash.utils.setTimeout;
 
-import org.mvcexpress.core.ModuleBase;
-import org.mvcexpress.core.ModuleManager;
-import org.mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.core.namespace.pureLegsCore;
+
+import mvcexpress.extensions.scoped.core.ScopeManager;
+
 import org.mvcexpress.extensions.workers.core.messenger.MessengerWorker;
 import org.mvcexpress.extensions.workers.data.ClassAliasRegistry;
 
@@ -94,7 +95,7 @@ public class ModuleWorkerBase extends Sprite {
 
 		if (_isWorkersSupported) {
 
-			trace("[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
+			trace("------[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
 					+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			//
@@ -112,13 +113,13 @@ public class ModuleWorkerBase extends Sprite {
 					WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
 				}
 			} else {
-				trace("[" + moduleName + "]" + "ModuleWorkerBase: can init child module?:", ModuleWorkerBase.canInitChildModule
+				trace("------[" + moduleName + "]" + "ModuleWorkerBase: can init child module?:", ModuleWorkerBase.canInitChildModule
 						+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 				// check if this is temp copy of the main swf
 				if (!ModuleWorkerBase.canInitChildModule) {
 					// NOT PRIMORDIAL, COPY OF THE MAIN.
 					var childModuleClassDefinition:String = WorkerClass.current.getSharedProperty(MODULE_CLASS_NAME_KEY);
-					trace("[" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
+					trace("------[" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
 							+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 					if (childModuleClassDefinition) {
 						WorkerClass.current.setSharedProperty(MODULE_CLASS_NAME_KEY, null);
@@ -157,9 +158,9 @@ public class ModuleWorkerBase extends Sprite {
 				// todo : get this naime better.
 				var workerModuleName:String = WorkerIds.MAIN_WORKER_TEST_MODULE;
 
-				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-				ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 			}
 
 		}
@@ -173,10 +174,10 @@ public class ModuleWorkerBase extends Sprite {
 
 		if (_isWorkersSupported) {
 			//
-			trace("[" + debug_moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
+			trace("------[" + debug_moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
 					+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
-			trace("WorkerClass.isSupported:", WorkerClass.isSupported);
+			//trace("WorkerClass.isSupported:", WorkerClass.isSupported);
 
 			if (WorkerClass.current.isPrimordial) {
 				var remoteWorker:Object = WorkerDomainClass.current.createWorker($primordialBytes);
@@ -194,12 +195,12 @@ public class ModuleWorkerBase extends Sprite {
 				use namespace pureLegsCore;
 
 				// init custom scoped messenger
-				var messengerWorker:MessengerWorker = ModuleManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker;
+				var messengerWorker:MessengerWorker = ScopeManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker;
 				pendingWorkerMessengers[workerModuleName] = messengerWorker;
 
-				ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-				ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-				ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 
 
 				//
@@ -213,9 +214,9 @@ public class ModuleWorkerBase extends Sprite {
 		} else {
 //			throw  Error("TODO");
 
-			ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-			ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-			ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+			ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+			ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+			ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 
 			ModuleWorkerBase.canInitChildModule = true;
 			var childModule:ModuleWorker = new workerModuleClass();
@@ -225,7 +226,7 @@ public class ModuleWorkerBase extends Sprite {
 	}
 
 	public function stopWorkerModule(workerModuleName:String):void {
-		trace("STOP workerModuleName...");
+		trace("STOP worker :", workerModuleName);
 
 		// todo : decide what to do, if current module name is sent.
 		// todo : decide what to do if current worker is not primordial.
@@ -268,7 +269,7 @@ public class ModuleWorkerBase extends Sprite {
 
 	private function debug_workerStateHandler(event:Event):void {
 		var childWorker:Object = event.target;
-		trace("[" + debug_moduleName + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
+		trace("------[" + debug_moduleName + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
 				+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 	}
 
@@ -287,7 +288,7 @@ public class ModuleWorkerBase extends Sprite {
 	private function connectRemoteWorker(remoteWorker:Object):void {
 		// get all running workers
 		var workers:* = WorkerDomainClass.current.listWorkers();
-		trace("[" + debug_moduleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
+		trace("------[" + debug_moduleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
 				+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
 		for (var i:int = 0; i < workers.length; i++) {
@@ -328,7 +329,7 @@ public class ModuleWorkerBase extends Sprite {
 	private function setUpRemoteWorkerCommunication():void {
 		// get all workers
 		var workers:* = WorkerDomainClass.current.listWorkers();
-		trace("[" + debug_moduleName + "]" + "setUpWorkerCommunication " + workers
+		trace("------[" + debug_moduleName + "]" + "setUpWorkerCommunication " + workers
 				+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
 		var thisWorker:Object = WorkerClass.current;
@@ -346,10 +347,10 @@ public class ModuleWorkerBase extends Sprite {
 					use namespace pureLegsCore;
 
 					// init custom scoped messenger
-					(ModuleManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker).ready();
-					ModuleManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-					ModuleManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-					ModuleManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+					(ScopeManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker).ready();
+					ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+					ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+					ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 					//
 					if (!messageSendChannelsRegistry[workerModuleName]) {
 						var workerToThis:Object = thisWorker.getSharedProperty("workerToRemote_" + workerModuleName);
@@ -395,9 +396,9 @@ public class ModuleWorkerBase extends Sprite {
 				// handle special communication for initialization of new worker.
 				var remoteModuleName:String = channel.receive(true);
 
-				trace("Init new remote module : ", remoteModuleName);
+				//trace("Init new remote module : ", remoteModuleName);
 
-				trace("[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName
+				trace("------[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName
 						+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 				var thisWorker:Object = WorkerClass.current;
@@ -434,7 +435,7 @@ public class ModuleWorkerBase extends Sprite {
 				var params:Object = channel.receive(true);
 //				trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
 				var messageTypeSplite:Array = messageType.split("_^~_");
-				ModuleManager.sendScopeMessage(debug_moduleName, debug_moduleName, messageTypeSplite[1], params);
+				ScopeManager.sendScopeMessage(debug_moduleName, debug_moduleName, messageTypeSplite[1], params);
 			} else {
 				throw Error("ModuleWorkerBase can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
 			}
@@ -442,7 +443,7 @@ public class ModuleWorkerBase extends Sprite {
 	}
 
 	private function registerClassNameAlias(classQualifiedName:String):void {
-		trace("Registering new class...", classQualifiedName);
+		//trace("Registering new class...", classQualifiedName);
 
 		use namespace pureLegsCore;
 
@@ -452,7 +453,7 @@ public class ModuleWorkerBase extends Sprite {
 		} catch (error:Error) {
 			// do noting
 		}
-		trace("Alias clas exists?", mapClass)
+		//trace("Alias clas exists?", mapClass)
 		if (!mapClass) {
 			// try to get it by definition...
 			mapClass = getDefinitionByName(classQualifiedName) as Class;
@@ -462,7 +463,7 @@ public class ModuleWorkerBase extends Sprite {
 				throw Error("Failed to find class with definition:" + classQualifiedName + " in " + debug_moduleName + " add this class to project or use registerClassAlias(" + classQualifiedName + ", YourClass); to register alternative class. ");
 			}
 		}
-		trace("Class got by definition?", mapClass)
+		//trace("Class got by definition?", mapClass)
 		//
 		$classAliasRegistry.classes[mapClass] = classQualifiedName;
 	}
@@ -491,7 +492,7 @@ public class ModuleWorkerBase extends Sprite {
 
 
 	public function debug_CommunicationMain():void {
-		trace("MAIN TEST");
+		//trace("MAIN TEST");
 
 		use namespace pureLegsCore;
 
@@ -499,7 +500,7 @@ public class ModuleWorkerBase extends Sprite {
 	}
 
 	public function debug_CommunicationWorker():void {
-		trace("WORKER TEST");
+		//trace("WORKER TEST");
 
 		use namespace pureLegsCore;
 
@@ -508,11 +509,11 @@ public class ModuleWorkerBase extends Sprite {
 
 
 	private function demo_custom_scope():void {
-		var moduleBase:ModuleBase
+		//var moduleBase:ModuleBase
 
-		use namespace pureLegsCore;
+		//use namespace pureLegsCore;
 
-		//ModuleManager.registerScope("", "_moduleName", true, true, true);
+		//ScopeManager.registerScope("", "_moduleName", true, true, true);
 		//moduleBase.registerScope()
 	}
 

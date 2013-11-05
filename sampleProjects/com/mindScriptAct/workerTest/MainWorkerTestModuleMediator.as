@@ -13,22 +13,23 @@ import com.mindScriptAct.workerTest.messages.Messages;
 import flash.text.TextField;
 import flash.utils.setTimeout;
 
+import mvcexpress.extensions.scoped.mvc.MediatorScoped;
+
 import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
-import org.mvcexpress.mvc.Mediator;
 
 /**
  * TODO:CLASS COMMENT
  * @author Deril
  */
-public class MainWorkerTestModuleMediator extends Mediator {
+public class MainWorkerTestModuleMediator extends MediatorScoped {
 
 	[Inject]
 	public var view:MainWorkerTestModule;
 
 	private var debugTextField:TextField;
 
-	override public function onRegister():void {
+	override protected function onRegister():void {
 
 		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN, handleWorkerString);
 		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN_OBJECT, handleWorkerObject);
@@ -225,7 +226,7 @@ public class MainWorkerTestModuleMediator extends Mediator {
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	override public function onRemove():void {
+	override protected function onRemove():void {
 		trace("TODO - implement MainWorkerTestModuleMediator function: onRemove().");
 	}
 }

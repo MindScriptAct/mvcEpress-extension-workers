@@ -10,20 +10,21 @@ import com.mindScriptAct.workerTest.messages.Messages;
 
 import flash.utils.setTimeout;
 
+import mvcexpress.extensions.scoped.mvc.MediatorScoped;
+
 import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
-import org.mvcexpress.mvc.Mediator;
 
 /**
  * TODO:CLASS COMMENT
  * @author Deril
  */
-public class ChildWorkerModuleMediator extends Mediator {
+public class ChildWorkerModuleMediator extends MediatorScoped {
 
 	[Inject]
 	public var view:ChildWorkerModule;
 
-	override public function onRegister():void {
+	override protected function onRegister():void {
 
 		addScopeHandler(WorkerIds.CHILD_WORKER_MODULE, Messages.MAIN_CHILD, handleWorkerString);
 		addScopeHandler(WorkerIds.CHILD_WORKER_MODULE, Messages.MAIN_CHILD_OBJECT, handleWorkerObject);
@@ -112,7 +113,7 @@ public class ChildWorkerModuleMediator extends Mediator {
 		trace("7: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received nested object:", "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
-	override public function onRemove():void {
+	override protected function onRemove():void {
 		trace("TODO - implement ChildWorkerModuleMediator function: onRemove().");
 	}
 }

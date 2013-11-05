@@ -1,7 +1,7 @@
 package org.mvcexpress.extensions.workers.data {
 import flash.utils.Dictionary;
 
-import org.mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.core.namespace.pureLegsCore;
 
 public class ClassAliasRegistry {
 

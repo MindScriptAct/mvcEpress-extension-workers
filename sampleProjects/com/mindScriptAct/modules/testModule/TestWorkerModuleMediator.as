@@ -11,15 +11,16 @@ import com.mindScriptAct.workerTest.messages.Messages;
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
+import mvcexpress.extensions.scoped.mvc.MediatorScoped;
+
 import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
-import org.mvcexpress.mvc.Mediator;
 
 /**
  * TODO:CLASS COMMENT
  * @author Deril
  */
-public class TestWorkerModuleMediator extends Mediator {
+public class TestWorkerModuleMediator extends MediatorScoped {
 
 	[Inject]
 	public var view:TestWorkerModule;
@@ -29,7 +30,7 @@ public class TestWorkerModuleMediator extends Mediator {
 	private var to3:int;
 	private var to4:int;
 
-	override public function onRegister():void {
+	override protected function onRegister():void {
 
 		addScopeHandler(WorkerIds.TEST2_WORKER_MODULE, Messages.MAIN_TEST2, handleWorkerString);
 		addScopeHandler(WorkerIds.TEST2_WORKER_MODULE, Messages.MAIN_TEST2_OBJECT, handleWorkerObject);
@@ -123,7 +124,7 @@ public class TestWorkerModuleMediator extends Mediator {
 		trace("15: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received nested object:", "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
-	override public function onRemove():void {
+	override protected function onRemove():void {
 //		trace("TODO - implement TestWorkerModuleMediator function: onRemove().");
 
 		clearTimeout(to1);

@@ -2,12 +2,11 @@
 package org.mvcexpress.extensions.workers.modules {
 import flash.events.Event;
 
-import org.mvcexpress.core.CommandMap;
-import org.mvcexpress.core.MediatorMap;
-import org.mvcexpress.core.ModuleBase;
-import org.mvcexpress.core.ModuleManager;
-import org.mvcexpress.core.ProxyMap;
-import org.mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.core.CommandMap;
+import mvcexpress.core.MediatorMap;
+import mvcexpress.core.ProxyMap;
+import mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.extensions.scoped.modules.ModuleScoped;
 
 /**
  * Core Module class based on Sprite.
@@ -19,7 +18,7 @@ import org.mvcexpress.core.namespace.pureLegsCore;
  */
 public class ModuleWorker extends ModuleWorkerBase {
 
-	private var moduleBase:ModuleBase;
+	private var moduleBase:ModuleScoped;
 
 	protected var proxyMap:ProxyMap;
 	protected var mediatorMap:MediatorMap;
@@ -34,7 +33,7 @@ public class ModuleWorker extends ModuleWorkerBase {
 	 * @param    initOnStage    defines if module should init only then it is added to stage or not. By default it will wait for Event.ADDED_TO_STAGE before calling onInit(). If autoInit is set to false, this parameters is ignored.
 	 */
 	public function ModuleWorker(moduleName:String, autoInit:Boolean = true, initOnStage:Boolean = true) {
-		trace("[" + moduleName + "]" + "ModuleWorker: try to create module." + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		trace("-----[" + moduleName + "]" + "ModuleWorker: try to create module." + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		use namespace pureLegsCore;
 
@@ -43,8 +42,8 @@ public class ModuleWorker extends ModuleWorkerBase {
 				initOnStage = false;
 			}
 
-			trace("[" + moduleName + "]" + "ModuleWorker: Create module!" + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
-			moduleBase = ModuleManager.createModule(moduleName, autoInit);
+			trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!" + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			moduleBase = new ModuleScoped(moduleName);
 			//
 			if (autoInit) {
 				proxyMap = moduleBase.proxyMap;
@@ -82,7 +81,7 @@ public class ModuleWorker extends ModuleWorkerBase {
 	 * By default it is called in constructor, but you can do it manually if you set constructor parameter 'autoInit' to false.
 	 */
 	protected function initModule():void {
-		moduleBase.initModule();
+		//moduleBase.initModule();
 
 		proxyMap = moduleBase.proxyMap;
 		mediatorMap = moduleBase.mediatorMap;
