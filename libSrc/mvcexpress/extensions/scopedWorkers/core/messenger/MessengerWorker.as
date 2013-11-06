@@ -27,7 +27,7 @@ public class MessengerWorker extends Messenger {
 		if (isReady) {
 
 			if (params) {
-				if (ModuleScopedWorker.$autoRegisterClasses) {
+				if (ModuleScopedWorker.doAutoRegisterClasses) {
 					var paramClass:Class = params.constructor;
 					var qualifiedName:String = ModuleScopedWorker.$classAliasRegistry.classes[paramClass];
 					if (!qualifiedName) {
@@ -38,7 +38,7 @@ public class MessengerWorker extends Messenger {
 
 			use namespace pureLegsCore;
 
-			ModuleScopedWorker.demo_sendMessage(type, params);
+			ModuleScopedWorker.debug_sendMessage(type, params);
 
 		} else {
 			pendingTypes.push(type);

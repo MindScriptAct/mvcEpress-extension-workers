@@ -6,8 +6,6 @@ import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
-import flash.utils.setInterval;
-import flash.utils.setTimeout;
 
 import mvcexpress.core.ExtensionManager;
 import mvcexpress.core.namespace.pureLegsCore;
@@ -16,33 +14,51 @@ import mvcexpress.extensions.scoped.modules.ModuleScoped;
 import mvcexpress.extensions.scopedWorkers.core.messenger.MessengerWorker;
 import mvcexpress.extensions.scopedWorkers.data.ClassAliasRegistry;
 
-import workerTest.constants.WorkerIds;
-
 //import flash.system.MessageChannel;
 //import flash.system.Worker;
 //import flash.system.WorkerDomain;
 public class ModuleScopedWorker extends ModuleScoped {
 
-
-	public static var $autoRegisterClasses:Boolean = true;
-
-	static private var rootBytes:ByteArray;
-
-	private static const MODULE_NAME_KEY:String = "$_moduleName_$";
-	private static const MODULE_CLASS_NAME_KEY:String = "$_moduleClassName_$";
-	private static const INIT_REMOTE_WORKER:String = "$_init_remote_worker_$";
-	private static const SEND_WORKER_MESSAGE:String = "$_send_worker_message_$";
-	private static const REGISTER_CLASS_ALIAS:String = "$_register_class_alias_$";
-	pureLegsCore static const CLASS_ALIAS_NAMES_KEY:String = "$_class_alias_names_key_$";
+	/**
+	 * If set to true, class aliases will be registered before sending between modules. (untyped objects will be sent otherwise)
+	 */
+	static public var doAutoRegisterClasses:Boolean = true;
 
 
-	// bytes of main swf file. Used for creating workers.
-	private static var $primordialBytes:ByteArray;
+	//---------------------
+	// internal properties
+	//---------------------
 
-	pureLegsCore static var canInitChildModule:Boolean = false;
+	// keys for worker shared data.
+	private static const WORKER_MODULE_NAME_KEY:String = "$_wmn_$";
+	private static const MODULE_NAME_KEY:String = "$_mn_$";
+	private static const CHILD_MODULE_CLASS_NAME_KEY:String = "$_cmcn_$";
+	private static const INIT_REMOTE_WORKER:String = "$_irw_$";
+	private static const SEND_WORKER_MESSAGE:String = "$_sm_$";
+	private static const REGISTER_CLASS_ALIAS:String = "$_rca_$";
+	pureLegsCore static const CLASS_ALIAS_NAMES_KEY:String = "$_can_$";
 
-	// channels for all remote workres to send data to them.
+	// worker support
+	private static var needWorkerSupportCheck:Boolean = true;
+	private static var _isWorkersSupported:Boolean = false;
+
+	public static var WorkerClass:Class;
+	public static var WorkerDomainClass:Class;
+
+	// root class bytes.
+	static private var $primordialBytes:ByteArray;
+
+	// channels for all remote workers.
 	private static var $sendMessageChannels:Vector.<Object> = new <Object>[];
+
+	// registry of all workers.
+	private var workerRegistry:Dictionary = new Dictionary()
+
+	//  messenger  waiting for remote worker to be initialized. (All messages send while waiting will be stacked, and send then remote module is ready.)
+	private var pendingWorkerMessengers:Dictionary = new Dictionary();
+
+	// collection of registered class aliases.
+	pureLegsCore static const $classAliasRegistry:ClassAliasRegistry = new ClassAliasRegistry();
 
 	// todo : check if needed.
 	private var receiveMessageChannels:Vector.<Object> = new <Object>[];
@@ -52,29 +68,15 @@ public class ModuleScopedWorker extends ModuleScoped {
 	// store messageChannels so they don't get garbage collected while they are handled by remote worker.
 	private var tempChannelStorage:Vector.<Object> = new <Object>[];
 
-
-	private var debug_moduleName:String;
+	// debug ids, for tracing.
 	public static const debug_coreId:int = Math.random() * 100000000;
 	public var debug_objectID:int = Math.random() * 100000000;
-	private var debug_doDebugging:Boolean = false;
-
-	pureLegsCore static const $classAliasRegistry:ClassAliasRegistry = new ClassAliasRegistry();
-	private var pendingWorkerMessengers:Dictionary = new Dictionary();
-	private var workerRegistry:Dictionary = new Dictionary();
-
-	//
-
-	private static var isWorkersDefined:Boolean = false;
-	private static var _isWorkersSupported:Boolean = false;
-
-//	public static var MessageChannelClass:Class;
-	public static var WorkerClass:Class;
-	public static var WorkerDomainClass:Class;
 
 
 	public function ModuleScopedWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
 
-		trace("-----[" + moduleName + "]" + "ModuleWorker: try to create module." + "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		trace("-----[" + moduleName + "]" + "ModuleWorker: try to create module."
+				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		use namespace pureLegsCore;
 
@@ -82,118 +84,44 @@ public class ModuleScopedWorker extends ModuleScoped {
 			enableExtension(EXTENSION_WORKER_ID);
 		}
 
-		if (handleWorker(moduleName)) {
-			trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!" + "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		if (initWorker(moduleName)) {
+			trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!"
+					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 			super(moduleName, mediatorMapClass, proxyMapClass, commandMapClass, messengerClass);
 		}
 
 	}
 
-	//
+	/**
+	 * Set root swf file Bytes. (used toe create workers from self, as alternative to leading it.)
+	 * @param rootSwfBytes
+	 */
+	public static function setRootSwfBytes(rootSwfBytes:ByteArray):void {
+		$primordialBytes = rootSwfBytes;
+	}
 
-	pureLegsCore function handleWorker(moduleName:String):Boolean {
-
-		if (!isWorkersDefined) {
-			isWorkersDefined = true;
-
-			try {
-//				MessageChannelClass = getDefinitionByName("flash.system.MessageChannel") as Class;
-				WorkerClass = getDefinitionByName("flash.system.Worker") as Class;
-				WorkerDomainClass = getDefinitionByName("flash.system.WorkerDomain") as Class;
-			} catch (error:Error) {
-				// do nothing.
-			}
-
-			if (WorkerClass) {
-				_isWorkersSupported = true;
-			}
-		}
-
-		use namespace pureLegsCore;
-
-		this.debug_moduleName = moduleName;
-
-		if (_isWorkersSupported) {
-
-			trace("------[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
-					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
-
-			//
-			if (WorkerClass.current.isPrimordial) { // check if primordial.
-				if ($primordialBytes) { // check if primordial bytes are already stored.
-					throw Error("Only first(main) ModuleWorker can be instantiated. Use createWorker(MyBackgroundWorkerModule) to create background workers. ");
-				} else {
-					// PRIMORDIAL, MAIN.
-					$primordialBytes = rootBytes;
-					CONFIG::debug {
-						if (!moduleName) {
-							throw Error("Worker must have not empty moduleName. (It is used for module to module communication.)");
-						}
-					}
-					WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
-				}
-			} else {
-				trace("------[" + moduleName + "]" + "ModuleWorkerBase: can init child module?:", ModuleScopedWorker.canInitChildModule
-						+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
-				// check if this is temp copy of the main swf
-				if (!ModuleScopedWorker.canInitChildModule) {
-					// NOT PRIMORDIAL, COPY OF THE MAIN.
-					var childModuleClassDefinition:String = WorkerClass.current.getSharedProperty(MODULE_CLASS_NAME_KEY);
-					trace("------[" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
-							+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
-					if (childModuleClassDefinition) {
-						WorkerClass.current.setSharedProperty(MODULE_CLASS_NAME_KEY, null);
-
-						var childModuleClass:Class = getDefinitionByName(childModuleClassDefinition) as Class;
-
-						ModuleScopedWorker.canInitChildModule = true;
-						var childModule:Object = new childModuleClass();
-						ModuleScopedWorker.canInitChildModule = true;
-					}
-					return false;
-				} else {
-					// NOT PRIMORDIAL, CHILD MODULE.
-					WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
-
-					// register all already used class aliases.
-					var classAliasNames:String = WorkerClass.current.getSharedProperty(CLASS_ALIAS_NAMES_KEY);
-					if (classAliasNames != "") {
-						var classAliasSplit:Array = classAliasNames.split(",");
-						for (var i:int = 0; i < classAliasSplit.length; i++) {
-							registerClassNameAlias(classAliasSplit[i])
-						}
-					}
-
-					setUpRemoteWorkerCommunication();
-
-					// todo: debug
-					if (debug_doDebugging) {
-						setInterval(debug_CommunicationWorker, 1000);
-					}
-				}
-			}
-		} else {
-			if (ModuleScopedWorker.canInitChildModule) {
-
-				// todo : get this naime better.
-				var workerModuleName:String = WorkerIds.MAIN_WORKER;
-
-				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
-			}
-		}
-		return true;
+	/**
+	 * True if workers are supported.
+	 */
+	public static function get isWorkersSupported():Boolean {
+		return _isWorkersSupported;
 	}
 
 
-	// TODO : consider creating it as static public funcion.
-	protected function startWorkerModule(workerModuleClass:Class, workerModuleName:String):void {
+	/**
+	 * Starts background worker.
+	 *        If workerSwfBytes property is not provided - rootSwfBytes will be used.
+	 * @param workerModuleClass
+	 * @param workerModuleName
+	 * @param workerSwfBytes
+	 */
+	public function createBackgroundWorker(workerModuleClass:Class, workerModuleName:String, workerSwfBytes:ByteArray = null):void {
+
 		// TODO : check extended form workerModule class.
 
 		if (_isWorkersSupported) {
 			//
-			trace("------[" + debug_moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
+			trace("------[" + moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
 					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			//trace("WorkerClass.isSupported:", WorkerClass.isSupported);
@@ -204,7 +132,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 				// todo : debug
 				remoteWorker.addEventListener(Event.WORKER_STATE, debug_workerStateHandler);
-				remoteWorker.setSharedProperty(MODULE_CLASS_NAME_KEY, getQualifiedClassName(workerModuleClass));
+				remoteWorker.setSharedProperty(CHILD_MODULE_CLASS_NAME_KEY, getQualifiedClassName(workerModuleClass));
 
 				var classAlianNames:String = $classAliasRegistry.getCustomClasses();
 
@@ -217,8 +145,8 @@ public class ModuleScopedWorker extends ModuleScoped {
 				var messengerWorker:MessengerWorker = ScopeManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker;
 				pendingWorkerMessengers[workerModuleName] = messengerWorker;
 
-				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+				ScopeManager.registerScope(moduleName, workerModuleName, true, true, false);
+				ScopeManager.registerScope(moduleName, moduleName, true, true, false);
 				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 
 				//
@@ -230,31 +158,32 @@ public class ModuleScopedWorker extends ModuleScoped {
 				throw Error("Starting other workers only possible from main(primordial) worker.)");
 			}
 		} else {
-//			throw  Error("TODO");
+			throw  Error("TODO");
 
-			ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-			ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-			ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
-
-			ModuleScopedWorker.canInitChildModule = true;
-			var childModule:Object = new workerModuleClass();
-			workerRegistry[workerModuleName] = childModule;
-			ModuleScopedWorker.canInitChildModule = true;
+//			ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+//			ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+//			ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+//
+//			ModuleScopedWorker.canInitChildModule = true;
+//			var childModule:Object = new workerModuleClass();
+//			workerRegistry[workerModuleName] = childModule;
+//			ModuleScopedWorker.canInitChildModule = true;
 		}
 	}
 
-	public function stopWorkerModule(workerModuleName:String):void {
+	/**
+	 * Stops background worker.s
+	 * @param workerModuleName
+	 */
+	public function terminateBackgroundWorker(workerModuleName:String):void {
 		trace("STOP worker :", workerModuleName);
 
 		// todo : decide what to do, if current module name is sent.
 		// todo : decide what to do if current worker is not primordial.
 
 		if (_isWorkersSupported) {
-
 			var worker:Object = workerRegistry[workerModuleName];
-
 			if (worker) {
-
 				// remove channels from this module.
 				for (var i:int = 0; i < messageChannelsWorkerNames.length; i++) {
 					if (messageChannelsWorkerNames[i] == workerModuleName) {
@@ -268,11 +197,8 @@ public class ModuleScopedWorker extends ModuleScoped {
 						break;
 					}
 				}
-
 				// todo : send message to other modules to remove channels with
-
 				worker.terminate();
-
 				delete workerRegistry[workerModuleName]
 			}
 		} else {
@@ -285,27 +211,123 @@ public class ModuleScopedWorker extends ModuleScoped {
 	}
 
 
-	private function debug_workerStateHandler(event:Event):void {
-		var childWorker:Object = event.target;
-		trace("------[" + debug_moduleName + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
-				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+	//////////////////////////////
+	//	INTERNALS
+	//////////////////////////////
+
+	// inits main worker
+	pureLegsCore function initWorker(moduleName:String):Boolean {
+
+		// dynamically get worker classes.
+		if (needWorkerSupportCheck) {
+			needWorkerSupportCheck = false;
+
+			try {
+				WorkerClass = getDefinitionByName("flash.system.Worker") as Class;
+				WorkerDomainClass = getDefinitionByName("flash.system.WorkerDomain") as Class;
+			} catch (error:Error) {
+				// do nothing.
+			}
+
+			if (WorkerClass && WorkerDomainClass && WorkerClass.isSupported) {
+				_isWorkersSupported = true;
+			}
+		}
+
+		use namespace pureLegsCore;
+
+		if (_isWorkersSupported) {
+
+			trace("------[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
+					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+			if (WorkerClass.current.isPrimordial) { // check if primordial.
+				var rootModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+				if (rootModuleName != null) { // check if root module is already created.
+					throw Error("Only first(main) ModuleScopedWorker can be instantiated. Use createBackgroundWorker(MyBackgroundWorkerModule) to create background workers. ");
+				} else { // PRIMORDIAL, MAIN.
+
+					CONFIG::debug {
+						if (!moduleName) {
+							throw Error("Worker must have not empty moduleName. (It is used for module to module communication.)");
+						}
+					}
+					WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+					WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
+				}
+			} else {
+				// not primordial workers.
+
+				// check if child must be created.
+				var childModuleClassDefinition:String = WorkerClass.current.getSharedProperty(CHILD_MODULE_CLASS_NAME_KEY);
+
+				trace("------[" + moduleName + "]" + "ModuleWorkerBase: should init child module?:", childModuleClassDefinition
+						+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+				if (childModuleClassDefinition) {
+					// NOT PRIMORDIAL, COPY OF THE MAIN.
+
+					trace("------[" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
+							+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+					WorkerClass.current.setSharedProperty(CHILD_MODULE_CLASS_NAME_KEY, null);
+
+
+					try {
+						var childModuleClass:Class = getDefinitionByName(childModuleClassDefinition) as Class;
+					} catch (error:Error) {
+						throw Error("Failed to get a class from class definition: " + childModuleClassDefinition + " - " + error)
+					}
+
+					try {
+						var childModule:Object = new childModuleClass();
+					} catch (error:Error) {
+						throw Error("Failed to construct class for: " + childModuleClass + " - " + error)
+					}
+
+					// end this module.
+					return false;
+				} else {
+					// NOT PRIMORDIAL, CHILD MODULE.
+
+					var workerModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+
+					WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+
+					// register all already used class aliases.
+					var classAliasNames:String = WorkerClass.current.getSharedProperty(CLASS_ALIAS_NAMES_KEY);
+					if (classAliasNames != "") {
+						var classAliasSplit:Array = classAliasNames.split(",");
+						for (var i:int = 0; i < classAliasSplit.length; i++) {
+							registerClassNameAlias(classAliasSplit[i])
+						}
+					}
+
+					setUpRemoteWorkerCommunication(moduleName);
+				}
+
+
+			}
+		} else {
+			throw Error("TODO");
+//			if (ModuleScopedWorker.canInitChildModule) {
+//
+//				// todo : get this naime better.
+//				var workerModuleName:String = WorkerIds.MAIN_WORKER;
+//
+//				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+//				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+//				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+//			}
+		}
+		return true;
 	}
 
-	public function debug_getModuleName():String {
-		if (_isWorkersSupported) {
-			var retVal:String = WorkerClass.current.getSharedProperty(MODULE_NAME_KEY);
-			WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, retVal);
-			return retVal;
-		} else {
-//			throw  Error("TODO");
-			return "";
-		}
-	}
 
 	private function connectRemoteWorker(remoteWorker:Object):void {
 		// get all running workers
 		var workers:* = WorkerDomainClass.current.listWorkers();
-		trace("------[" + debug_moduleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
+		trace("------[" + moduleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
 				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
 		for (var i:int = 0; i < workers.length; i++) {
@@ -330,23 +352,15 @@ public class ModuleScopedWorker extends ModuleScoped {
 				//Listen to the response from our worker
 				remoteToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
-				// todo : debug
-				if (debug_doDebugging) {
-					setTimeout(debug_initChildDebug, 500);
-				}
 			}
 		}
 	}
 
-	private function debug_initChildDebug():void {
-		setInterval(debug_CommunicationMain, 1000);
-	}
 
-
-	private function setUpRemoteWorkerCommunication():void {
+	private function setUpRemoteWorkerCommunication(moduleName:String):void {
 		// get all workers
 		var workers:* = WorkerDomainClass.current.listWorkers();
-		trace("------[" + debug_moduleName + "]" + "setUpWorkerCommunication " + workers
+		trace("------[" + moduleName + "]" + "setUpWorkerCommunication " + workers
 				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
 		var thisWorker:Object = WorkerClass.current;
@@ -365,8 +379,8 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 					// init custom scoped messenger
 					(ScopeManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker).ready();
-					ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-					ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+					ScopeManager.registerScope(moduleName, workerModuleName, true, true, false);
+					ScopeManager.registerScope(moduleName, moduleName, true, true, false);
 					ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 					//
 					if (!messageSendChannelsRegistry[workerModuleName]) {
@@ -381,11 +395,13 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 						workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
 
-						worker.setSharedProperty("thisToWorker_" + debug_moduleName, thisToWorker);
-						worker.setSharedProperty("workerToThis_" + debug_moduleName, workerToThis);
+						worker.setSharedProperty("thisToWorker_" + moduleName, thisToWorker);
+						worker.setSharedProperty("workerToThis_" + moduleName, workerToThis);
 
+
+						trace("INIT_REMOTE_WORKER !!! ", moduleName);
 						thisToWorker.send(INIT_REMOTE_WORKER);
-						thisToWorker.send(debug_moduleName);
+						thisToWorker.send(moduleName);
 					} else {
 						throw Error("2 workers with same name should not exist.");
 					}
@@ -414,7 +430,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 				//trace("Init new remote module : ", remoteModuleName);
 
-				trace("------[" + debug_moduleName + "]" + "handle child module init! ", remoteModuleName
+				trace("------[" + moduleName + "]" + "handle child module init! ", remoteModuleName
 						+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 				var thisWorker:Object = WorkerClass.current;
@@ -451,7 +467,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 				var params:Object = channel.receive(true);
 //				trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
 				var messageTypeSplite:Array = messageType.split("_^~_");
-				ScopeManager.sendScopeMessage(debug_moduleName, debug_moduleName, messageTypeSplite[1], params);
+				ScopeManager.sendScopeMessage(moduleName, moduleName, messageTypeSplite[1], params);
 			} else {
 				throw Error("ModuleWorkerBase can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
 			}
@@ -476,7 +492,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 			if (mapClass) {
 				registerClassAlias(classQualifiedName, mapClass);
 			} else {
-				throw Error("Failed to find class with definition:" + classQualifiedName + " in " + debug_moduleName + " add this class to project or use registerClassAlias(" + classQualifiedName + ", YourClass); to register alternative class. ");
+				throw Error("Failed to find class with definition:" + classQualifiedName + " in " + moduleName + " add this class to project or use registerClassAlias(" + classQualifiedName + ", YourClass); to register alternative class. ");
 			}
 		}
 		//trace("Class got by definition?", mapClass)
@@ -493,7 +509,29 @@ public class ModuleScopedWorker extends ModuleScoped {
 		}
 	}
 
-	static pureLegsCore function demo_sendMessage(type:String, params:Object = null):void {
+
+	//---------------------------------
+	// Debug functions.
+	//---------------------------------
+
+	private function debug_workerStateHandler(event:Event):void {
+		var childWorker:Object = event.target;
+		trace("------[" + moduleName + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
+				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+	}
+
+	public function debug_getModuleName():String {
+		if (_isWorkersSupported) {
+			var retVal:String = WorkerClass.current.getSharedProperty(MODULE_NAME_KEY);
+			WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, retVal);
+			return retVal;
+		} else {
+//			throw  Error("TODO");
+			return moduleName;
+		}
+	}
+
+	static pureLegsCore function debug_sendMessage(type:String, params:Object = null):void {
 //		trace(" !! demo_sendMessage", type, params);
 		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
 			var msgChannel:Object = $sendMessageChannels[i];
@@ -504,38 +542,6 @@ public class ModuleScopedWorker extends ModuleScoped {
 				msgChannel.send(params);
 			}
 		}
-	}
-
-
-	public function debug_CommunicationMain():void {
-		//trace("MAIN TEST");
-		use namespace pureLegsCore;
-
-		demo_sendMessage("Main > worker...");
-	}
-
-	public function debug_CommunicationWorker():void {
-		//trace("WORKER TEST");
-		use namespace pureLegsCore;
-
-		demo_sendMessage("Worker > main...");
-	}
-
-
-	private function demo_custom_scope():void {
-		//var moduleBase:ModuleBase
-		//use namespace pureLegsCore;
-		//ScopeManager.registerScope("", "_moduleName", true, true, true);
-		//moduleBase.registerScope()
-	}
-
-	public static function setRootSwfBytes(rootSwfBytes:ByteArray):void {
-		rootBytes = rootSwfBytes;
-	}
-
-
-	public static function get isWorkersSupported():Boolean {
-		return _isWorkersSupported;
 	}
 
 

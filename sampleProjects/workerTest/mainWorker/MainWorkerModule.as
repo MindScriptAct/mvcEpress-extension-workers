@@ -37,9 +37,9 @@ public class MainWorkerModule extends ModuleScopedWorker {
 		}
 
 
-		startWorkerModule(ChildWorkerModule, WorkerIds.CHILD_WORKER);
+		createBackgroundWorker(ChildWorkerModule, WorkerIds.CHILD_WORKER);
 
-		startWorkerModule(TestWorkerModule, WorkerIds.TEST_WORKER);
+		createBackgroundWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
 
 		mediatorMap.mediateWith(this, MainWorkerModuleMediator);
 
@@ -50,11 +50,11 @@ public class MainWorkerModule extends ModuleScopedWorker {
 
 
 	private function doStopTestModule():void {
-		stopWorkerModule(WorkerIds.TEST_WORKER);
+		terminateBackgroundWorker(WorkerIds.TEST_WORKER);
 	}
 
 	private function doStartTestModule():void {
-		startWorkerModule(TestWorkerModule, WorkerIds.TEST_WORKER);
+		createBackgroundWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
 	}
 
 	private var debugTextField:TextField;
