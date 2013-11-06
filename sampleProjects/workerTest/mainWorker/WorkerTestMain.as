@@ -26,6 +26,7 @@ public class WorkerTestMain extends Sprite {
 		ModuleWorkerBase.setRootSwfBytes(this.loaderInfo.bytes);
 
 		module = new MainWorkerTestModule();
+		module.start(this);
 
 	}
 }

@@ -21,7 +21,7 @@ import org.mvcexpress.extensions.workers.data.ClassAliasRegistry;
 //import flash.system.MessageChannel;
 //import flash.system.Worker;
 //import flash.system.WorkerDomain;
-public class ModuleWorkerBase extends Sprite {
+public class ModuleWorkerBase {
 
 	static private var rootBytes:ByteArray;
 

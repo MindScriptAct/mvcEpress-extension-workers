@@ -27,7 +27,7 @@ public class MainWorkerTestModuleMediator extends MediatorScoped {
 	[Inject]
 	public var view:MainWorkerTestModule;
 
-	private var debugTextField:TextField;
+
 
 	override protected function onRegister():void {
 
@@ -66,25 +66,17 @@ public class MainWorkerTestModuleMediator extends MediatorScoped {
 //		setTimeout(sendObjectNest, 1000);
 
 
-		debugTextField = new TextField();
-		debugTextField.text = "...";
-		view.addChild(debugTextField);
 
-		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN_CALC, handleChildCalc);
-		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.TEST2_MAIN_CALC, handleTest2Calc);
+		//view.addChild(debugTextField);
+
+		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN_CALC, view.handleChildCalc);
+		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.TEST2_MAIN_CALC, view.handleChildCalc);
 
 		sendScopeMessage(WorkerIds.CHILD_WORKER_MODULE, Messages.MAIN_CHILD_CALC, 100);
 		sendScopeMessage(WorkerIds.TEST2_WORKER_MODULE, Messages.MAIN_TEST2_CALC, 100);
 
 	}
 
-	private function handleTest2Calc(calcData:String):void {
-		debugTextField.text += "\n" + calcData;
-	}
-
-	private function handleChildCalc(calcData:String):void {
-		debugTextField.text += "\n" + calcData;
-	}
 
 	////////////////////////////////
 

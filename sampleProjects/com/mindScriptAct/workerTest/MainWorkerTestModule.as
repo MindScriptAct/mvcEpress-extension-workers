@@ -6,10 +6,13 @@ import com.mindScriptAct.modules.testModule.TestWorkerModule;
 import com.mindScriptAct.modules.testModule.data.TestDataSwapTestVO;
 
 import flash.net.registerClassAlias;
+import flash.text.TextField;
 import flash.utils.setTimeout;
 
 import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
+
+import workerTest.mainWorker.WorkerTestMain;
 
 public class MainWorkerTestModule extends ModuleWorker {
 
@@ -33,10 +36,9 @@ public class MainWorkerTestModule extends ModuleWorker {
 		mediatorMap.mediateWith(this, MainWorkerTestModuleMediator);
 
 
-		setTimeout(doStopTestModule, 16000+100);
-		setTimeout(doStartTestModule, 32000+100);
+		setTimeout(doStopTestModule, 16000 + 100);
+		setTimeout(doStartTestModule, 32000 + 100);
 	}
-
 
 
 	private function doStopTestModule():void {
@@ -47,6 +49,17 @@ public class MainWorkerTestModule extends ModuleWorker {
 		startWorkerModule(TestWorkerModule, WorkerIds.TEST2_WORKER_MODULE);
 	}
 
+	private var debugTextField:TextField;
 
+	public function start(main:WorkerTestMain):void {
+
+		debugTextField = new TextField();
+		debugTextField.text = "...";
+		main.addChild(debugTextField);
+	}
+
+	public function handleChildCalc(debugData:String):void {
+		debugTextField.text += "\n" + debugData;
+	}
 }
 }
