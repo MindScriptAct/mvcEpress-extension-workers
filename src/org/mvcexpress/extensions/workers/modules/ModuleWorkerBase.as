@@ -14,6 +14,7 @@ import flash.utils.setTimeout;
 
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.scoped.core.ScopeManager;
+import mvcexpress.extensions.scoped.modules.ModuleScoped;
 
 import org.mvcexpress.extensions.workers.core.messenger.MessengerWorker;
 import org.mvcexpress.extensions.workers.data.ClassAliasRegistry;
@@ -21,7 +22,10 @@ import org.mvcexpress.extensions.workers.data.ClassAliasRegistry;
 //import flash.system.MessageChannel;
 //import flash.system.Worker;
 //import flash.system.WorkerDomain;
-public class ModuleWorkerBase {
+public class ModuleWorkerBase extends ModuleScoped {
+
+
+	public static var $autoRegisterClasses:Boolean = true;
 
 	static private var rootBytes:ByteArray;
 
@@ -62,11 +66,25 @@ public class ModuleWorkerBase {
 	//
 
 	private static var isWorkersDefined:Boolean = false;
-	protected static var _isWorkersSupported:Boolean = false;
+	private static var _isWorkersSupported:Boolean = false;
 
 //	public static var MessageChannelClass:Class;
 	public static var WorkerClass:Class;
 	public static var WorkerDomainClass:Class;
+
+
+	public function ModuleWorkerBase(moduleName:String):void {
+
+		trace("-----[" + moduleName + "]" + "ModuleWorker: try to create module." + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+		use namespace pureLegsCore;
+
+		if (handleWorker(moduleName)) {
+			trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!" + "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			super(moduleName);
+		}
+
+	}
 
 	//
 
@@ -127,7 +145,7 @@ public class ModuleWorkerBase {
 						var childModuleClass:Class = getDefinitionByName(childModuleClassDefinition) as Class;
 
 						ModuleWorkerBase.canInitChildModule = true;
-						var childModule:ModuleWorker = new childModuleClass();
+						var childModule:Object = new childModuleClass();
 						ModuleWorkerBase.canInitChildModule = true;
 					}
 					return false;
@@ -219,7 +237,7 @@ public class ModuleWorkerBase {
 			ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
 
 			ModuleWorkerBase.canInitChildModule = true;
-			var childModule:ModuleWorker = new workerModuleClass();
+			var childModule:Object = new workerModuleClass();
 			workerRegistry[workerModuleName] = childModule;
 			ModuleWorkerBase.canInitChildModule = true;
 		}
@@ -259,7 +277,7 @@ public class ModuleWorkerBase {
 			}
 		} else {
 			if (workerRegistry[workerModuleName]) {
-				(workerRegistry[workerModuleName] as ModuleWorker).disposeModule();
+				(workerRegistry[workerModuleName] as ModuleWorkerBase).disposeModule();
 
 				delete workerRegistry[workerModuleName]
 			}
@@ -519,6 +537,11 @@ public class ModuleWorkerBase {
 
 	public static function setRootSwfBytes(rootSwfBytes:ByteArray):void {
 		rootBytes = rootSwfBytes;
+	}
+
+
+	public static function get isWorkersSupported():Boolean {
+		return _isWorkersSupported;
 	}
 
 

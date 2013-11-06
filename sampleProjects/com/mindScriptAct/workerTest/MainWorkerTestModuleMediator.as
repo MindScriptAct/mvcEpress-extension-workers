@@ -10,12 +10,10 @@ import com.mindScriptAct.workerTest.data.MainDataSwapVO;
 import com.mindScriptAct.workerTest.data.MainDataVO;
 import com.mindScriptAct.workerTest.messages.Messages;
 
-import flash.text.TextField;
 import flash.utils.setTimeout;
 
 import mvcexpress.extensions.scoped.mvc.MediatorScoped;
 
-import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 
 /**
@@ -28,7 +26,6 @@ public class MainWorkerTestModuleMediator extends MediatorScoped {
 	public var view:MainWorkerTestModule;
 
 
-
 	override protected function onRegister():void {
 
 		addScopeHandler(WorkerIds.MAIN_WORKER_TEST_MODULE, Messages.CHILD_MAIN, handleWorkerString);
@@ -39,7 +36,7 @@ public class MainWorkerTestModuleMediator extends MediatorScoped {
 
 		setTimeout(sendString, 0);
 		setTimeout(sendObject, 2000);
-		if (ModuleWorker.isWorkersSupported) {
+		if (ModuleWorkerBase.isWorkersSupported) {
 			setTimeout(sendObjectSwap, 4000);
 		}
 		setTimeout(sendObjectNest, 6000);
@@ -55,7 +52,7 @@ public class MainWorkerTestModuleMediator extends MediatorScoped {
 
 		setTimeout(sendString2, 0 + 8000);
 		setTimeout(sendObject2, 2000 + 8000);
-		if (ModuleWorker.isWorkersSupported) {
+		if (ModuleWorkerBase.isWorkersSupported) {
 			setTimeout(sendObjectSwap2, 4000 + 8000);
 		}
 		setTimeout(sendObjectNest2, 6000 + 8000);
@@ -64,7 +61,6 @@ public class MainWorkerTestModuleMediator extends MediatorScoped {
 //		sendString();
 //		sendObject();
 //		setTimeout(sendObjectNest, 1000);
-
 
 
 		//view.addChild(debugTextField);

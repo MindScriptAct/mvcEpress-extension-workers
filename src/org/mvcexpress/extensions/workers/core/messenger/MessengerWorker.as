@@ -7,7 +7,6 @@ import flash.utils.getQualifiedClassName;
 import mvcexpress.core.messenger.Messenger;
 import mvcexpress.core.namespace.pureLegsCore;
 
-import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 
 public class MessengerWorker extends Messenger {
@@ -29,7 +28,7 @@ public class MessengerWorker extends Messenger {
 		if (isReady) {
 
 			if (params) {
-				if (ModuleWorker.$autoRegisterClasses) {
+				if (ModuleWorkerBase.$autoRegisterClasses) {
 					var paramClass:Class = params.constructor;
 					var qualifiedName:String = ModuleWorkerBase.$classAliasRegistry.classes[paramClass];
 					if (!qualifiedName) {

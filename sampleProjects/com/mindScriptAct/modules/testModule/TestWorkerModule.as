@@ -4,14 +4,13 @@ import com.mindScriptAct.workerTest.data.MainDataSwapTestVO;
 
 import flash.net.registerClassAlias;
 
-import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 
 /**
  * TODO:CLASS COMMENT
  * @author rbanevicius
  */
-public class TestWorkerModule extends ModuleWorker {
+public class TestWorkerModule extends ModuleWorkerBase {
 
 	public function TestWorkerModule() {
 		super(WorkerIds.TEST2_WORKER_MODULE);

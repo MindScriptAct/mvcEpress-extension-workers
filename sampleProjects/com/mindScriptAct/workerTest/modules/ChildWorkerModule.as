@@ -8,7 +8,7 @@ import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
  * TODO:CLASS COMMENT
  * @author rbanevicius
  */
-public class ChildWorkerModule extends ModuleWorker {
+public class ChildWorkerModule extends ModuleWorkerBase {
 
 	public function ChildWorkerModule() {
 		super(WorkerIds.CHILD_WORKER_MODULE);

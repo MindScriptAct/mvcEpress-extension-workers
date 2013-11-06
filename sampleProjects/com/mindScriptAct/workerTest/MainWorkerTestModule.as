@@ -9,12 +9,11 @@ import flash.net.registerClassAlias;
 import flash.text.TextField;
 import flash.utils.setTimeout;
 
-import org.mvcexpress.extensions.workers.modules.ModuleWorker;
 import org.mvcexpress.extensions.workers.modules.ModuleWorkerBase;
 
 import workerTest.mainWorker.WorkerTestMain;
 
-public class MainWorkerTestModule extends ModuleWorker {
+public class MainWorkerTestModule extends ModuleWorkerBase {
 
 	public function MainWorkerTestModule() {
 		super(WorkerIds.MAIN_WORKER_TEST_MODULE);
