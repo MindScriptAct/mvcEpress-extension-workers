@@ -11,6 +11,7 @@ import mvcexpress.core.ExtensionManager;
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.scoped.core.ScopeManager;
 import mvcexpress.extensions.scoped.modules.ModuleScoped;
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
 import mvcexpress.extensions.scopedWorkers.core.messenger.MessengerWorker;
 import mvcexpress.extensions.scopedWorkers.data.ClassAliasRegistry;
 
@@ -40,10 +41,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 	// worker support
 	private static var needWorkerSupportCheck:Boolean = true;
-	private static var _isWorkersSupported:Boolean = false;
-
-	public static var WorkerClass:Class;
-	public static var WorkerDomainClass:Class;
+	private static var _isWorkersSupported:Boolean;// = false;
 
 	// root class bytes.
 	static private var $primordialBytes:ByteArray;
@@ -84,7 +82,31 @@ public class ModuleScopedWorker extends ModuleScoped {
 			enableExtension(EXTENSION_WORKER_ID);
 		}
 
-		if (initWorker(moduleName)) {
+		if (needWorkerSupportCheck) {
+			needWorkerSupportCheck = false;
+			_isWorkersSupported = WorkerManager.checkWorkerSupport();
+		}
+
+		var canCreateModule:Boolean = true;
+
+
+		if (_isWorkersSupported) {
+			canCreateModule = initWorker(moduleName);
+		} else {
+			trace("TODO - not supported worker scenario.");
+//			if (ModuleScopedWorker.canInitChildModule) {
+//
+//				// todo : get this name better.
+//				var workerModuleName:String = WorkerIds.MAIN_WORKER;
+//
+//				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+//				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+//				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+//			}
+		}
+
+
+		if (canCreateModule) {
 			trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!"
 					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 			super(moduleName, mediatorMapClass, proxyMapClass, commandMapClass, messengerClass);
@@ -121,13 +143,13 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 		if (_isWorkersSupported) {
 			//
-			trace("------[" + moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
+			trace("------[" + moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerManager.WorkerClass.current.isPrimordial
 					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			//trace("WorkerClass.isSupported:", WorkerClass.isSupported);
 
-			if (WorkerClass.current.isPrimordial) {
-				var remoteWorker:Object = WorkerDomainClass.current.createWorker($primordialBytes);
+			if (WorkerManager.WorkerClass.current.isPrimordial) {
+				var remoteWorker:Object = WorkerManager.WorkerDomainClass.current.createWorker($primordialBytes);
 				workerRegistry[workerModuleName] = remoteWorker;
 
 				// todo : debug
@@ -218,107 +240,78 @@ public class ModuleScopedWorker extends ModuleScoped {
 	// inits main worker
 	pureLegsCore function initWorker(moduleName:String):Boolean {
 
-		// dynamically get worker classes.
-		if (needWorkerSupportCheck) {
-			needWorkerSupportCheck = false;
-
-			try {
-				WorkerClass = getDefinitionByName("flash.system.Worker") as Class;
-				WorkerDomainClass = getDefinitionByName("flash.system.WorkerDomain") as Class;
-			} catch (error:Error) {
-				// do nothing.
-			}
-
-			if (WorkerClass && WorkerDomainClass && WorkerClass.isSupported) {
-				_isWorkersSupported = true;
-			}
-		}
-
 		use namespace pureLegsCore;
 
-		if (_isWorkersSupported) {
 
-			trace("------[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
-					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		trace("------[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerManager.WorkerClass.current.isPrimordial
+				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
-			if (WorkerClass.current.isPrimordial) { // check if primordial.
-				var rootModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
-				if (rootModuleName != null) { // check if root module is already created.
-					throw Error("Only first(main) ModuleScopedWorker can be instantiated. Use createBackgroundWorker(MyBackgroundWorkerModule) to create background workers. ");
-				} else { // PRIMORDIAL, MAIN.
+		if (WorkerManager.WorkerClass.current.isPrimordial) { // check if primordial.
+			var rootModuleName:String = WorkerManager.WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+			if (rootModuleName != null) { // check if root module is already created.
+				throw Error("Only first(main) ModuleScopedWorker can be instantiated. Use createBackgroundWorker(MyBackgroundWorkerModule) to create background workers. ");
+			} else { // PRIMORDIAL, MAIN.
 
-					CONFIG::debug {
-						if (!moduleName) {
-							throw Error("Worker must have not empty moduleName. (It is used for module to module communication.)");
-						}
+				CONFIG::debug {
+					if (!moduleName) {
+						throw Error("Worker must have not empty moduleName. (It is used for module to module communication.)");
 					}
-					WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
-					WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
 				}
-			} else {
-				// not primordial workers.
-
-				// check if child must be created.
-				var childModuleClassDefinition:String = WorkerClass.current.getSharedProperty(CHILD_MODULE_CLASS_NAME_KEY);
-
-				trace("------[" + moduleName + "]" + "ModuleWorkerBase: should init child module?:", childModuleClassDefinition
-						+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
-
-				if (childModuleClassDefinition) {
-					// NOT PRIMORDIAL, COPY OF THE MAIN.
-
-					trace("------[" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
-							+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
-
-					WorkerClass.current.setSharedProperty(CHILD_MODULE_CLASS_NAME_KEY, null);
-
-
-					try {
-						var childModuleClass:Class = getDefinitionByName(childModuleClassDefinition) as Class;
-					} catch (error:Error) {
-						throw Error("Failed to get a class from class definition: " + childModuleClassDefinition + " - " + error)
-					}
-
-					try {
-						var childModule:Object = new childModuleClass();
-					} catch (error:Error) {
-						throw Error("Failed to construct class for: " + childModuleClass + " - " + error)
-					}
-
-					// end this module.
-					return false;
-				} else {
-					// NOT PRIMORDIAL, CHILD MODULE.
-
-					var workerModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
-
-					WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
-
-					// register all already used class aliases.
-					var classAliasNames:String = WorkerClass.current.getSharedProperty(CLASS_ALIAS_NAMES_KEY);
-					if (classAliasNames != "") {
-						var classAliasSplit:Array = classAliasNames.split(",");
-						for (var i:int = 0; i < classAliasSplit.length; i++) {
-							registerClassNameAlias(classAliasSplit[i])
-						}
-					}
-
-					setUpRemoteWorkerCommunication(moduleName);
-				}
-
-
+				WorkerManager.WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+				WorkerManager.WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
 			}
 		} else {
-			throw Error("TODO");
-//			if (ModuleScopedWorker.canInitChildModule) {
-//
-//				// todo : get this naime better.
-//				var workerModuleName:String = WorkerIds.MAIN_WORKER;
-//
-//				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-//				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-//				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
-//			}
+			// not primordial workers.
+
+			// check if child must be created.
+			var childModuleClassDefinition:String = WorkerManager.WorkerClass.current.getSharedProperty(CHILD_MODULE_CLASS_NAME_KEY);
+
+			trace("------[" + moduleName + "]" + "ModuleWorkerBase: should init child module?:", childModuleClassDefinition
+					+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+			if (childModuleClassDefinition) {
+				// NOT PRIMORDIAL, COPY OF THE MAIN.
+
+				trace("------[" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
+						+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+				WorkerManager.WorkerClass.current.setSharedProperty(CHILD_MODULE_CLASS_NAME_KEY, null);
+
+
+				try {
+					var childModuleClass:Class = getDefinitionByName(childModuleClassDefinition) as Class;
+				} catch (error:Error) {
+					throw Error("Failed to get a class from class definition: " + childModuleClassDefinition + " - " + error)
+				}
+
+				try {
+					var childModule:Object = new childModuleClass();
+				} catch (error:Error) {
+					throw Error("Failed to construct class for: " + childModuleClass + " - " + error)
+				}
+
+				// end this module.
+				return false;
+			} else {
+				// NOT PRIMORDIAL, CHILD MODULE.
+
+				var workerModuleName:String = WorkerManager.WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+
+				WorkerManager.WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+
+				// register all already used class aliases.
+				var classAliasNames:String = WorkerManager.WorkerClass.current.getSharedProperty(CLASS_ALIAS_NAMES_KEY);
+				if (classAliasNames != "") {
+					var classAliasSplit:Array = classAliasNames.split(",");
+					for (var i:int = 0; i < classAliasSplit.length; i++) {
+						registerClassNameAlias(classAliasSplit[i])
+					}
+				}
+
+				setUpRemoteWorkerCommunication(moduleName);
+			}
+
+
 		}
 		return true;
 	}
@@ -326,7 +319,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 	private function connectRemoteWorker(remoteWorker:Object):void {
 		// get all running workers
-		var workers:* = WorkerDomainClass.current.listWorkers();
+		var workers:* = WorkerManager.WorkerDomainClass.current.listWorkers();
 		trace("------[" + moduleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
 				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
@@ -359,15 +352,15 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 	private function setUpRemoteWorkerCommunication(moduleName:String):void {
 		// get all workers
-		var workers:* = WorkerDomainClass.current.listWorkers();
+		var workers:* = WorkerManager.WorkerDomainClass.current.listWorkers();
 		trace("------[" + moduleName + "]" + "setUpWorkerCommunication " + workers
 				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
-		var thisWorker:Object = WorkerClass.current;
+		var thisWorker:Object = WorkerManager.WorkerClass.current;
 		for (var i:int = 0; i < workers.length; i++) {
 			var worker:Object = workers[i];
 			// TODO : decide what to do with self send messages...
-			if (worker != WorkerClass.current) {
+			if (worker != WorkerManager.WorkerClass.current) {
 				if (worker.isPrimordial) {
 
 
@@ -433,7 +426,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 				trace("------[" + moduleName + "]" + "handle child module init! ", remoteModuleName
 						+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
-				var thisWorker:Object = WorkerClass.current;
+				var thisWorker:Object = WorkerManager.WorkerClass.current;
 
 				var workerToThis:Object = thisWorker.getSharedProperty("thisToWorker_" + remoteModuleName);
 				var thisToWorker:Object = thisWorker.getSharedProperty("workerToThis_" + remoteModuleName);
@@ -522,8 +515,8 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 	public function debug_getModuleName():String {
 		if (_isWorkersSupported) {
-			var retVal:String = WorkerClass.current.getSharedProperty(MODULE_NAME_KEY);
-			WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, retVal);
+			var retVal:String = WorkerManager.WorkerClass.current.getSharedProperty(MODULE_NAME_KEY);
+			WorkerManager.WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, retVal);
 			return retVal;
 		} else {
 //			throw  Error("TODO");
