@@ -1,13 +1,10 @@
 package workerTest {
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
-
-import workerTest.mainWorker.*;
-import workerTest.mainWorker.MainWorkerModule;
-
 import flash.display.Sprite;
 import flash.events.Event;
 
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+
+import workerTest.mainWorker.MainWorkerModule;
 
 public class WorkerTestMain extends Sprite {
 

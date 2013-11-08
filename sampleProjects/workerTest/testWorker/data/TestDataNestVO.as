@@ -1,6 +1,4 @@
 package workerTest.testWorker.data {
-import workerTest.childWorker.data.*;
-
 public class TestDataNestVO {
 
 	public var data:String = "?";

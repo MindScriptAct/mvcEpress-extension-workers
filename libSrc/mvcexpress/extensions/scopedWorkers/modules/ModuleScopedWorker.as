@@ -1,4 +1,5 @@
 package mvcexpress.extensions.scopedWorkers.modules {
+import flash.system.Worker;
 import flash.utils.ByteArray;
 
 import mvcexpress.core.ExtensionManager;
@@ -6,24 +7,21 @@ import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.scoped.modules.ModuleScoped;
 import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
 
-//import flash.system.MessageChannel;
-//import flash.system.Worker;
-//import flash.system.WorkerDomain;
 public class ModuleScopedWorker extends ModuleScoped {
 
-
-
-
-	//---------------------
-	// internal properties
-	//---------------------
 	// worker support
 	private static var needWorkerSupportCheck:Boolean = true;
+
+	// true if workers are supported.
 	private static var _isWorkersSupported:Boolean;// = false;
 
+	// TEMP... for Debug only..
 	public var debug_objectID:int = Math.random() * 100000000;
 
-
+	/**
+	 * CONSTRUCTOR. ModuleName must be provided.
+	 * @inheritDoc
+	 */
 	public function ModuleScopedWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
 
 		trace("-----[" + moduleName + "]" + "ModuleWorker: try to create module."
@@ -40,24 +38,23 @@ public class ModuleScopedWorker extends ModuleScoped {
 			_isWorkersSupported = WorkerManager.checkWorkerSupport();
 		}
 
+		// stores if this module will be created. (then same swf file is used to create other modules - main module will not be created.)
 		var canCreateModule:Boolean = true;
-
 
 		if (_isWorkersSupported) {
 			canCreateModule = WorkerManager.initWorker(moduleName, debug_objectID);
 		} else {
-			trace("TODO - not supported worker scenario.");
-//			if (ModuleScopedWorker.canInitChildModule) {
-//
-//				// todo : get this name better.
-//				var workerModuleName:String = WorkerIds.MAIN_WORKER;
-//
-//				ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-//				ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-//				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
-//			}
+			trace("TODO - implement scenario then workers are not supported.");
+			//if (ModuleScopedWorker.canInitChildModule) {
+			//
+			//	// todo : get this name better.
+			//	var workerModuleName:String = WorkerIds.MAIN_WORKER;
+			//
+			//	ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
+			//	ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
+			//	ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+			//}
 		}
-
 
 		if (canCreateModule) {
 			trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!"
@@ -68,67 +65,46 @@ public class ModuleScopedWorker extends ModuleScoped {
 	}
 
 	/**
-	 * True if workers are supported.
-	 */
-	public static function get isWorkersSupported():Boolean {
-		return _isWorkersSupported;
-	}
-
-
-	/**
 	 * Starts background worker.
 	 *        If workerSwfBytes property is not provided - rootSwfBytes will be used.
 	 * @param workerModuleClass
 	 * @param workerModuleName
-	 * @param workerSwfBytes
+	 * @param workerSwfBytes    bytes of loaded swf file.
 	 */
-	public function createBackgroundWorker(workerModuleClass:Class, workerModuleName:String, workerSwfBytes:ByteArray = null):void {
+	public function startWorker(workerModuleClass:Class, workerModuleName:String, workerSwfBytes:ByteArray = null):void {
+
+		// todo : implement optional module parameters for extendability.
 		use namespace pureLegsCore;
 
-		WorkerManager.createBackgroundWorker(workerModuleClass, workerModuleName, workerSwfBytes, moduleName, debug_objectID);
+		WorkerManager.startWorker(moduleName, workerModuleClass, workerModuleName, workerSwfBytes, debug_objectID);
 	}
 
 	/**
-	 * Stops background worker.s
+	 * terminates background worker and dispose worker module.
 	 * @param workerModuleName
 	 */
-	public function terminateBackgroundWorker(workerModuleName:String):void {
+	public function terminateWorker(workerModuleName:String):void {
 		use namespace pureLegsCore;
 
-		WorkerManager.terminateBackgroundWorker(workerModuleName, moduleName, debug_objectID);
+		WorkerManager.terminateWorker(workerModuleName, moduleName, debug_objectID);
 	}
 
 
 	//////////////////////////////
-	//	INTERNALS
+	//	DEBUG..
 	//////////////////////////////
 
 	public function debug_getModuleName():String {
+		use namespace pureLegsCore;
+
 		if (_isWorkersSupported) {
-			var retVal:String = WorkerManager.WorkerClass.current.getSharedProperty("$_mn_$");
-			WorkerManager.WorkerClass.current.setSharedProperty("$_mn_$", retVal);
+			var retVal:String = Worker.current.getSharedProperty("$_mn_$");
+			Worker.current.setSharedProperty("$_mn_$", retVal);
 			return retVal;
 		} else {
-//			throw  Error("TODO");
 			return moduleName;
 		}
 	}
-
-	static pureLegsCore function debug_sendMessage(type:String, params:Object = null):void {
-//		trace(" !! demo_sendMessage", type, params);
-		use namespace pureLegsCore;
-
-		for (var i:int = 0; i < WorkerManager.$sendMessageChannels.length; i++) {
-			var msgChannel:Object = WorkerManager.$sendMessageChannels[i];
-//			trace("   " + msgChannel);
-			msgChannel.send("$_sm_$");
-			msgChannel.send(type);
-			if (params) {
-				msgChannel.send(params);
-			}
-		}
-	}
-
 
 	//----------------------------------
 	//    Extension checking: INTERNAL, DEBUG ONLY.

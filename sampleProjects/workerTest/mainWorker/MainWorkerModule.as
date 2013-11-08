@@ -1,20 +1,17 @@
 package workerTest.mainWorker {
-import flash.system.Worker;
-
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
-
-import workerTest.testWorker.*;
-
 import flash.net.registerClassAlias;
+import flash.system.Worker;
 import flash.text.TextField;
 import flash.utils.setTimeout;
 
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
 import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
-import workerTest.constants.WorkerIds;
+import workerTest.WorkerTestMain;
 import workerTest.childWorker.ChildWorkerModule;
 import workerTest.childWorker.data.ChildDataSwapTestVO;
-import workerTest.WorkerTestMain;
+import workerTest.constants.WorkerIds;
+import workerTest.testWorker.*;
 import workerTest.testWorker.data.TestDataSwapTestVO;
 
 public class MainWorkerModule extends ModuleScopedWorker {
@@ -39,9 +36,9 @@ public class MainWorkerModule extends ModuleScopedWorker {
 		}
 
 
-		createBackgroundWorker(ChildWorkerModule, WorkerIds.CHILD_WORKER);
+		startWorker(ChildWorkerModule, WorkerIds.CHILD_WORKER);
 
-		createBackgroundWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
+		startWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
 
 		mediatorMap.mediateWith(this, MainWorkerModuleMediator);
 
@@ -52,11 +49,11 @@ public class MainWorkerModule extends ModuleScopedWorker {
 
 
 	private function doStopTestModule():void {
-		terminateBackgroundWorker(WorkerIds.TEST_WORKER);
+		terminateWorker(WorkerIds.TEST_WORKER);
 	}
 
 	private function doStartTestModule():void {
-		createBackgroundWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
+		startWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
 	}
 
 	private var debugTextField:TextField;

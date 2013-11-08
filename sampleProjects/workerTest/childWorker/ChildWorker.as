@@ -2,8 +2,6 @@ package workerTest.childWorker {
 import flash.display.Sprite;
 import flash.events.Event;
 
-import workerTest.constants.WorkerIds;
-
 public class ChildWorker extends Sprite {
 	public function ChildWorker() {
 		if (stage) {

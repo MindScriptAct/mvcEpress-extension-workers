@@ -1,14 +1,12 @@
 package workerTest.testWorker {
+import flash.net.registerClassAlias;
 import flash.system.Worker;
 
 import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
 import workerTest.constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
-
-import flash.net.registerClassAlias;
-
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
 /**
  * TODO:CLASS COMMENT

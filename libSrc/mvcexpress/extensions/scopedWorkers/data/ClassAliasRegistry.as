@@ -1,39 +1,48 @@
 package mvcexpress.extensions.scopedWorkers.data {
 import flash.utils.Dictionary;
 
-import mvcexpress.core.namespace.pureLegsCore;
-
+/**
+ * Stores class description names, by classes. Basic types are added by default.
+ * @private
+ */
 public class ClassAliasRegistry {
 
-	pureLegsCore const classes:Dictionary = new Dictionary();
-
+	static private var classes:Dictionary;
 
 	public function ClassAliasRegistry() {
-		use namespace pureLegsCore;
-
-		classes[null] = "null";
-		classes[Boolean] = "Boolean";
-		classes[int] = "int";
-		classes[uint] = "uint";
-		classes[Number] = "Number";
-		classes[String] = "String";
-
-		classes[Object] = "Object";
-		classes[Array] = "Array";
-		classes[Date] = "Date";
-		classes[Error] = "Error";
-		classes[Function] = "Function";
-		classes[RegExp] = "RegExp";
-		classes[XML] = "XML";
-		classes[XMLList] = "XMLList";
-
+		throw Error("Static class. Use getAliasRegistry().");
 	}
 
+	static public function getAliasRegistry():Dictionary {
+		if (!classes) {
+			classes = new Dictionary()
 
-	public function getCustomClasses():String {
-		use namespace pureLegsCore;
+			classes[null] = "null";
+			classes[Boolean] = "Boolean";
+			classes[int] = "int";
+			classes[uint] = "uint";
+			classes[Number] = "Number";
+			classes[String] = "String";
 
+			classes[Object] = "Object";
+			classes[Array] = "Array";
+			classes[Date] = "Date";
+			classes[Error] = "Error";
+			classes[Function] = "Function";
+			classes[RegExp] = "RegExp";
+			classes[XML] = "XML";
+			classes[XMLList] = "XMLList";
+		}
+		return classes;
+	}
+
+	// gives list of custom classes in alias registry.
+	static public function getCustomClasses():String {
 		var retVal:String = "";
+
+		if (!classes) {
+			getAliasRegistry();
+		}
 
 		for each (var className:String in classes) {
 			switch (className) {
@@ -61,8 +70,14 @@ public class ClassAliasRegistry {
 
 			}
 		}
-
 		return retVal;
+	}
+
+	public static function mapClassAlias(newClass:Class, classQualifiedName:String):void {
+		if (!classes) {
+			getAliasRegistry();
+		}
+		classes[newClass] = classQualifiedName;
 	}
 }
 }

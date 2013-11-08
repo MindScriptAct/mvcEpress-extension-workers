@@ -9,10 +9,14 @@ import flash.utils.getQualifiedClassName;
 
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.scoped.core.ScopeManager;
-import mvcexpress.extensions.scopedWorkers.core.messenger.MessengerWorker;
+import mvcexpress.extensions.scopedWorkers.core.messenger.WorkerMessenger;
 import mvcexpress.extensions.scopedWorkers.data.ClassAliasRegistry;
 import mvcexpress.modules.ModuleCore;
 
+/**
+ * Manages workers.
+ * @private
+ */
 public class WorkerManager {
 
 	/**
@@ -24,8 +28,8 @@ public class WorkerManager {
 	private static var _isSupported:Boolean;
 
 
-	public static var WorkerClass:Class;
-	public static var WorkerDomainClass:Class;
+	private static var WorkerClass:Class;
+	private static var WorkerDomainClass:Class;
 
 
 	// keys for worker shared data.
@@ -35,23 +39,20 @@ public class WorkerManager {
 	private static const INIT_REMOTE_WORKER:String = "$_irw_$";
 	private static const SEND_WORKER_MESSAGE:String = "$_sm_$";
 	private static const REGISTER_CLASS_ALIAS:String = "$_rca_$";
-	pureLegsCore static const CLASS_ALIAS_NAMES_KEY:String = "$_can_$";
+	static pureLegsCore const CLASS_ALIAS_NAMES_KEY:String = "$_can_$";
 
 	// root class bytes.
 	static private var $primordialBytes:ByteArray;
 
 	// channels for all remote workers.
 	// TODO : make private, remove use namespace there it is used.
-	static pureLegsCore var $sendMessageChannels:Vector.<Object> = new <Object>[];
+	static private var $sendMessageChannels:Vector.<Object> = new <Object>[];
 
 	// registry of all workers.
 	static private var workerRegistry:Dictionary = new Dictionary()
 
 	//  messenger  waiting for remote worker to be initialized. (All messages send while waiting will be stacked, and send then remote module is ready.)
 	static private var pendingWorkerMessengers:Dictionary = new Dictionary();
-
-	// collection of registered class aliases.
-	pureLegsCore static const $classAliasRegistry:ClassAliasRegistry = new ClassAliasRegistry();
 
 	// todo : check if needed.
 	static private var receiveMessageChannels:Vector.<Object> = new <Object>[];
@@ -65,7 +66,26 @@ public class WorkerManager {
 	static public const debug_coreId:int = Math.random() * 100000000;
 
 
-	public static function checkWorkerSupport():Boolean {
+	/**
+	 * True if workers are supported.
+	 */
+	public static function get isSupported():Boolean {
+		return _isSupported;
+	}
+
+
+	/**
+	 * Set root swf file Bytes. (used toe create workers from self, as alternative to leading it.)
+	 * @param rootSwfBytes
+	 */
+	public static function setRootSwfBytes(rootSwfBytes:ByteArray):void {
+		$primordialBytes = rootSwfBytes;
+	}
+
+
+	static pureLegsCore function checkWorkerSupport():Boolean {
+		use namespace pureLegsCore;
+
 		try {
 			// dynamically get worker classes.
 			WorkerClass = getDefinitionByName("flash.system.Worker") as Class;
@@ -81,22 +101,27 @@ public class WorkerManager {
 		return _isSupported;
 	}
 
-	public static function get isSupported():Boolean {
-		return _isSupported;
-	}
-
-	pureLegsCore static function initWorker(moduleName:String, debug_objectID:int):Boolean {
+	/**
+	 * Tries to initialize main worker module,
+	 *        or if it is copy of main swf - creates remote worker module.
+	 * @param moduleName
+	 * @param debug_objectID
+	 * @return
+	 *
+	 * @private
+	 */
+	static pureLegsCore function initWorker(moduleName:String, debug_objectID:int):Boolean {
 
 		use namespace pureLegsCore;
 
 
-		trace("------[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerManager.WorkerClass.current.isPrimordial
-				+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		trace("------[" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
+				+ "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
-		if (WorkerManager.WorkerClass.current.isPrimordial) { // check if primordial.
-			var rootModuleName:String = WorkerManager.WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+		if (WorkerClass.current.isPrimordial) { // check if primordial.
+			var rootModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 			if (rootModuleName != null) { // check if root module is already created.
-				throw Error("Only first(main) ModuleScopedWorker can be instantiated. Use createBackgroundWorker(MyBackgroundWorkerModule) to create background workers. ");
+				throw Error("Only first(main) ModuleScopedWorker can be instantiated. Use startWorker(MyBackgroundWorkerModule) to create background workers. ");
 			} else { // PRIMORDIAL, MAIN.
 
 				CONFIG::debug {
@@ -104,25 +129,25 @@ public class WorkerManager {
 						throw Error("Worker must have not empty moduleName. (It is used for module to module communication.)");
 					}
 				}
-				WorkerManager.WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
-				WorkerManager.WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
+				WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+				WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
 			}
 		} else {
 			// not primordial workers.
 
 			// check if child must be created.
-			var childModuleClassDefinition:String = WorkerManager.WorkerClass.current.getSharedProperty(CHILD_MODULE_CLASS_NAME_KEY);
+			var childModuleClassDefinition:String = WorkerClass.current.getSharedProperty(CHILD_MODULE_CLASS_NAME_KEY);
 
 			trace("------[" + moduleName + "]" + "ModuleWorkerBase: should init child module?:", childModuleClassDefinition
-					+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+					+ "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			if (childModuleClassDefinition) {
 				// NOT PRIMORDIAL, COPY OF THE MAIN.
 
 				trace("------[" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
-						+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+						+ "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
-				WorkerManager.WorkerClass.current.setSharedProperty(CHILD_MODULE_CLASS_NAME_KEY, null);
+				WorkerClass.current.setSharedProperty(CHILD_MODULE_CLASS_NAME_KEY, null);
 
 
 				try {
@@ -142,12 +167,12 @@ public class WorkerManager {
 			} else {
 				// NOT PRIMORDIAL, CHILD MODULE.
 
-				var workerModuleName:String = WorkerManager.WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+				var workerModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 
-				WorkerManager.WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
+				WorkerClass.current.setSharedProperty(MODULE_NAME_KEY, moduleName);
 
 				// register all already used class aliases.
-				var classAliasNames:String = WorkerManager.WorkerClass.current.getSharedProperty(CLASS_ALIAS_NAMES_KEY);
+				var classAliasNames:String = WorkerClass.current.getSharedProperty(CLASS_ALIAS_NAMES_KEY);
 				if (classAliasNames != "") {
 					var classAliasSplit:Array = classAliasNames.split(",");
 					for (var i:int = 0; i < classAliasSplit.length; i++) {
@@ -167,29 +192,31 @@ public class WorkerManager {
 	 * Starts background worker.
 	 *        If workerSwfBytes property is not provided - rootSwfBytes will be used.
 	 * @param workerModuleClass
-	 * @param workerModuleName
+	 * @param remoweModuleName
 	 * @param workerSwfBytes
+	 *
+	 * @private
 	 */
-	static pureLegsCore function createBackgroundWorker(workerModuleClass:Class, workerModuleName:String, workerSwfBytes:ByteArray = null, moduleName:String = null, debug_objectID:int = 0):void {
+	static pureLegsCore function startWorker(mainModuleName:String, workerModuleClass:Class, remoweModuleName:String, workerSwfBytes:ByteArray = null, debug_objectID:int = 0):void {
 
 		// TODO : check extended form workerModule class.
 
 		if (_isSupported) {
 			//
-			trace("------[" + moduleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerManager.WorkerClass.current.isPrimordial
-					+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			trace("------[" + mainModuleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
+					+ "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			//trace("WorkerClass.isSupported:", WorkerClass.isSupported);
 
-			if (WorkerManager.WorkerClass.current.isPrimordial) {
-				var remoteWorker:Object = WorkerManager.WorkerDomainClass.current.createWorker($primordialBytes);
-				workerRegistry[workerModuleName] = remoteWorker;
+			if (WorkerClass.current.isPrimordial) {
+				var remoteWorker:Object = WorkerDomainClass.current.createWorker($primordialBytes);
+				workerRegistry[remoweModuleName] = remoteWorker;
 
 				// todo : debug
 				remoteWorker.addEventListener(Event.WORKER_STATE, debug_workerStateHandler);
 				remoteWorker.setSharedProperty(CHILD_MODULE_CLASS_NAME_KEY, getQualifiedClassName(workerModuleClass));
 
-				var classAlianNames:String = $classAliasRegistry.getCustomClasses();
+				var classAlianNames:String = ClassAliasRegistry.getCustomClasses();
 
 				remoteWorker.setSharedProperty(CLASS_ALIAS_NAMES_KEY, classAlianNames);
 				//
@@ -197,15 +224,15 @@ public class WorkerManager {
 				use namespace pureLegsCore;
 
 				// init custom scoped messenger
-				var messengerWorker:MessengerWorker = ScopeManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker;
-				pendingWorkerMessengers[workerModuleName] = messengerWorker;
+				var messengerWorker:WorkerMessenger = ScopeManager.getScopeMessenger(remoweModuleName, WorkerMessenger) as WorkerMessenger;
+				pendingWorkerMessengers[remoweModuleName] = messengerWorker;
 
-				ScopeManager.registerScope(moduleName, workerModuleName, true, true, false);
-				ScopeManager.registerScope(moduleName, moduleName, true, true, false);
-				ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
+				ScopeManager.registerScope(mainModuleName, remoweModuleName, true, true, false);
+				ScopeManager.registerScope(mainModuleName, mainModuleName, true, true, false);
+				ScopeManager.registerScope(remoweModuleName, remoweModuleName, true, true, false);
 
 				//
-				connectRemoteWorker(remoteWorker, moduleName, debug_objectID);
+				connectRemoteWorker(remoteWorker, mainModuleName, debug_objectID);
 				//
 				remoteWorker.start();
 
@@ -230,7 +257,7 @@ public class WorkerManager {
 	 * Stops background worker.s
 	 * @param workerModuleName
 	 */
-	static pureLegsCore function terminateBackgroundWorker(workerModuleName:String, moduleName:String = null, debug_objectID:int = 0):void {
+	static pureLegsCore function terminateWorker(workerModuleName:String, debug_mainModuleName:String = null, debug_objectID:int = 0):void {
 		trace("STOP worker :", workerModuleName);
 
 		use namespace pureLegsCore;
@@ -268,11 +295,13 @@ public class WorkerManager {
 	}
 
 
-	static private function connectRemoteWorker(remoteWorker:Object, moduleName:String = null, debug_objectID:int = 0):void {
+	static private function connectRemoteWorker(remoteWorker:Object, debug_mainModuleName:String = null, debug_objectID:int = 0):void {
+		use namespace pureLegsCore;
+
 		// get all running workers
-		var workers:* = WorkerManager.WorkerDomainClass.current.listWorkers();
-		trace("------[" + moduleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
-				+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		var workers:* = WorkerDomainClass.current.listWorkers();
+		trace("------[" + debug_mainModuleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
+				+ "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
 		for (var i:int = 0; i < workers.length; i++) {
 			var worker:Object = workers[i];
@@ -301,17 +330,17 @@ public class WorkerManager {
 	}
 
 
-	static private function setUpRemoteWorkerCommunication(remoteModuleName:String, moduleName:String = null, debug_objectID:int = 0):void {
+	static private function setUpRemoteWorkerCommunication(remoteModuleName:String, debug_mainModuleName:String = null, debug_objectID:int = 0):void {
 		// get all workers
-		var workers:* = WorkerManager.WorkerDomainClass.current.listWorkers();
-		trace("------[" + moduleName + "]" + "setUpWorkerCommunication " + workers
-				+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		var workers:* = WorkerDomainClass.current.listWorkers();
+		trace("------[" + debug_mainModuleName + "]" + "setUpWorkerCommunication " + workers
+				+ "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
-		var thisWorker:Object = WorkerManager.WorkerClass.current;
+		var thisWorker:Object = WorkerClass.current;
 		for (var i:int = 0; i < workers.length; i++) {
 			var worker:Object = workers[i];
 			// TODO : decide what to do with self send messages...
-			if (worker != WorkerManager.WorkerClass.current) {
+			if (worker != WorkerClass.current) {
 				if (worker.isPrimordial) {
 
 
@@ -322,7 +351,7 @@ public class WorkerManager {
 					use namespace pureLegsCore;
 
 					// init custom scoped messenger
-					(ScopeManager.getScopeMessenger(workerModuleName, MessengerWorker) as MessengerWorker).ready();
+					(ScopeManager.getScopeMessenger(workerModuleName, WorkerMessenger) as WorkerMessenger).ready();
 					ScopeManager.registerScope(remoteModuleName, workerModuleName, true, true, false);
 					ScopeManager.registerScope(remoteModuleName, remoteModuleName, true, true, false);
 					ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
@@ -356,6 +385,22 @@ public class WorkerManager {
 		}
 	}
 
+
+	static pureLegsCore function sendWorkerMessage(type:String, params:Object = null):void {
+//		trace(" !! demo_sendMessage", type, params);
+		use namespace pureLegsCore;
+
+		for (var i:int = 0; i < $sendMessageChannels.length; i++) {
+			var msgChannel:Object = $sendMessageChannels[i];
+//			trace("   " + msgChannel);
+			msgChannel.send("$_sm_$");
+			msgChannel.send(type);
+			if (params) {
+				msgChannel.send(params);
+			}
+		}
+	}
+
 	static private function handleChannelMessage(event:Event):void {
 		use namespace pureLegsCore;
 
@@ -375,9 +420,9 @@ public class WorkerManager {
 				//trace("Init new remote module : ", remoteModuleName);
 
 				trace("------[" + "moduleName" + "]" + "handle child module init! ", remoteModuleName
-						+ "[" + WorkerManager.debug_coreId + "]" + "<" + "debug_objectID" + "> ");
+						+ "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 
-				var thisWorker:Object = WorkerManager.WorkerClass.current;
+				var thisWorker:Object = WorkerClass.current;
 
 				var workerToThis:Object = thisWorker.getSharedProperty("thisToWorker_" + remoteModuleName);
 				var thisToWorker:Object = thisWorker.getSharedProperty("workerToThis_" + remoteModuleName);
@@ -441,9 +486,8 @@ public class WorkerManager {
 				throw Error("Failed to find class with definition:" + classQualifiedName + " in " + "moduleName" + " add this class to project or use registerClassAlias(" + classQualifiedName + ", YourClass); to register alternative class. ");
 			}
 		}
-		//trace("Class got by definition?", mapClass)
-		//
-		$classAliasRegistry.classes[mapClass] = classQualifiedName;
+		//trace("Class got by definition:", mapClass)
+		ClassAliasRegistry.mapClassAlias(mapClass, classQualifiedName);
 	}
 
 
@@ -465,17 +509,9 @@ public class WorkerManager {
 	static private function debug_workerStateHandler(event:Event):void {
 		var childWorker:Object = event.target;
 		trace("------[" + "moduleName" + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
-				+ "[" + WorkerManager.debug_coreId + "]" + "<" + "debug_objectID" + "> ");
+				+ "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 	}
 
-
-	/**
-	 * Set root swf file Bytes. (used toe create workers from self, as alternative to leading it.)
-	 * @param rootSwfBytes
-	 */
-	public static function setRootSwfBytes(rootSwfBytes:ByteArray):void {
-		$primordialBytes = rootSwfBytes;
-	}
 
 }
 }

@@ -3,7 +3,6 @@ import flash.utils.setTimeout;
 
 import mvcexpress.extensions.scoped.mvc.MediatorScoped;
 import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
 import workerTest.childWorker.data.ChildDataNestVO;
 import workerTest.childWorker.data.ChildDataSwapVO;
@@ -32,7 +31,7 @@ public class ChildWorkerModuleMediator extends MediatorScoped {
 
 		setTimeout(sendString, 1000);
 		setTimeout(sendObject, 3000);
-		if (ModuleScopedWorker.isWorkersSupported) {
+		if (WorkerManager.isSupported) {
 			setTimeout(sendObjectSwap, 5000);
 		}
 		setTimeout(sendObjectNest, 7000);

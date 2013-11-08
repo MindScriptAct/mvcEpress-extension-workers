@@ -19,6 +19,7 @@ public class MainDataNestVO {
 	public function set nestData_set(value:MainDataVO):void {
 		_nestData_set = value;
 	}
+
 	public function get nestData_get():MainDataVO {
 		return _nestData_get;
 	}

@@ -17,7 +17,6 @@ public class Messages {
 	public static const MAIN_CHILD_OBJECT_NEST:String = "MAIN_CHILD_OBJECT_NEST";
 
 
-
 	public static const TEST2_MAIN:String = "TEST2_MAIN";
 	public static const MAIN_TEST2:String = "MAIN_TEST2";
 

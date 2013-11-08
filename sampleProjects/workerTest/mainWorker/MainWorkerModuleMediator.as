@@ -1,23 +1,20 @@
 package workerTest.mainWorker {
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
-
-import workerTest.constants.WorkerIds;
-import workerTest.childWorker.data.ChildDataNestVO;
-import workerTest.childWorker.data.ChildDataSwapTestVO;
-import workerTest.childWorker.data.ChildDataVO;
-import workerTest.testWorker.data.TestDataNestVO;
-import workerTest.testWorker.data.TestDataSwapTestVO;
-import workerTest.testWorker.data.TestDataVO;
-import workerTest.mainWorker.data.MainDataNestVO;
-import workerTest.mainWorker.data.MainDataSwapVO;
-import workerTest.mainWorker.data.MainDataVO;
-import workerTest.constants.Messages;
-
 import flash.utils.setTimeout;
 
 import mvcexpress.extensions.scoped.mvc.MediatorScoped;
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
 
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
+import workerTest.childWorker.data.ChildDataNestVO;
+import workerTest.childWorker.data.ChildDataSwapTestVO;
+import workerTest.childWorker.data.ChildDataVO;
+import workerTest.constants.Messages;
+import workerTest.constants.WorkerIds;
+import workerTest.mainWorker.data.MainDataNestVO;
+import workerTest.mainWorker.data.MainDataSwapVO;
+import workerTest.mainWorker.data.MainDataVO;
+import workerTest.testWorker.data.TestDataNestVO;
+import workerTest.testWorker.data.TestDataSwapTestVO;
+import workerTest.testWorker.data.TestDataVO;
 
 /**
  * TODO:CLASS COMMENT
@@ -39,7 +36,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 
 		setTimeout(sendString, 0);
 		setTimeout(sendObject, 2000);
-		if (ModuleScopedWorker.isWorkersSupported) {
+		if (WorkerManager.isSupported) {
 			setTimeout(sendObjectSwap, 4000);
 		}
 		setTimeout(sendObjectNest, 6000);
@@ -55,7 +52,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 
 		setTimeout(sendString2, 0 + 8000);
 		setTimeout(sendObject2, 2000 + 8000);
-		if (ModuleScopedWorker.isWorkersSupported) {
+		if (WorkerManager.isSupported) {
 			setTimeout(sendObjectSwap2, 4000 + 8000);
 		}
 		setTimeout(sendObjectNest2, 6000 + 8000);
