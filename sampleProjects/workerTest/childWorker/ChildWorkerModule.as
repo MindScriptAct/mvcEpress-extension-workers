@@ -20,8 +20,8 @@ public class ChildWorkerModule extends ModuleScopedWorker {
 
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
-		trace("---[" + moduleName + "]" + "ChildWorkerModule:onInit();"
-				+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		//debug:worker//trace("---[" + moduleName + "]" + "ChildWorkerModule:onInit();"
+		//debug:worker//		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		CONFIG::debug {
 			if (Worker.current.isPrimordial) {
