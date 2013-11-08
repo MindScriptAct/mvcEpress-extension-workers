@@ -29,8 +29,8 @@ public class WorkerManager {
 	private static var _isSupported:Boolean;
 
 	// stores worker classes dynamically.
-	private static var WorkerClass:Class;
-	private static var WorkerDomainClass:Class;
+	public static var WorkerClass:Class;
+	public static var WorkerDomainClass:Class;
 
 	// root class bytes.
 	static private var $primordialSwfBytes:ByteArray;
@@ -40,7 +40,7 @@ public class WorkerManager {
 	// name of worker module,  every worker have only one worker Module.
 	private static const WORKER_MODULE_NAME_KEY:String = "$_wmn_$";
 	// class name of remote module. (used by remote worker to instantiate remote module)
-	private static const REMOTE_MODULE_CLASS_NAME_KEY:String = "$_rmcn_$";
+	pureLegsCore static const REMOTE_MODULE_CLASS_NAME_KEY:String = "$_rmcn_$";
 	// all class alias names to register.
 	private static const CLASS_ALIAS_NAMES_KEY:String = "$_can_$";
 
@@ -448,7 +448,6 @@ public class WorkerManager {
 				$channelReadyWorkerNames.push(remoteModuleName);
 
 				// send pending messages.
-				$pendingWorkerMessengers[remoteModuleName].ready();
 				delete $pendingWorkerMessengers[remoteModuleName]
 				// remove  channels from temporal storage.
 				for (var i:int = 0; i < $tempChannelStorage.length; i++) {
@@ -523,7 +522,8 @@ public class WorkerManager {
 
 	//debug:worker//static private function debug_workerStateHandler(event:Event):void {
 	//debug:worker//	var childWorker:Object = event.target;
-	//debug:worker//	trace("------[" + "moduleName" + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
+	//debug:worker//	var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+	//debug:worker//	trace("------[" + moduleName + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
 	//debug:worker//			+ "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 	//debug:worker//}
 

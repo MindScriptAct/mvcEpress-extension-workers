@@ -41,6 +41,8 @@ public class ScopeManager {
 	/** sends scoped message
 	 * @private */
 	static pureLegsCore function sendScopeMessage(moduleName:String, scopeName:String, type:String, params:Object, checkPermisions:Boolean = true):void {
+		//trace("...sendScopeMessage", moduleName, scopeName, type);
+
 		use namespace pureLegsCore;
 
 		if (checkPermisions) {
@@ -401,7 +403,18 @@ public class ScopeManager {
 	 * @param customMessangerClass
 	 */
 	static pureLegsCore function getScopeMessenger(scopeName:String, customMessangerClass:Class = null):Messenger {
+		//debug:worker//trace("--ScopeManager.getScopeMessenger(" + scopeName + ", " + customMessangerClass + ")")
+
 		var scopeMesanger:Messenger = scopedMessengers[scopeName];
+
+		if (scopeMesanger) {
+			if (!(scopeMesanger is customMessangerClass)) {
+				trace("ERROR : messenger is already created" + scopeMesanger + ", and not with " + customMessangerClass + " type...");
+				// this situation happens then scope is registered with same name, before worker is started.
+				// this situation should be impossible in all scenarios... somehow.
+			}
+		}
+
 		if (!scopeMesanger) {
 			use namespace pureLegsCore;
 
@@ -414,6 +427,7 @@ public class ScopeManager {
 			Messenger.allowInstantiation = false;
 			scopedMessengers[scopeName] = scopeMesanger;
 		}
+		//debug:worker//trace("---ScopeManager created this messenger:" + scopeMesanger);
 		return scopeMesanger;
 	}
 
