@@ -91,15 +91,15 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 
 	//////////////////////////////
-	//	DEBUG..
+	//	DEBUG...S
 	//////////////////////////////
 
 	public function debug_getModuleName():String {
 		use namespace pureLegsCore;
 
 		if (_isWorkersSupported) {
-			var retVal:String = Worker.current.getSharedProperty("$_mn_$");
-			Worker.current.setSharedProperty("$_mn_$", retVal);
+			var retVal:String = Worker.current.getSharedProperty("$_wmn_$");
+			Worker.current.setSharedProperty("$_wmn_$", retVal);
 			return retVal;
 		} else {
 			return moduleName;

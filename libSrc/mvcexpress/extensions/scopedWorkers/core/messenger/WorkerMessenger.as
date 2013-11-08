@@ -18,15 +18,20 @@ public class WorkerMessenger extends Messenger {
 
 	static private const $classAliasRegistry:Dictionary = ClassAliasRegistry.getAliasRegistry();
 
+	// true if messenger is ready for use.
 	private var isReady:Boolean;// = false;
 
+	// messages are stored here if messenger is requested to send message while it is not ready.
 	private var pendingTypes:Vector.<String> = new <String>[];
 	private var pendingParams:Vector.<Object> = new <Object>[];
 
+	/**
+	 * CONSTRUCTOR
+	 * @param $moduleName
+	 */
 	public function WorkerMessenger($moduleName:String) {
 		super($moduleName);
 	}
-
 
 	// send message
 	override public function send(type:String, params:Object = null):void {
@@ -34,7 +39,6 @@ public class WorkerMessenger extends Messenger {
 
 		// messenger is not ready until worker is ready.
 		if (isReady) {
-
 			// handle parameters types. (register class alias if needed).
 			if (params) {
 				if (WorkerManager.doAutoRegisterClasses) {
@@ -50,13 +54,11 @@ public class WorkerMessenger extends Messenger {
 
 			// send message to other workers.
 			WorkerManager.sendWorkerMessage(type, params);
-
 		} else {
 			// messenger is not ready, push to pending vector and wait for it to be ready.
 			pendingTypes.push(type);
 			pendingParams.push(params);
 		}
-
 	}
 
 	// make messenger ready.
@@ -102,8 +104,6 @@ public class WorkerMessenger extends Messenger {
 				}
 			}
 		}
-
-
 	}
 }
 }
