@@ -2,6 +2,7 @@ package workerTest.childWorker {
 import flash.net.registerClassAlias;
 import flash.system.Worker;
 
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
 import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
 import workerTest.constants.WorkerIds;
@@ -20,7 +21,7 @@ public class ChildWorkerModule extends ModuleScopedWorker {
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
 		trace("---[" + moduleName + "]" + "ChildWorkerModule:onInit();"
-				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+				+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		CONFIG::debug {
 			if (Worker.current.isPrimordial) {
@@ -35,7 +36,6 @@ public class ChildWorkerModule extends ModuleScopedWorker {
 		mediatorMap.mediateWith(this, ChildWorkerModuleMediator);
 
 	}
-
 
 }
 }

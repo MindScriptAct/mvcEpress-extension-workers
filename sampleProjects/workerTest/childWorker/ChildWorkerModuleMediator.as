@@ -1,18 +1,18 @@
 package workerTest.childWorker {
+import flash.utils.setTimeout;
+
+import mvcexpress.extensions.scoped.mvc.MediatorScoped;
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
+
 import workerTest.childWorker.data.ChildDataNestVO;
 import workerTest.childWorker.data.ChildDataSwapVO;
 import workerTest.childWorker.data.ChildDataVO;
+import workerTest.constants.Messages;
 import workerTest.constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataNestVO;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
 import workerTest.mainWorker.data.MainDataVO;
-import workerTest.constants.Messages;
-
-import flash.utils.setTimeout;
-
-import mvcexpress.extensions.scoped.mvc.MediatorScoped;
-
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
 /**
  * TODO:CLASS COMMENT
@@ -55,7 +55,7 @@ public class ChildWorkerModuleMediator extends MediatorScoped {
 
 	private function sendString():void {
 		trace("	[" + view.moduleName + "]" + ">>ChildWorkerModule:sendString();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN, "CHILD > MAIN");
@@ -64,7 +64,7 @@ public class ChildWorkerModuleMediator extends MediatorScoped {
 
 	private function sendObject():void {
 		trace("	[" + view.moduleName + "]" + ">>ChildWorkerModule:sendObject();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT, new ChildDataVO("CHILD >> MAIN"));
@@ -73,7 +73,7 @@ public class ChildWorkerModuleMediator extends MediatorScoped {
 
 	private function sendObjectSwap():void {
 		trace("	[" + view.moduleName + "]" + ">>ChildWorkerModule:sendObjectSwap();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT_SWAP, new ChildDataSwapVO("CHILD >>> MAIN"));
@@ -83,7 +83,7 @@ public class ChildWorkerModuleMediator extends MediatorScoped {
 
 	private function sendObjectNest():void {
 		trace("	[" + view.moduleName + "]" + ">>ChildWorkerModule:sendObjectNest();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT_NEST, new ChildDataNestVO("CHILD >>>> MAIN"));
@@ -94,22 +94,22 @@ public class ChildWorkerModuleMediator extends MediatorScoped {
 
 	private function handleWorkerString(params:Object):void {
 //		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received message:", params);
-		trace("1: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received string:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("1: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received string:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObject(params:MainDataVO):void {
 //		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received message:", params);
-		trace("3: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received object:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("3: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectSwap(params:MainDataSwapTestVO):void {
 //		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received message:", params);
-		trace("5: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received swapped object:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("5: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received swapped object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectNest(params:MainDataNestVO):void {
 //		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received message:", params);
-		trace("7: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received nested object:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("7: " + params, "!!!!!!!!!!!!!!!! ChildWorkerModuleMediator received nested object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	override protected function onRemove():void {

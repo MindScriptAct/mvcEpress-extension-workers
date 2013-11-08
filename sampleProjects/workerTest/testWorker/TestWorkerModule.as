@@ -1,6 +1,8 @@
 package workerTest.testWorker {
 import flash.system.Worker;
 
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+
 import workerTest.constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
 
@@ -21,7 +23,7 @@ public class TestWorkerModule extends ModuleScopedWorker {
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
 		trace("---[" + moduleName + "]" + "TestWorkerModule:onInit();"
-				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+				+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		CONFIG::debug {
 			if (Worker.current.isPrimordial) {

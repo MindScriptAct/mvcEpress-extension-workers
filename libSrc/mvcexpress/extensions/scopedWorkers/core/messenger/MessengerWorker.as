@@ -6,6 +6,7 @@ import flash.utils.getQualifiedClassName;
 
 import mvcexpress.core.messenger.Messenger;
 import mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
 import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
 public class MessengerWorker extends Messenger {
@@ -27,9 +28,9 @@ public class MessengerWorker extends Messenger {
 		if (isReady) {
 
 			if (params) {
-				if (ModuleScopedWorker.doAutoRegisterClasses) {
+				if (WorkerManager.doAutoRegisterClasses) {
 					var paramClass:Class = params.constructor;
-					var qualifiedName:String = ModuleScopedWorker.$classAliasRegistry.classes[paramClass];
+					var qualifiedName:String = WorkerManager.$classAliasRegistry.classes[paramClass];
 					if (!qualifiedName) {
 						parseObject(params.constructor);
 					}
@@ -65,9 +66,9 @@ public class MessengerWorker extends Messenger {
 		//trace("start registration ... ", qualifiedName);
 		registerClassAlias(qualifiedName, paramClass);
 
-		ModuleScopedWorker.$classAliasRegistry.classes[paramClass] = qualifiedName;
+		WorkerManager.$classAliasRegistry.classes[paramClass] = qualifiedName;
 
-		ModuleScopedWorker.startClassRegistration(qualifiedName);
+		WorkerManager.startClassRegistration(qualifiedName);
 
 		// handle meber types.
 
@@ -84,7 +85,7 @@ public class MessengerWorker extends Messenger {
 
 				// TODO : optimize for better performance. (local static dictionary?)
 
-				var qualifiedName:String = ModuleScopedWorker.$classAliasRegistry.classes[memberClass];
+				var qualifiedName:String = WorkerManager.$classAliasRegistry.classes[memberClass];
 				if (!qualifiedName) {
 					parseObject(memberClass);
 				}

@@ -3,6 +3,7 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import mvcexpress.extensions.scoped.mvc.MediatorScoped;
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
 import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
 
 import workerTest.constants.Messages;
@@ -60,7 +61,7 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 
 	private function sendString():void {
 		trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendString();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN, "TEST2 > MAIN");
@@ -71,7 +72,7 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 
 	private function sendObject():void {
 		trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendObject();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN_OBJECT, new TestDataVO("TEST2 >> MAIN"));
@@ -80,7 +81,7 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 
 	private function sendObjectSwap():void {
 		trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectSwap();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN_OBJECT_SWAP, new TestDataSwapVO("TEST2 >>> MAIN"));
@@ -90,7 +91,7 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 
 	private function sendObjectNest():void {
 		trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectNest();", "Debug module name: " + view.debug_getModuleName()
-				+ "	[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+				+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN_OBJECT_NEST, new TestDataNestVO("TEST2 >>>> MAIN"));
@@ -104,22 +105,22 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 	//*
 	private function handleWorkerString(params:Object):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		trace("9: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received string:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("9: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received string:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObject(params:MainDataVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		trace("11: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received object:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("11: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectSwap(params:MainDataSwapTestVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		trace("13: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received swapped object:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("13: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received swapped object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectNest(params:MainDataNestVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		trace("15: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received nested object:", "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		trace("15: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received nested object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	override protected function onRemove():void {

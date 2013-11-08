@@ -1,6 +1,8 @@
 package workerTest.mainWorker {
 import flash.system.Worker;
 
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+
 import workerTest.testWorker.*;
 
 import flash.net.registerClassAlias;
@@ -24,7 +26,7 @@ public class MainWorkerModule extends ModuleScopedWorker {
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
 		trace("---[" + moduleName + "]" + "MainWorkerTestModule:onInit();"
-				+ "[" + ModuleScopedWorker.debug_coreId + "]" + "<" + debug_objectID + "> ");
+				+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		registerClassAlias("workerTest.childWorker.data.ChildDataSwapVO", ChildDataSwapTestVO);
 		registerClassAlias("workerTest.testWorker.data.TestDataSwapVO", TestDataSwapTestVO);

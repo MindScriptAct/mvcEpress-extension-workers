@@ -1,4 +1,6 @@
 package workerTest {
+import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+
 import workerTest.mainWorker.*;
 import workerTest.mainWorker.MainWorkerModule;
 
@@ -24,7 +26,7 @@ public class WorkerTestMain extends Sprite {
 
 		///
 
-		ModuleScopedWorker.setRootSwfBytes(this.loaderInfo.bytes);
+		WorkerManager.setRootSwfBytes(this.loaderInfo.bytes);
 
 		module = new MainWorkerModule();
 		module.start(this);
