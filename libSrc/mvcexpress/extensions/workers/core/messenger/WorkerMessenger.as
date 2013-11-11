@@ -63,11 +63,13 @@ public class WorkerMessenger extends Messenger {
 
 	// make messenger ready.
 	pureLegsCore function ready():void {
+
+		trace("............................. worker messenger ready!", pendingTypes, pendingParams, pureLegsCore::moduleName);
 		isReady = true;
 
 		// send all waiting messages.
 		while (pendingTypes.length) {
-			send(pendingTypes.pop(), pendingParams.pop());
+			workerSend(pendingTypes.pop(), pendingParams.pop());
 		}
 	}
 
