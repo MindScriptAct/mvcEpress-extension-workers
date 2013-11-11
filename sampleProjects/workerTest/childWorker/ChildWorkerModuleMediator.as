@@ -1,8 +1,8 @@
 package workerTest.childWorker {
 import flash.utils.setTimeout;
 
-import mvcexpress.extensions.scoped.mvc.MediatorScoped;
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+import mvcexpress.extensions.workers.core.WorkerManager;
+import mvcexpress.extensions.workers.mvc.MediatorWorker;
 
 import workerTest.childWorker.data.ChildDataNestVO;
 import workerTest.childWorker.data.ChildDataSwapVO;
@@ -17,17 +17,17 @@ import workerTest.mainWorker.data.MainDataVO;
  * TODO:CLASS COMMENT
  * @author Deril
  */
-public class ChildWorkerModuleMediator extends MediatorScoped {
+public class ChildWorkerModuleMediator extends MediatorWorker {
 
 	[Inject]
 	public var view:ChildWorkerModule;
 
 	override protected function onRegister():void {
 
-		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD, handleWorkerString);
-		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT, handleWorkerObject);
-		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT_SWAP, handleWorkerObjectSwap);
-		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT_NEST, handleWorkerObjectNest);
+		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD, handleWorkerString);
+		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT, handleWorkerObject);
+		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT_SWAP, handleWorkerObjectSwap);
+		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT_NEST, handleWorkerObjectNest);
 
 		setTimeout(sendString, 1000);
 		setTimeout(sendObject, 3000);
@@ -43,49 +43,49 @@ public class ChildWorkerModuleMediator extends MediatorScoped {
 
 //		setTimeout(sendObjectNest, 2000);
 
-		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_CALC, handleMainCalc);
+		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_CALC, handleMainCalc);
 	}
 
 	private function handleMainCalc(testNumber:int):void {
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_CALC, "child div2... " + (testNumber / 2));
+		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_CALC, "child div2... " + (testNumber / 2));
 	}
 
 	////////////////////////////////
 
 	private function sendString():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>ChildWorkerModule:sendString();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN, "CHILD > MAIN");
+		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN, "CHILD > MAIN");
 		setTimeout(sendString, 16000);
 	}
 
 	private function sendObject():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>ChildWorkerModule:sendObject();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT, new ChildDataVO("CHILD >> MAIN"));
+		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT, new ChildDataVO("CHILD >> MAIN"));
 		setTimeout(sendObject, 16000);
 	}
 
 	private function sendObjectSwap():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>ChildWorkerModule:sendObjectSwap();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT_SWAP, new ChildDataSwapVO("CHILD >>> MAIN"));
+		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT_SWAP, new ChildDataSwapVO("CHILD >>> MAIN"));
 		setTimeout(sendObjectSwap, 16000);
 	}
 
 
 	private function sendObjectNest():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>ChildWorkerModule:sendObjectNest();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT_NEST, new ChildDataNestVO("CHILD >>>> MAIN"));
+		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN_OBJECT_NEST, new ChildDataNestVO("CHILD >>>> MAIN"));
 		setTimeout(sendObjectNest, 16000);
 	}
 

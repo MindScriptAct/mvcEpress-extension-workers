@@ -1,5 +1,5 @@
 package mainTest {
-import mvcexpress.extensions.scopedWorkers.display.WorkerSprite;
+import mvcexpress.extensions.workers.display.WorkerSprite;
 
 import utils.debug.Stats;
 

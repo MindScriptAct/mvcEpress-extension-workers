@@ -2,7 +2,7 @@ package childTest {
 import flash.utils.getTimer;
 import flash.utils.setTimeout;
 
-import mvcexpress.extensions.scoped.mvc.CommandScoped;
+import mvcexpress.extensions.workers.mvc.CommandWorker;
 
 import workerTest.constants.WorkerIds;
 import workerTest.constants.WorkerMessage;
@@ -11,7 +11,7 @@ import workerTest.constants.WorkerMessage;
  * TODO:CLASS COMMENT
  * @author rbanevicius
  */
-public class CpuIntensiveCommand extends CommandScoped {
+public class CpuIntensiveCommand extends CommandWorker {
 
 	private var startingVal:int = 1000;
 
@@ -25,7 +25,7 @@ public class CpuIntensiveCommand extends CommandScoped {
 
 		for (var i:int = startingVal; i < startingVal + 5000; i++) { // 3 sec
 
-			sendScopeMessage(WorkerIds.MAIN_WORKER, WorkerMessage.TEST2, i);
+			sendWorkerMessage(WorkerIds.MAIN_WORKER, WorkerMessage.TEST2, i);
 
 			var isPrime:Boolean = true;
 			for (var j:int = i - 1; j > 1; j--) {
@@ -41,10 +41,10 @@ public class CpuIntensiveCommand extends CommandScoped {
 		}
 		//}
 
-		trace("Highest prime:" + prime + "  [" + Math.floor((getTimer() - startTime)) + " sec spent.]");
+		trace("Highest prime:" + prime + "  [" + Math.floor((getTimer() - startTime)) + " ms spent.]");
 
 		if (prime) {
-			sendScopeMessage(WorkerIds.MAIN_WORKER, WorkerMessage.TEST1, prime);
+			sendWorkerMessage(WorkerIds.MAIN_WORKER, WorkerMessage.TEST1, prime);
 		}
 
 		startingVal = prime + lastPrime + 1;

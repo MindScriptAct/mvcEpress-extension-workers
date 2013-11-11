@@ -1,11 +1,11 @@
-package mvcexpress.extensions.scopedWorkers.display {
+package mvcexpress.extensions.workers.display {
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.system.Worker;
 import flash.utils.getDefinitionByName;
 
 import mvcexpress.core.namespace.pureLegsCore;
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+import mvcexpress.extensions.workers.core.WorkerManager;
 
 use namespace pureLegsCore;
 

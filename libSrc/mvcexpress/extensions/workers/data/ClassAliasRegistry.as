@@ -1,4 +1,4 @@
-package mvcexpress.extensions.scopedWorkers.data {
+package mvcexpress.extensions.workers.data {
 import flash.utils.Dictionary;
 
 /**

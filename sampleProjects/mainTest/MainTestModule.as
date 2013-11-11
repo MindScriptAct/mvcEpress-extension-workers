@@ -4,12 +4,12 @@ import childTest.ChildTestModule;
 import flash.system.Worker;
 import flash.utils.setTimeout;
 
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
+import mvcexpress.extensions.workers.modules.ModuleWorker;
 
 import workerTest.constants.WorkerIds;
 
 //public class MainTestModule extends ModuleScoped {
-public class MainTestModule extends ModuleScopedWorker {
+public class MainTestModule extends ModuleWorker {
 
 	public function MainTestModule() {
 		super(WorkerIds.MAIN_WORKER);

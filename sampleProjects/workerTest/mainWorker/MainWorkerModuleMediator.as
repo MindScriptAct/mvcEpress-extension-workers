@@ -1,8 +1,8 @@
 package workerTest.mainWorker {
 import flash.utils.setTimeout;
 
-import mvcexpress.extensions.scoped.mvc.MediatorScoped;
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+import mvcexpress.extensions.workers.core.WorkerManager;
+import mvcexpress.extensions.workers.mvc.MediatorWorker;
 
 import workerTest.childWorker.data.ChildDataNestVO;
 import workerTest.childWorker.data.ChildDataSwapTestVO;
@@ -20,7 +20,7 @@ import workerTest.testWorker.data.TestDataVO;
  * TODO:CLASS COMMENT
  * @author Deril
  */
-public class MainWorkerModuleMediator extends MediatorScoped {
+public class MainWorkerModuleMediator extends MediatorWorker {
 
 	[Inject]
 	public var view:MainWorkerModule;
@@ -28,10 +28,10 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 
 	override protected function onRegister():void {
 
-		addScopeHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN, handleWorkerString);
-		addScopeHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_OBJECT, handleWorkerObject);
-		addScopeHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_OBJECT_SWAP, handleWorkerObjectSwap);
-		addScopeHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_OBJECT_NEST, handleWorkerObjectNest);
+		addWorkerHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN, handleWorkerString);
+		addWorkerHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_OBJECT, handleWorkerObject);
+		addWorkerHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_OBJECT_SWAP, handleWorkerObjectSwap);
+		addWorkerHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_OBJECT_NEST, handleWorkerObjectNest);
 
 
 		setTimeout(sendString, 950);
@@ -44,10 +44,10 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 
 		/////////////////////////////////
 
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN, handleWorkerString2);
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT, handleWorkerObject2);
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT_SWAP, handleWorkerObjectSwap2);
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT_NEST, handleWorkerObjectNest2);
+		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN, handleWorkerString2);
+		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT, handleWorkerObject2);
+		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT_SWAP, handleWorkerObjectSwap2);
+		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT_NEST, handleWorkerObjectNest2);
 
 
 		setTimeout(sendString2, 0 + 8000);
@@ -65,13 +65,13 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 
 		//view.addChild(debugTextField);
 
-		addScopeHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_CALC, view.handleChildCalc);
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_CALC, view.handleChildCalc);
+		addWorkerHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_CALC, view.handleChildCalc);
+		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_CALC, view.handleChildCalc);
 
 
 		// todo : fix or remove.
-		//sendScopeMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_CALC, 100);
-		//sendScopeMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_CALC, 100);
+		//sendWorkerMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_CALC, 100);
+		//sendWorkerMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_CALC, 100);
 
 	}
 
@@ -84,7 +84,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
 
-		sendScopeMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD, "MAIN > CHILD");
+		sendWorkerMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD, "MAIN > CHILD");
 		setTimeout(sendString, 16000);
 	}
 
@@ -93,7 +93,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
-		sendScopeMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_OBJECT, new MainDataVO("MAIN >> CHILD"));
+		sendWorkerMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_OBJECT, new MainDataVO("MAIN >> CHILD"));
 		setTimeout(sendObject, 16000);
 	}
 
@@ -103,7 +103,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
 
-		sendScopeMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_OBJECT_SWAP, new MainDataSwapVO("MAIN >>> CHILD"));
+		sendWorkerMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_OBJECT_SWAP, new MainDataSwapVO("MAIN >>> CHILD"));
 		setTimeout(sendObjectSwap, 16000);
 	}
 
@@ -113,7 +113,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
 
-		sendScopeMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_OBJECT_NEST, new MainDataNestVO("MAIN >>>> CHILD"));
+		sendWorkerMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_OBJECT_NEST, new MainDataNestVO("MAIN >>>> CHILD"));
 
 		setTimeout(sendObjectNest, 16000);
 	}
@@ -153,7 +153,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
 
-		sendScopeMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST, "MAIN > TEST2");
+		sendWorkerMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST, "MAIN > TEST2");
 		setTimeout(sendString2, 16000);
 	}
 
@@ -163,7 +163,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
 
-		sendScopeMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_OBJECT, new MainDataVO("MAIN >> TEST2"));
+		sendWorkerMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_OBJECT, new MainDataVO("MAIN >> TEST2"));
 		setTimeout(sendObject2, 16000);
 	}
 
@@ -173,7 +173,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
 
-		sendScopeMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_OBJECT_SWAP, new MainDataSwapVO("MAIN >>> TEST2"));
+		sendWorkerMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_OBJECT_SWAP, new MainDataSwapVO("MAIN >>> TEST2"));
 		setTimeout(sendObjectSwap2, 16000);
 	}
 
@@ -183,7 +183,7 @@ public class MainWorkerModuleMediator extends MediatorScoped {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
 
-		sendScopeMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_OBJECT_NEST, new MainDataNestVO("MAIN >>>> TEST2"));
+		sendWorkerMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_OBJECT_NEST, new MainDataNestVO("MAIN >>>> TEST2"));
 
 		setTimeout(sendObjectNest2, 16000);
 	}

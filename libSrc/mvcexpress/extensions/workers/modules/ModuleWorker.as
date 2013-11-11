@@ -1,13 +1,13 @@
-package mvcexpress.extensions.scopedWorkers.modules {
+package mvcexpress.extensions.workers.modules {
 import flash.system.Worker;
 import flash.utils.ByteArray;
 
 import mvcexpress.core.ExtensionManager;
 import mvcexpress.core.namespace.pureLegsCore;
-import mvcexpress.extensions.scoped.modules.ModuleScoped;
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+import mvcexpress.extensions.workers.core.WorkerManager;
+import mvcexpress.modules.ModuleCore;
 
-public class ModuleScopedWorker extends ModuleScoped {
+public class ModuleWorker extends ModuleCore {
 
 	// worker support
 	private static var needWorkerSupportCheck:Boolean = true;
@@ -22,7 +22,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 	 * CONSTRUCTOR. ModuleName must be provided.
 	 * @inheritDoc
 	 */
-	public function ModuleScopedWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
+	public function ModuleWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
 
 		/**debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: try to create module."
 		/**debug:worker**/		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");

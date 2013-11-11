@@ -4,8 +4,8 @@ import flash.system.Worker;
 import flash.text.TextField;
 import flash.utils.setTimeout;
 
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
+import mvcexpress.extensions.workers.core.WorkerManager;
+import mvcexpress.extensions.workers.modules.ModuleWorker;
 
 import workerTest.WorkerTestMain;
 import workerTest.childWorker.ChildWorkerModule;
@@ -14,7 +14,7 @@ import workerTest.constants.WorkerIds;
 import workerTest.testWorker.*;
 import workerTest.testWorker.data.TestDataSwapTestVO;
 
-public class MainWorkerModule extends ModuleScopedWorker {
+public class MainWorkerModule extends ModuleWorker {
 
 	public function MainWorkerModule() {
 		super(WorkerIds.MAIN_WORKER);

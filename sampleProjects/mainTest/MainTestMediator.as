@@ -6,7 +6,7 @@ import flash.events.Event;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 
-import mvcexpress.extensions.scoped.mvc.MediatorScoped;
+import mvcexpress.extensions.workers.mvc.MediatorWorker;
 
 import mx.core.FlexTextField;
 
@@ -17,7 +17,7 @@ import workerTest.constants.WorkerMessage;
  * TODO:CLASS COMMENT
  * @author rbanevicius
  */
-public class MainTestMediator extends MediatorScoped {
+public class MainTestMediator extends MediatorWorker {
 
 	[Inject]
 	public var view:MainTest;
@@ -33,15 +33,13 @@ public class MainTestMediator extends MediatorScoped {
 		primeTest.text = "...";
 		primeTest.y = 110;
 		view.addChild(primeTest);
-		addScopeHandler(WorkerIds.CHILD_WORKER, WorkerMessage.TEST2, handlePrimeDataTest);
-		addScopeHandler(WorkerIds.MAIN_WORKER, WorkerMessage.TEST2, handlePrimeDataTest);
+		addWorkerHandler(WorkerIds.MAIN_WORKER, WorkerMessage.TEST2, handlePrimeDataTest);
 
 		primeFound = new FlexTextField();
 		primeFound.text = "waiting for data...";
 		primeFound.y = 130;
 		view.addChild(primeFound);
-		addScopeHandler(WorkerIds.CHILD_WORKER, WorkerMessage.TEST1, handlePrimeData);
-		addScopeHandler(WorkerIds.MAIN_WORKER, WorkerMessage.TEST1, handlePrimeData);
+		addWorkerHandler(WorkerIds.MAIN_WORKER, WorkerMessage.TEST1, handlePrimeData);
 
 
 		animaton = new Sprite();

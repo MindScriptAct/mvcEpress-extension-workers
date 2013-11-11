@@ -1,4 +1,4 @@
-package mvcexpress.extensions.scopedWorkers.core.messenger {
+package mvcexpress.extensions.workers.core.messenger {
 import flash.net.registerClassAlias;
 import flash.utils.Dictionary;
 import flash.utils.describeType;
@@ -7,8 +7,8 @@ import flash.utils.getQualifiedClassName;
 
 import mvcexpress.core.messenger.Messenger;
 import mvcexpress.core.namespace.pureLegsCore;
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
-import mvcexpress.extensions.scopedWorkers.data.ClassAliasRegistry;
+import mvcexpress.extensions.workers.core.WorkerManager;
+import mvcexpress.extensions.workers.data.ClassAliasRegistry;
 
 /**
  * Messenger to send messages from worker to worker.

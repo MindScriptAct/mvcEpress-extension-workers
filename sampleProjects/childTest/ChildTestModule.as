@@ -1,13 +1,12 @@
 package childTest {
 import flash.system.Worker;
 
-import mvcexpress.extensions.scoped.modules.ModuleScoped;
-import mvcexpress.extensions.scopedWorkers.modules.ModuleScopedWorker;
+import mvcexpress.extensions.workers.modules.ModuleWorker;
 
 import workerTest.constants.WorkerIds;
 
 //public class ChildTestModule extends ModuleScoped {
-public class ChildTestModule extends ModuleScopedWorker {
+public class ChildTestModule extends ModuleWorker {
 
 	public function ChildTestModule() {
 		super(WorkerIds.CHILD_WORKER);

@@ -2,7 +2,7 @@ package workerTest {
 import flash.display.Sprite;
 import flash.events.Event;
 
-import mvcexpress.extensions.scopedWorkers.core.WorkerManager;
+import mvcexpress.extensions.workers.core.WorkerManager;
 
 import workerTest.mainWorker.MainWorkerModule;
 
