@@ -1,6 +1,4 @@
 package mvcexpress.extensions.workers.core {
-import constants.WorkerMessage;
-
 import flash.events.Event;
 import flash.net.getClassByAlias;
 import flash.net.registerClassAlias;
@@ -414,16 +412,15 @@ public class WorkerManager {
 		if (channel.messageAvailable) {
 			var communicationType:Object = channel.receive();
 
-			trace("........WorkerManager.handleChannelMessage() communicationType:", communicationType);
 
-//			trace("  [" + debug_moduleName + "]" + "handleChannelMessage : ", communicationType
-//					+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			/**debug:worker**/var thisModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+			/**debug:worker**/trace("  [" + thisModuleName + "]" + "handleChannelMessage : ", communicationType
+			/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + "" + "> ");
 
 			if (communicationType == INIT_REMOTE_WORKER_TYPE) {
 				// handle special communication for initialization of new worker.
 				var remoteModuleName:String = channel.receive(true);
 
-				/**debug:worker**/var thisModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 				/**debug:worker**/trace("      [" + thisModuleName + "]" + "handle child module init! ", remoteModuleName
 				/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 
@@ -464,11 +461,13 @@ public class WorkerManager {
 				var messageType:String = channel.receive(true) as String;
 				var params:Object = channel.receive(true);
 				//trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
-				var messageTypeSplite:Array = messageType.split("_^~_");
+				var messageTypeSplit:Array = messageType.split("_^~_");
+
+				trace("................ hendle remote send message..:", messageType, params);
 				// TODO : rething if getting moduleName from worker valid here.(error scenarios?)
 				var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 				//WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
-				wip_handleReceivedWorkerMessage(moduleName, moduleName, messageTypeSplite[1], params);
+				wip_handleReceivedWorkerMessage(moduleName, messageTypeSplit[0], messageTypeSplit[1], params);
 			} else {
 				throw Error("WorkerManager can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
 			}
@@ -532,7 +531,7 @@ public class WorkerManager {
 
 		var workerMessenger:WorkerMessenger = workerMessengers[toModule];
 		if (workerMessenger) {
-			workerMessenger.send(toModule + "_^~_" + type, params);
+			workerMessenger.workerSend(fromModule + "_^~_" + type, params);
 		}
 
 	}

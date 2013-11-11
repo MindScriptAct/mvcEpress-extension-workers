@@ -34,7 +34,7 @@ public class WorkerMessenger extends Messenger {
 	}
 
 	// send message
-	override public function send(type:String, params:Object = null):void {
+	public function workerSend(type:String, params:Object = null):void {
 		trace("......WorkerMessenger.send()", type, params, "(isReady:" + isReady + ")");
 
 		// messenger is not ready until worker is ready.

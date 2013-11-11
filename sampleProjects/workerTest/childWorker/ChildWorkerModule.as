@@ -23,7 +23,8 @@ public class ChildWorkerModule extends ModuleWorker {
 		/**debug:worker**/trace("  -[" + moduleName + "]" + "ChildWorkerModule:onInit();"
 		/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
-		//registerClassAlias("workerTest.mainWorker.data.MainDataSwapVO", MainDataSwapTestVO);
+		// ??? why this is needed?
+		registerClassAlias("workerTest.mainWorker.data.MainDataSwapVO", MainDataSwapTestVO);
 
 
 		mediatorMap.mediateWith(this, ChildWorkerModuleMediator);

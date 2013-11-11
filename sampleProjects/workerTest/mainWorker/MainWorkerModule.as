@@ -41,7 +41,7 @@ public class MainWorkerModule extends ModuleWorker {
 
 		startWorker(ChildWorkerModule, WorkerIds.CHILD_WORKER);
 
-		//startWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
+		startWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
 
 		mediatorMap.mediateWith(this, MainWorkerModuleMediator);
 

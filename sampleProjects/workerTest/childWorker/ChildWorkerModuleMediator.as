@@ -32,11 +32,11 @@ public class ChildWorkerModuleMediator extends MediatorWorker {
 		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT_NEST, handleWorkerObjectNest);
 
 		setTimeout(sendString, TestConsts.START_DELAY + 1000);
-		//setTimeout(sendObject, TestConsts.START_DELAY + 3000);
-		//if (WorkerManager.isSupported) {
-		//	setTimeout(sendObjectSwap, TestConsts.START_DELAY + 5000);
-		//}
-		//setTimeout(sendObjectNest, TestConsts.START_DELAY + 7000);
+		setTimeout(sendObject, TestConsts.START_DELAY + 3000);
+		if (WorkerManager.isSupported) {
+			setTimeout(sendObjectSwap, TestConsts.START_DELAY + 5000);
+		}
+		setTimeout(sendObjectNest, TestConsts.START_DELAY + 7000);
 
 //		sendString();
 //		sendObject();
@@ -62,7 +62,7 @@ public class ChildWorkerModuleMediator extends MediatorWorker {
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "ChildWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.CHILD_MAIN, "CHILD > MAIN");
-		//setTimeout(sendString, 16000);
+		setTimeout(sendString, 16000);
 	}
 
 	private function sendObject():void {
