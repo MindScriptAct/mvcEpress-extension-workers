@@ -20,8 +20,8 @@ public class TestWorkerModule extends ModuleScopedWorker {
 
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
-		//debug:worker//trace("---[" + moduleName + "]" + "TestWorkerModule:onInit();"
-		//debug:worker//		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("  -[" + moduleName + "]" + "TestWorkerModule:onInit();"
+		/**debug:worker**/		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		CONFIG::debug {
 			if (Worker.current.isPrimordial) {

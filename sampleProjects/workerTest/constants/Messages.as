@@ -17,24 +17,24 @@ public class Messages {
 	public static const MAIN_CHILD_OBJECT_NEST:String = "MAIN_CHILD_OBJECT_NEST";
 
 
-	public static const TEST2_MAIN:String = "TEST2_MAIN";
-	public static const MAIN_TEST2:String = "MAIN_TEST2";
+	public static const TEST_MAIN:String = "TEST_MAIN";
+	public static const MAIN_TEST:String = "MAIN_TEST";
 
 
-	public static const TEST2_MAIN_OBJECT:String = "TEST2_MAIN_OBJECT";
-	public static const MAIN_TEST2_OBJECT:String = "MAIN_TEST2_OBJECT";
+	public static const TEST_MAIN_OBJECT:String = "TEST_MAIN_OBJECT";
+	public static const MAIN_TEST_OBJECT:String = "MAIN_TEST_OBJECT";
 
 
-	public static const TEST2_MAIN_OBJECT_SWAP:String = "TEST2_MAIN_OBJECT_SWAP";
-	public static const MAIN_TEST2_OBJECT_SWAP:String = "MAIN_TEST2_OBJECT_SWAP";
+	public static const TEST_MAIN_OBJECT_SWAP:String = "TEST_MAIN_OBJECT_SWAP";
+	public static const MAIN_TEST_OBJECT_SWAP:String = "MAIN_TEST_OBJECT_SWAP";
 
 
-	public static const TEST2_MAIN_OBJECT_NEST:String = "TEST2_MAIN_OBJECT_NEST";
-	public static const MAIN_TEST2_OBJECT_NEST:String = "MAIN_TEST2_OBJECT_NEST";
+	public static const TEST_MAIN_OBJECT_NEST:String = "TEST_MAIN_OBJECT_NEST";
+	public static const MAIN_TEST_OBJECT_NEST:String = "MAIN_TEST_OBJECT_NEST";
 
 	public static const MAIN_CHILD_CALC:String = "MAIN_CHILD_CALC";
-	public static const MAIN_TEST2_CALC:String = "MAIN_TEST2_CALC";
+	public static const MAIN_TEST_CALC:String = "MAIN_TEST_CALC";
 	public static const CHILD_MAIN_CALC:String = "CHILD_MAIN_CALC";
-	public static const TEST2_MAIN_CALC:String = "TEST2_MAIN_CALC";
+	public static const TEST_MAIN_CALC:String = "TEST_MAIN_CALC";
 }
 }

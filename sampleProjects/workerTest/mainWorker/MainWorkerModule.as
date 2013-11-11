@@ -22,16 +22,17 @@ public class MainWorkerModule extends ModuleScopedWorker {
 
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
-		//debug:worker//trace("---[" + moduleName + "]" + "MainWorkerTestModule:onInit();"
-		//debug:worker//		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("  -[" + moduleName + "]" + "MainWorkerTestModule:onInit();"
+		/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		registerClassAlias("workerTest.childWorker.data.ChildDataSwapVO", ChildDataSwapTestVO);
 		registerClassAlias("workerTest.testWorker.data.TestDataSwapVO", TestDataSwapTestVO);
 
 		CONFIG::debug {
 			if (Worker.current.isPrimordial) {
-				registerScope(WorkerIds.MAIN_WORKER, true, true);
-				registerScope(WorkerIds.TEST_WORKER, true, true);
+				//registerScope(WorkerIds.MAIN_WORKER, true, true);
+				//registerScope(WorkerIds.CHILD_WORKER, true, true);
+				//registerScope(WorkerIds.TEST_WORKER, true, true);
 			}
 		}
 

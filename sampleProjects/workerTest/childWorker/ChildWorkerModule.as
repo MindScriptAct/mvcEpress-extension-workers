@@ -20,17 +20,18 @@ public class ChildWorkerModule extends ModuleScopedWorker {
 
 	override protected function onInit():void {
 		//MonsterDebugger.initialize(this);
-		//debug:worker//trace("---[" + moduleName + "]" + "ChildWorkerModule:onInit();"
-		//debug:worker//		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("  -[" + moduleName + "]" + "ChildWorkerModule:onInit();"
+		/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		CONFIG::debug {
 			if (Worker.current.isPrimordial) {
 				registerScope(WorkerIds.MAIN_WORKER, true, true);
 				registerScope(WorkerIds.CHILD_WORKER, true, true);
+				registerScope(WorkerIds.TEST_WORKER, true, true);
 			}
 		}
 
-		registerClassAlias("workerTest.mainWorker.data.MainDataSwapVO", MainDataSwapTestVO);
+		//registerClassAlias("workerTest.mainWorker.data.MainDataSwapVO", MainDataSwapTestVO);
 
 
 		mediatorMap.mediateWith(this, ChildWorkerModuleMediator);

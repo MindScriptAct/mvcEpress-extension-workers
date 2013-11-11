@@ -30,10 +30,10 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 
 	override protected function onRegister():void {
 
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.MAIN_TEST2, handleWorkerString);
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.MAIN_TEST2_OBJECT, handleWorkerObject);
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.MAIN_TEST2_OBJECT_SWAP, handleWorkerObjectSwap);
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.MAIN_TEST2_OBJECT_NEST, handleWorkerObjectNest);
+		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_TEST, handleWorkerString);
+		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_TEST_OBJECT, handleWorkerObject);
+		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_TEST_OBJECT_SWAP, handleWorkerObjectSwap);
+		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_TEST_OBJECT_NEST, handleWorkerObjectNest);
 //
 		to1 = setTimeout(sendString, 1000 + 8000);
 		to2 = setTimeout(sendObject, 3000 + 8000);
@@ -49,51 +49,51 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 
 //		setTimeout(sendObjectNest, 2000);
 
-		addScopeHandler(WorkerIds.TEST_WORKER, Messages.MAIN_TEST2_CALC, handleMainCalc);
+		addScopeHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_TEST_CALC, handleMainCalc);
 	}
 
 	private function handleMainCalc(testNumber:int):void {
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN_CALC, "Test2 mult2... " + (testNumber * 2));
+		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_CALC, "Test2 mult2... " + (testNumber * 2));
 	}
 
 	////////////////////////////////
 
 	private function sendString():void {
-		//debug:worker//trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendString();", "Debug module name: " + view.debug_getModuleName()
-		//debug:worker//		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendString();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN, "TEST2 > MAIN");
+		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN, "TEST2 > MAIN");
 		to1 = setTimeout(sendString, 16000);
 	}
 
 	//*
 
 	private function sendObject():void {
-		//debug:worker//trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendObject();", "Debug module name: " + view.debug_getModuleName()
-		//debug:worker//		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObject();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN_OBJECT, new TestDataVO("TEST2 >> MAIN"));
+		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT, new TestDataVO("TEST2 >> MAIN"));
 		to2 = setTimeout(sendObject, 16000);
 	}
 
 	private function sendObjectSwap():void {
-		//debug:worker//trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectSwap();", "Debug module name: " + view.debug_getModuleName()
-		//debug:worker//		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectSwap();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN_OBJECT_SWAP, new TestDataSwapVO("TEST2 >>> MAIN"));
+		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT_SWAP, new TestDataSwapVO("TEST2 >>> MAIN"));
 		to3 = setTimeout(sendObjectSwap, 16000);
 	}
 
 
 	private function sendObjectNest():void {
-		//debug:worker//trace("	[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectNest();", "Debug module name: " + view.debug_getModuleName()
-		//debug:worker//		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectNest();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
-		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST2_MAIN_OBJECT_NEST, new TestDataNestVO("TEST2 >>>> MAIN"));
+		sendScopeMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT_NEST, new TestDataNestVO("TEST2 >>>> MAIN"));
 		to4 = setTimeout(sendObjectNest, 16000);
 	}
 
@@ -104,22 +104,22 @@ public class TestWorkerModuleMediator extends MediatorScoped {
 	//*
 	private function handleWorkerString(params:Object):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker//trace("9: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received string:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("9: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received string:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObject(params:MainDataVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker//trace("11: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("11: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectSwap(params:MainDataSwapTestVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker//trace("13: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received swapped object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("13: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received swapped object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectNest(params:MainDataNestVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker//trace("15: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received nested object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("15: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received nested object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	override protected function onRemove():void {

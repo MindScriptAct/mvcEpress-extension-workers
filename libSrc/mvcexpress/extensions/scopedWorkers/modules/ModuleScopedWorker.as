@@ -16,7 +16,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 	private static var _isWorkersSupported:Boolean;// = false;
 
 	// TEMP... for Debug only..
-	//debug:worker//public var debug_objectID:int = Math.random() * 100000000;
+	/**debug:worker**/public var debug_objectID:int = Math.random() * 100000000;
 
 	/**
 	 * CONSTRUCTOR. ModuleName must be provided.
@@ -24,8 +24,8 @@ public class ModuleScopedWorker extends ModuleScoped {
 	 */
 	public function ModuleScopedWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
 
-		//debug:worker//trace("-----[" + moduleName + "]" + "ModuleWorker: try to create module."
-		//debug:worker//		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: try to create module."
+		/**debug:worker**/		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		use namespace pureLegsCore;
 
@@ -43,7 +43,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 
 		if (_isWorkersSupported) {
 			canCreateModule = WorkerManager.initWorker(moduleName
-					//debug:worker//, debug_objectID
+					/**debug:worker**/, debug_objectID
 			);
 		} else {
 			trace("TODO - implement scenario then workers are not supported.");
@@ -59,8 +59,8 @@ public class ModuleScopedWorker extends ModuleScoped {
 		}
 
 		if (canCreateModule) {
-			//debug:worker//trace("-----[" + moduleName + "]" + "ModuleWorker: Create module!"
-			//debug:worker//		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			/**debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: Create module!"
+			/**debug:worker**/		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 			super(moduleName, mediatorMapClass, proxyMapClass, commandMapClass, messengerClass);
 		}
 
@@ -79,7 +79,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 		use namespace pureLegsCore;
 
 		WorkerManager.startWorker(moduleName, workerModuleClass, workerModuleName, workerSwfBytes
-				//debug:worker//, debug_objectID
+				/**debug:worker**/, debug_objectID
 		);
 	}
 
@@ -91,7 +91,7 @@ public class ModuleScopedWorker extends ModuleScoped {
 		use namespace pureLegsCore;
 
 		WorkerManager.terminateWorker(workerModuleName
-				//debug:worker//, moduleName, debug_objectID
+				/**debug:worker**/, moduleName, debug_objectID
 		);
 	}
 
@@ -100,17 +100,17 @@ public class ModuleScopedWorker extends ModuleScoped {
 	//	DEBUG...
 	//////////////////////////////
 
-	//debug:worker//public function debug_getModuleName():String {
-	//debug:worker//	use namespace pureLegsCore;
-	//debug:worker//
-	//debug:worker//		if (_isWorkersSupported) {
-	//debug:worker//			var retVal:String = Worker.current.getSharedProperty("$_wmn_$");
-	//debug:worker//			Worker.current.setSharedProperty("$_wmn_$", retVal);
-	//debug:worker//			return retVal;
-	//debug:worker//		} else {
-	//debug:worker//			return moduleName;
-	//debug:worker//		}
-	//debug:worker//	}
+	/**debug:worker**/public function debug_getModuleName():String {
+	/**debug:worker**/	use namespace pureLegsCore;
+	/**debug:worker**/
+	/**debug:worker**/		if (_isWorkersSupported) {
+	/**debug:worker**/			var retVal:String = Worker.current.getSharedProperty("$_wmn_$");
+	/**debug:worker**/			Worker.current.setSharedProperty("$_wmn_$", retVal);
+	/**debug:worker**/			return retVal;
+	/**debug:worker**/		} else {
+	/**debug:worker**/			return moduleName;
+	/**debug:worker**/		}
+	/**debug:worker**/	}
 
 	//----------------------------------
 	//    Extension checking: INTERNAL, DEBUG ONLY.
