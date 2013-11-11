@@ -37,11 +37,11 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 
 
 		setTimeout(sendString, TestConsts.START_DELAY + 0);
-		setTimeout(sendObject, TestConsts.START_DELAY + 2000);
-		if (WorkerManager.isSupported) {
-			setTimeout(sendObjectSwap, TestConsts.START_DELAY + 4000);
-		}
-		setTimeout(sendObjectNest, TestConsts.START_DELAY + 6000);
+		//setTimeout(sendObject, TestConsts.START_DELAY + 2000);
+		//if (WorkerManager.isSupported) {
+		//	setTimeout(sendObjectSwap, TestConsts.START_DELAY + 4000);
+		//}
+		//setTimeout(sendObjectNest, TestConsts.START_DELAY + 6000);
 
 
 		/////////////////////////////////
@@ -51,14 +51,14 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT_SWAP, handleWorkerObjectSwap2);
 		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT_NEST, handleWorkerObjectNest2);
 
-
+		/*
 		setTimeout(sendString2, TestConsts.START_DELAY + 0 + 8000);
 		setTimeout(sendObject2, TestConsts.START_DELAY + 2000 + 8000);
 		if (WorkerManager.isSupported) {
 			setTimeout(sendObjectSwap2, TestConsts.START_DELAY + 4000 + 8000);
 		}
 		setTimeout(sendObjectNest2, TestConsts.START_DELAY + 6000 + 8000);
-
+		*/
 
 //		sendString();
 //		sendObject();
@@ -90,7 +90,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 
 
 		sendWorkerMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD, "MAIN > CHILD");
-		setTimeout(sendString, 16000);
+		//setTimeout(sendString, 16000);
 	}
 
 	private function sendObject():void {

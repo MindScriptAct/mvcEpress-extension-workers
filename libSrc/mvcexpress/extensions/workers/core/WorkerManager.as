@@ -10,7 +10,6 @@ import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 
 import mvcexpress.core.messenger.HandlerVO;
-
 import mvcexpress.core.messenger.Messenger;
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.workers.core.messenger.WorkerMessenger;
@@ -132,7 +131,7 @@ public class WorkerManager {
 
 		if (_isSupported) {
 			//
-			/**debug:worker**/trace("      [" + mainModuleName + "]" + "ModuleWorkerBase: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
+			/**debug:worker**/trace("      [" + mainModuleName + "]" + "WorkerManager: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
 			/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			//trace("WorkerClass.isSupported:", WorkerClass.isSupported);
@@ -189,7 +188,7 @@ public class WorkerManager {
 											/**debug:worker**/, debug_objectID:int):Boolean {
 		use namespace pureLegsCore;
 
-		/**debug:worker**/trace("      [" + moduleName + "]" + "ModuleWorkerBase: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
+		/**debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
 		/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		if (WorkerClass.current.isPrimordial) { // check if primordial.
@@ -212,13 +211,13 @@ public class WorkerManager {
 			// check if child must be created.
 			var childModuleClassDefinition:String = WorkerClass.current.getSharedProperty(REMOTE_MODULE_CLASS_NAME_KEY);
 
-			/**debug:worker**/trace("      [" + moduleName + "]" + "ModuleWorkerBase: should init child module?:", childModuleClassDefinition
+			/**debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: should init child module?:", childModuleClassDefinition
 			/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			if (childModuleClassDefinition) {
 				// NOT PRIMORDIAL, COPY OF THE MAIN.
 
-				/**debug:worker**/trace("      [" + moduleName + "]" + "ModuleWorkerBase: moduleClass:", childModuleClassDefinition
+				/**debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: moduleClass:", childModuleClassDefinition
 				/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 				WorkerClass.current.setSharedProperty(REMOTE_MODULE_CLASS_NAME_KEY, null);
@@ -418,13 +417,14 @@ public class WorkerManager {
 			trace("........WorkerManager.handleChannelMessage() communicationType:", communicationType);
 
 //			trace("  [" + debug_moduleName + "]" + "handleChannelMessage : ", communicationType
-//					+ "[" + ModuleWorkerBase.debug_coreId + "]" + "<" + debug_objectID + "> ");
+//					+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			if (communicationType == INIT_REMOTE_WORKER_TYPE) {
 				// handle special communication for initialization of new worker.
 				var remoteModuleName:String = channel.receive(true);
 
-				/**debug:worker**/trace("      [" + "moduleName" + "]" + "handle child module init! ", remoteModuleName
+				/**debug:worker**/var thisModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+				/**debug:worker**/trace("      [" + thisModuleName + "]" + "handle child module init! ", remoteModuleName
 				/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 
 				var thisWorker:Object = WorkerClass.current;
@@ -450,6 +450,11 @@ public class WorkerManager {
 						i--;
 					}
 				}
+
+				// ready messenger.
+				var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
+				workerMessenger.ready();
+
 			} else if (communicationType == REGISTER_CLASS_ALIAS_TYPE) {
 				// handle special message for registering class alias.
 				var classQualifiedName:String = channel.receive(true) as String;
@@ -465,7 +470,7 @@ public class WorkerManager {
 				//WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
 				wip_handleReceivedWorkerMessage(moduleName, moduleName, messageTypeSplite[1], params);
 			} else {
-				throw Error("ModuleWorkerBase can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
+				throw Error("WorkerManager can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
 			}
 		}
 	}
@@ -515,7 +520,7 @@ public class WorkerManager {
 	/**debug:worker**/static private function debug_workerStateHandler(event:Event):void {
 		/**debug:worker**/    var childWorker:Object = event.target;
 		/**debug:worker**/    var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
-		/**debug:worker**/    trace("      [" + moduleName + "]" + "ModuleWorkerBase: workerStateHandler- " + childWorker.state
+		/**debug:worker**/    trace("      [" + moduleName + "]" + "WorkerManager: workerStateHandler- " + childWorker.state
 		/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 		/**debug:worker**/
 	}
@@ -572,7 +577,7 @@ public class WorkerManager {
 
 		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
 		if (!workerMessenger) {
-			getWorkerMessenger(remoteModuleName);
+			workerMessenger = getWorkerMessenger(remoteModuleName);
 		}
 		return workerMessenger.addHandler(remoteModuleName + "_^~_" + type, handler);
 
