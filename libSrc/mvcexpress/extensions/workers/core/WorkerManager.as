@@ -601,16 +601,34 @@ public class WorkerManager {
 	}
 
 
+	//-----------------------------
+	//	Command handling
+	//-----------------------------
+
+	public static function workerCommandMap(moduleName:String, handleCommandExecute:Function, remoteModuleName:String, type:String, commandClass:Class):HandlerVO {
+		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
+		if (!workerMessenger) {
+			workerMessenger = getWorkerMessenger(remoteModuleName);
+		}
+		return workerMessenger.addCommandHandler(remoteModuleName + "_^~_" + type, handleCommandExecute, commandClass);
+	}
+
+	public static function workerCommandUnmap(handleCommandExecute:Function, remoteModuleName:String, type:String):void {
+		var scopeMessenger:Messenger = workerMessengers[remoteModuleName];
+		if (scopeMessenger) {
+			scopeMessenger.removeHandler(remoteModuleName + "_^~_" + type, handleCommandExecute);
+		}
+	}
+
 	//---------------------------------
 	// DEBUG functions.
 	//---------------------------------
 
 	//debug:worker**/static private function debug_workerStateHandler(event:Event):void {
-		//debug:worker**/    var childWorker:Object = event.target;
-		//debug:worker**/    var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
-		//debug:worker**/    trace("      [" + moduleName + "]" + "WorkerManager: workerStateHandler- " + childWorker.state
-		//debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
-		//debug:worker**/}
-
+	//debug:worker**/    var childWorker:Object = event.target;
+	//debug:worker**/    var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+	//debug:worker**/    trace("      [" + moduleName + "]" + "WorkerManager: workerStateHandler- " + childWorker.state
+	//debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
+	//debug:worker**/}
 }
 }

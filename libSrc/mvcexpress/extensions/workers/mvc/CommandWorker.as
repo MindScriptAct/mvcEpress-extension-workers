@@ -2,6 +2,7 @@
 package mvcexpress.extensions.workers.mvc {
 import mvcexpress.MvcExpress;
 import mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.extensions.workers.core.CommandMapWorker;
 import mvcexpress.extensions.workers.core.WorkerManager;
 import mvcexpress.extensions.workers.core.traceObjects.command.TraceCommand_sendWorkerMessage;
 import mvcexpress.extensions.workers.modules.ModuleWorker;
@@ -23,6 +24,9 @@ import mvcexpress.mvc.Command;
  * @version workers.2.0.rc1
  */
 dynamic public class CommandWorker extends Command {
+
+	/** Instance of commandMap, typed as CommandMapWorker. (shortcut for 'commandMap as CommandMapWorker') */
+	public var commandMapWorker:CommandMapWorker;
 
 	//----------------------------------
 	//     MESSAGING

@@ -2,6 +2,8 @@ package mainTest {
 import childTest.ChildTestModule;
 import childTest.CpuIntensiveCommand;
 
+import constants.WorkerMessage;
+
 import flash.system.Worker;
 import flash.utils.setTimeout;
 
@@ -29,6 +31,9 @@ public class MainTestModule extends ModuleWorker {
 	public function start(mainTest:MainTest):void {
 
 		mediatorMap.mediateWith(mainTest, MainTestMediator);
+
+
+		commandMapWorker.workerMap(WorkerIds.CHILD_WORKER, WorkerMessage.TEST2, HandlePrimeFoundCommand)
 
 		setTimeout(startModule, 500)
 

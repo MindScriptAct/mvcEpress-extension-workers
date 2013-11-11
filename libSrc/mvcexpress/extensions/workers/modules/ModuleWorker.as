@@ -4,6 +4,7 @@ import flash.utils.ByteArray;
 import mvcexpress.MvcExpress;
 import mvcexpress.core.ExtensionManager;
 import mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.extensions.workers.core.CommandMapWorker;
 import mvcexpress.extensions.workers.core.WorkerManager;
 import mvcexpress.extensions.workers.core.traceObjects.moduleBase.TraceModuleBase_sendWorkerMessage;
 import mvcexpress.modules.ModuleCore;
@@ -15,6 +16,9 @@ public class ModuleWorker extends ModuleCore {
 
 	// true if workers are supported.
 	private static var _isWorkersSupported:Boolean;// = false;
+
+	/** Instance of commandMap, typed as CommandMapWorker. (shortcut for 'commandMap as CommandMapWorker') */
+	protected var commandMapWorker:CommandMapWorker;
 
 	// TEMP... for Debug only..
 	//debug:worker**/public var debug_objectID:int = Math.random() * 100000000;
@@ -62,7 +66,13 @@ public class ModuleWorker extends ModuleCore {
 		if (canCreateModule) {
 			//debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: Create module!"
 			//debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+
+			if (!commandMapClass) {
+				commandMapClass = CommandMapWorker;
+			}
 			super(moduleName, mediatorMapClass, proxyMapClass, commandMapClass, messengerClass);
+
+			commandMapWorker = commandMap as CommandMapWorker;
 		}
 
 	}
