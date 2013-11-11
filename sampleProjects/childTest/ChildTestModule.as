@@ -3,7 +3,7 @@ import flash.system.Worker;
 
 import mvcexpress.extensions.workers.modules.ModuleWorker;
 
-import workerTest.constants.WorkerIds;
+import constants.WorkerIds;
 
 //public class ChildTestModule extends ModuleScoped {
 public class ChildTestModule extends ModuleWorker {

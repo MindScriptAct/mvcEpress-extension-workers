@@ -4,8 +4,8 @@ import flash.utils.setTimeout;
 
 import mvcexpress.extensions.workers.mvc.CommandWorker;
 
-import workerTest.constants.WorkerIds;
-import workerTest.constants.WorkerMessage;
+import constants.WorkerIds;
+import constants.WorkerMessage;
 
 /**
  * TODO:CLASS COMMENT

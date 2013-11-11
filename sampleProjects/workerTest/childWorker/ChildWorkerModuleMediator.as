@@ -1,4 +1,6 @@
 package workerTest.childWorker {
+import constants.TestConsts;
+
 import flash.utils.setTimeout;
 
 import mvcexpress.extensions.workers.core.WorkerManager;
@@ -7,8 +9,8 @@ import mvcexpress.extensions.workers.mvc.MediatorWorker;
 import workerTest.childWorker.data.ChildDataNestVO;
 import workerTest.childWorker.data.ChildDataSwapVO;
 import workerTest.childWorker.data.ChildDataVO;
-import workerTest.constants.Messages;
-import workerTest.constants.WorkerIds;
+import constants.Messages;
+import constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataNestVO;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
 import workerTest.mainWorker.data.MainDataVO;
@@ -29,12 +31,12 @@ public class ChildWorkerModuleMediator extends MediatorWorker {
 		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT_SWAP, handleWorkerObjectSwap);
 		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_CHILD_OBJECT_NEST, handleWorkerObjectNest);
 
-		setTimeout(sendString, 1000);
-		setTimeout(sendObject, 3000);
+		setTimeout(sendString, TestConsts.START_DELAY + 1000);
+		setTimeout(sendObject, TestConsts.START_DELAY + 3000);
 		if (WorkerManager.isSupported) {
-			setTimeout(sendObjectSwap, 5000);
+			setTimeout(sendObjectSwap, TestConsts.START_DELAY + 5000);
 		}
-		setTimeout(sendObjectNest, 7000);
+		setTimeout(sendObjectNest, TestConsts.START_DELAY + 7000);
 
 //		sendString();
 //		sendObject();

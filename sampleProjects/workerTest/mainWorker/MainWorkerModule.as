@@ -1,4 +1,7 @@
 package workerTest.mainWorker {
+import constants.TestConsts;
+import constants.WorkerIds;
+
 import flash.net.registerClassAlias;
 import flash.system.Worker;
 import flash.text.TextField;
@@ -10,7 +13,6 @@ import mvcexpress.extensions.workers.modules.ModuleWorker;
 import workerTest.WorkerTestMain;
 import workerTest.childWorker.ChildWorkerModule;
 import workerTest.childWorker.data.ChildDataSwapTestVO;
-import workerTest.constants.WorkerIds;
 import workerTest.testWorker.*;
 import workerTest.testWorker.data.TestDataSwapTestVO;
 
@@ -44,8 +46,8 @@ public class MainWorkerModule extends ModuleWorker {
 		mediatorMap.mediateWith(this, MainWorkerModuleMediator);
 
 
-		setTimeout(doStopTestModule, 16000 + 100);
-		setTimeout(doStartTestModule, 32000 + 100);
+		setTimeout(doStopTestModule, TestConsts.START_DELAY + 16000 + 200);
+		setTimeout(doStartTestModule, TestConsts.START_DELAY + 32000 + 200);
 	}
 
 

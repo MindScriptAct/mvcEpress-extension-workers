@@ -1,4 +1,8 @@
 package workerTest.mainWorker {
+import constants.Messages;
+import constants.TestConsts;
+import constants.WorkerIds;
+
 import flash.utils.setTimeout;
 
 import mvcexpress.extensions.workers.core.WorkerManager;
@@ -7,8 +11,6 @@ import mvcexpress.extensions.workers.mvc.MediatorWorker;
 import workerTest.childWorker.data.ChildDataNestVO;
 import workerTest.childWorker.data.ChildDataSwapTestVO;
 import workerTest.childWorker.data.ChildDataVO;
-import workerTest.constants.Messages;
-import workerTest.constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataNestVO;
 import workerTest.mainWorker.data.MainDataSwapVO;
 import workerTest.mainWorker.data.MainDataVO;
@@ -34,12 +36,12 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 		addWorkerHandler(WorkerIds.CHILD_WORKER, Messages.CHILD_MAIN_OBJECT_NEST, handleWorkerObjectNest);
 
 
-		setTimeout(sendString, 950);
-		setTimeout(sendObject, 2000);
+		setTimeout(sendString, TestConsts.START_DELAY + 0);
+		setTimeout(sendObject, TestConsts.START_DELAY + 2000);
 		if (WorkerManager.isSupported) {
-			setTimeout(sendObjectSwap, 4000);
+			setTimeout(sendObjectSwap, TestConsts.START_DELAY + 4000);
 		}
-		setTimeout(sendObjectNest, 6000);
+		setTimeout(sendObjectNest, TestConsts.START_DELAY + 6000);
 
 
 		/////////////////////////////////
@@ -50,12 +52,12 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_OBJECT_NEST, handleWorkerObjectNest2);
 
 
-		setTimeout(sendString2, 0 + 8000);
-		setTimeout(sendObject2, 2000 + 8000);
+		setTimeout(sendString2, TestConsts.START_DELAY + 0 + 8000);
+		setTimeout(sendObject2, TestConsts.START_DELAY + 2000 + 8000);
 		if (WorkerManager.isSupported) {
-			setTimeout(sendObjectSwap2, 4000 + 8000);
+			setTimeout(sendObjectSwap2, TestConsts.START_DELAY + 4000 + 8000);
 		}
-		setTimeout(sendObjectNest2, 6000 + 8000);
+		setTimeout(sendObjectNest2, TestConsts.START_DELAY + 6000 + 8000);
 
 
 //		sendString();
@@ -79,6 +81,9 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 	////////////////////////////////
 
 	private function sendString():void {
+
+		trace("                                             \\/");
+
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendString();", "Debug module name: " + view.debug_getModuleName()
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
@@ -148,6 +153,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 
 
 	private function sendString2():void {
+
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendString2();", "Debug module name: " + view.debug_getModuleName()
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");

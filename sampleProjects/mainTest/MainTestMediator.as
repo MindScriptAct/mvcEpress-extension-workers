@@ -10,8 +10,8 @@ import mvcexpress.extensions.workers.mvc.MediatorWorker;
 
 import mx.core.FlexTextField;
 
-import workerTest.constants.WorkerIds;
-import workerTest.constants.WorkerMessage;
+import constants.WorkerIds;
+import constants.WorkerMessage;
 
 /**
  * TODO:CLASS COMMENT

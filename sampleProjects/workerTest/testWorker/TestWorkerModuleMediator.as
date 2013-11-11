@@ -1,12 +1,14 @@
 package workerTest.testWorker {
+import constants.Messages;
+import constants.TestConsts;
+import constants.WorkerIds;
+
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import mvcexpress.extensions.workers.core.WorkerManager;
 import mvcexpress.extensions.workers.mvc.MediatorWorker;
 
-import workerTest.constants.Messages;
-import workerTest.constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataNestVO;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
 import workerTest.mainWorker.data.MainDataVO;
@@ -35,12 +37,12 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_TEST_OBJECT_SWAP, handleWorkerObjectSwap);
 		addWorkerHandler(WorkerIds.MAIN_WORKER, Messages.MAIN_TEST_OBJECT_NEST, handleWorkerObjectNest);
 //
-		to1 = setTimeout(sendString, 1000 + 8000);
-		to2 = setTimeout(sendObject, 3000 + 8000);
+		to1 = setTimeout(sendString, TestConsts.START_DELAY + 1000 + 8000);
+		to2 = setTimeout(sendObject, TestConsts.START_DELAY + 3000 + 8000);
 		if (WorkerManager.isSupported) {
-			to3 = setTimeout(sendObjectSwap, 5000 + 8000);
+			to3 = setTimeout(sendObjectSwap, TestConsts.START_DELAY + 5000 + 8000);
 		}
-		to4 = setTimeout(sendObjectNest, 7000 + 8000);
+		to4 = setTimeout(sendObjectNest, TestConsts.START_DELAY + 7000 + 8000);
 
 //		sendString();
 //		sendObject();
@@ -60,7 +62,7 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 
 	private function sendString():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendString();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN, "TEST2 > MAIN");
@@ -71,7 +73,7 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 
 	private function sendObject():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObject();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT, new TestDataVO("TEST2 >> MAIN"));
@@ -80,7 +82,7 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 
 	private function sendObjectSwap():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectSwap();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT_SWAP, new TestDataSwapVO("TEST2 >>> MAIN"));
@@ -90,7 +92,7 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 
 	private function sendObjectNest():void {
 		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectNest();", "Debug module name: " + view.debug_getModuleName()
-		/**debug:worker**/		+ "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT_NEST, new TestDataNestVO("TEST2 >>>> MAIN"));

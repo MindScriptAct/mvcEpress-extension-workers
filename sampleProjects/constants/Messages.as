@@ -1,4 +1,4 @@
-package workerTest.constants {
+package constants {
 public class Messages {
 
 	public static const CHILD_MAIN:String = "CHILD_MAIN";

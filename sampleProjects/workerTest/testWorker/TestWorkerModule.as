@@ -5,7 +5,7 @@ import flash.system.Worker;
 import mvcexpress.extensions.workers.core.WorkerManager;
 import mvcexpress.extensions.workers.modules.ModuleWorker;
 
-import workerTest.constants.WorkerIds;
+import constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
 
 /**

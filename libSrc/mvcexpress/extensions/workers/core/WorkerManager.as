@@ -1,4 +1,6 @@
 package mvcexpress.extensions.workers.core {
+import constants.WorkerMessage;
+
 import flash.events.Event;
 import flash.net.getClassByAlias;
 import flash.net.registerClassAlias;
@@ -8,6 +10,7 @@ import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 
 import mvcexpress.core.messenger.HandlerVO;
+
 import mvcexpress.core.messenger.Messenger;
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.workers.core.messenger.WorkerMessenger;
@@ -154,7 +157,7 @@ public class WorkerManager {
 				var classAliasNames:String = ClassAliasRegistry.getCustomClasses();
 				remoteWorker.setSharedProperty(CLASS_ALIAS_NAMES_KEY, classAliasNames);
 
-				// init custom scoped messenger
+				// init custom worker messenger
 				var messengerWorker:WorkerMessenger = getWorkerMessenger(remoweModuleName);
 				$pendingWorkerMessengers[remoweModuleName] = messengerWorker;
 
@@ -170,14 +173,6 @@ public class WorkerManager {
 			}
 		} else {
 			throw  Error("TODO");
-//			ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-//			ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-//			ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
-//
-//			ModuleScopedWorker.canInitChildModule = true;
-//			var childModule:Object = new workerModuleClass();
-//			workerRegistry[workerModuleName] = childModule;
-//			ModuleScopedWorker.canInitChildModule = true;
 		}
 	}
 
@@ -200,7 +195,7 @@ public class WorkerManager {
 		if (WorkerClass.current.isPrimordial) { // check if primordial.
 			var rootModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 			if (rootModuleName != null) { // check if root module is already created.
-				throw Error("Only first(main) ModuleScopedWorker can be instantiated. Use startWorker(MyBackgroundWorkerModule) to create background workers. ");
+				throw Error("Only first(main) ModuleWorker can be instantiated. Use startWorker(MyBackgroundWorkerModule) to create background workers. ");
 			} else { // PRIMORDIAL, MAIN.
 
 				CONFIG::debug {
@@ -361,7 +356,7 @@ public class WorkerManager {
 					// handle communication permissions
 					use namespace pureLegsCore;
 
-					// init custom scoped messenger
+					// init custom worker messenger
 					getWorkerMessenger(workerModuleName).ready();
 
 					//
@@ -468,7 +463,7 @@ public class WorkerManager {
 				// TODO : rething if getting moduleName from worker valid here.(error scenarios?)
 				var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 				//WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
-				wip_sendScopeMessage(moduleName, moduleName, messageTypeSplite[1], params);
+				wip_handleReceivedWorkerMessage(moduleName, moduleName, messageTypeSplite[1], params);
 			} else {
 				throw Error("ModuleWorkerBase can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
 			}
@@ -530,20 +525,25 @@ public class WorkerManager {
 	static pureLegsCore function wip_sendWorkerMessage(fromModule:String, toModule:String, type:String, params:Object):void {
 		// from this to outside.
 
+		var workerMessenger:WorkerMessenger = workerMessengers[toModule];
+		if (workerMessenger) {
+			workerMessenger.send(toModule + "_^~_" + type, params);
+		}
+
 	}
 
 	// FIXME : rename, move.
-	private static function wip_sendScopeMessage(fromModule:String, toModule:String, type:String, params:Object):void {
-		trace("...WorkerManager.wip_sendScopeMessage()", fromModule, toModule, type, params);
+	private static function wip_handleReceivedWorkerMessage(fromModule:String, toModule:String, type:String, params:Object):void {
+		trace("...WorkerManager.wip_handleReceivedWorkerMessage()", fromModule, toModule, type, params);
 		// from outside to this...
 
 		use namespace pureLegsCore;
 
-		// get scoped messenger, and trigger send.
-		var scopeMessenger:Messenger = workerMessengers[toModule];
-		trace("....WorkerManager. .scopeMessenger:", scopeMessenger);
-		if (scopeMessenger) {
-			scopeMessenger.send(toModule + "_^~_" + type, params);
+		// get worker messenger, and trigger send.
+		var workerMessenger:Messenger = workerMessengers[toModule];
+		trace("....WorkerManager. .vorkerMessenger:", workerMessenger);
+		if (workerMessenger) {
+			workerMessenger.send(toModule + "_^~_" + type, params);
 		}
 	}
 
@@ -555,30 +555,33 @@ public class WorkerManager {
 	private static function getWorkerMessenger(remoteModuleName:String):WorkerMessenger {
 		/**debug:worker**/trace("  WorkerManager.getWorkerMessenger(" + remoteModuleName + ")");
 
-		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
-		if (!workerMessenger) {
+		var workerMesanger:WorkerMessenger = workerMessengers[remoteModuleName];
+		if (!workerMesanger) {
 			use namespace pureLegsCore;
 
 			Messenger.allowInstantiation = true;
-			workerMessenger = new WorkerMessenger("$worker_" + remoteModuleName);
+			workerMesanger = new WorkerMessenger("$worker_" + remoteModuleName);
 			Messenger.allowInstantiation = false;
-			workerMessengers[remoteModuleName] = workerMessenger;
+			workerMessengers[remoteModuleName] = workerMesanger;
 		}
-		return workerMessenger;
+		return workerMesanger;
 	}
 
-	public static function wip_addScopeHandler(moduleName:String, remoteModuleName:String, type:String, handler:Function):HandlerVO {
+	public static function wip_addWorkerHandler(moduleName:String, remoteModuleName:String, type:String, handler:Function):HandlerVO {
+
+
 		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
 		if (!workerMessenger) {
-			workerMessenger = getWorkerMessenger(remoteModuleName);
+			getWorkerMessenger(remoteModuleName);
 		}
 		return workerMessenger.addHandler(remoteModuleName + "_^~_" + type, handler);
+
 	}
 
-	public static function wip_removeScopeHandler(remoteModuleName:String, type:String, handler:Function):void {
-		var scopeMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
-		if (scopeMessenger) {
-			scopeMessenger.removeHandler(remoteModuleName + "_^~_" + type, handler);
+	public static function wip_removeWorkerHandler(remoteModuleName:String, type:String, handler:Function):void {
+		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
+		if (workerMessenger) {
+			workerMessenger.removeHandler(remoteModuleName + "_^~_" + type, handler);
 		}
 	}
 }

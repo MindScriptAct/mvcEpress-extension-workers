@@ -6,7 +6,7 @@ import flash.utils.setTimeout;
 
 import mvcexpress.extensions.workers.modules.ModuleWorker;
 
-import workerTest.constants.WorkerIds;
+import constants.WorkerIds;
 
 //public class MainTestModule extends ModuleScoped {
 public class MainTestModule extends ModuleWorker {

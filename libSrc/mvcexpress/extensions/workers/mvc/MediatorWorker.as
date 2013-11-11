@@ -1,7 +1,6 @@
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 package mvcexpress.extensions.workers.mvc {
 import mvcexpress.MvcExpress;
-import mvcexpress.core.messenger.HandlerVO;
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.workers.core.WorkerManager;
 import mvcexpress.extensions.workers.core.traceObjects.mediator.TraceMediator_sendWorkerMessage;
@@ -62,7 +61,7 @@ public class MediatorWorker extends Mediator {
 	protected function addWorkerHandler(remoteWorkerModuleName:String, type:String, handler:Function):void {
 		use namespace pureLegsCore;
 
-		handlerVoRegistry[handlerVoRegistry.length] = WorkerManager.wip_addScopeHandler(moduleName, remoteWorkerModuleName, type, handler);
+		handlerVoRegistry[handlerVoRegistry.length] = WorkerManager.wip_addWorkerHandler(moduleName, remoteWorkerModuleName, type, handler);
 	}
 
 	/**
@@ -74,7 +73,7 @@ public class MediatorWorker extends Mediator {
 	protected function removeWorkerHandler(remoteWorkerModuleName:String, type:String, handler:Function):void {
 		use namespace pureLegsCore;
 
-		WorkerManager.wip_removeScopeHandler(remoteWorkerModuleName, type, handler);
+		WorkerManager.wip_removeWorkerHandler(remoteWorkerModuleName, type, handler);
 	}
 
 	//----------------------------------
