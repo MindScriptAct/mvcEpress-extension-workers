@@ -15,12 +15,6 @@ public class ChildTestModule extends ModuleWorker {
 
 	override protected function onInit():void {
 
-		CONFIG::debug {
-			if (Worker.current.isPrimordial) {
-				//registerScope(WorkerIds.CHILD_WORKER, true);
-			}
-		}
-
 		commandMap.execute(CpuIntensiveCommand)
 	}
 

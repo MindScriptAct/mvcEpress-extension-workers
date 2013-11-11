@@ -1,8 +1,11 @@
 package mainTest {
 import childTest.ChildTestModule;
+import childTest.CpuIntensiveCommand;
 
 import flash.system.Worker;
 import flash.utils.setTimeout;
+
+import mvcexpress.core.traceObjects.commandMap.TraceCommandMap_execute;
 
 import mvcexpress.extensions.workers.modules.ModuleWorker;
 
@@ -17,12 +20,6 @@ public class MainTestModule extends ModuleWorker {
 
 
 	override protected function onInit():void {
-		CONFIG::debug {
-			if (Worker.current.isPrimordial) {
-				//registerScope(WorkerIds.CHILD_WORKER, false, true);
-				//registerScope(WorkerIds.MAIN_WORKER, false, true);
-			}
-		}
 	}
 
 	override protected function onDispose():void {
@@ -31,10 +28,7 @@ public class MainTestModule extends ModuleWorker {
 
 	public function start(mainTest:MainTest):void {
 
-		startWorker(ChildTestModule, WorkerIds.CHILD_WORKER);
-
 		mediatorMap.mediateWith(mainTest, MainTestMediator);
-
 
 		setTimeout(startModule, 500)
 
@@ -44,9 +38,8 @@ public class MainTestModule extends ModuleWorker {
 	private function startModule():void {
 		//var childModule:ChildTestModule = new ChildTestModule();
 
-		// FIXME : does not work properly.. messenger is overwritten.
-		//startWorker(ChildTestModule, WorkerIds.CHILD_WORKER);
-
+		startWorker(ChildTestModule, WorkerIds.CHILD_WORKER);
+		//commandMap.execute(CpuIntensiveCommand);
 
 	}
 }

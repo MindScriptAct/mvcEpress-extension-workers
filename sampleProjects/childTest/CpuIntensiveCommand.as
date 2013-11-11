@@ -25,6 +25,7 @@ public class CpuIntensiveCommand extends CommandWorker {
 
 		for (var i:int = startingVal; i < startingVal + 5000; i++) { // 3 sec
 
+			sendMessage(WorkerMessage.TEST2, i);
 			sendWorkerMessage(WorkerIds.MAIN_WORKER, WorkerMessage.TEST2, i);
 
 			var isPrime:Boolean = true;
@@ -44,6 +45,7 @@ public class CpuIntensiveCommand extends CommandWorker {
 		trace("Highest prime:" + prime + "  [" + Math.floor((getTimer() - startTime)) + " ms spent.]");
 
 		if (prime) {
+			sendMessage(WorkerMessage.TEST1, prime);
 			sendWorkerMessage(WorkerIds.MAIN_WORKER, WorkerMessage.TEST1, prime);
 		}
 
