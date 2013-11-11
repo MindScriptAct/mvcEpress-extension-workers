@@ -37,7 +37,7 @@ public class ProxyWorker extends Proxy {
 			MvcExpress.debug(new TraceProxy_sendWorkerMessage(moduleName, this, type, params, true));
 		}
 		//
-		WorkerManager.wip_sendWorkerMessage(moduleName, remoteWorkerModuleName, type, params);
+		WorkerManager.sendWorkerMessage(moduleName, remoteWorkerModuleName, type, params);
 		//
 		// clean up logging the action
 		CONFIG::debug {

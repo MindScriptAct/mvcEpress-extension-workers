@@ -53,7 +53,7 @@ public class WorkerMessenger extends Messenger {
 			use namespace pureLegsCore;
 
 			// send message to other workers.
-			WorkerManager.sendWorkerMessage(type, params);
+			WorkerManager.sendWorkerMessageToAllChannels(type, params);
 		} else {
 			// messenger is not ready, push to pending vector and wait for it to be ready.
 			pendingTypes.push(type);

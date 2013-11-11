@@ -1,10 +1,11 @@
 package mvcexpress.extensions.workers.modules {
-import flash.system.Worker;
 import flash.utils.ByteArray;
 
+import mvcexpress.MvcExpress;
 import mvcexpress.core.ExtensionManager;
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.workers.core.WorkerManager;
+import mvcexpress.extensions.workers.core.traceObjects.moduleBase.TraceModuleBase_sendWorkerMessage;
 import mvcexpress.modules.ModuleCore;
 
 public class ModuleWorker extends ModuleCore {
@@ -25,7 +26,7 @@ public class ModuleWorker extends ModuleCore {
 	public function ModuleWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
 
 		/**debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: try to create module."
-		/**debug:worker**/		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		use namespace pureLegsCore;
 
@@ -60,7 +61,7 @@ public class ModuleWorker extends ModuleCore {
 
 		if (canCreateModule) {
 			/**debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: Create module!"
-			/**debug:worker**/		+ "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 			super(moduleName, mediatorMapClass, proxyMapClass, commandMapClass, messengerClass);
 		}
 
@@ -96,21 +97,30 @@ public class ModuleWorker extends ModuleCore {
 	}
 
 
-	//////////////////////////////
-	//	DEBUG...
-	//////////////////////////////
+	//----------------------------------
+	//   Worker MESSAGING
+	//----------------------------------
 
-	/**debug:worker**/public function debug_getModuleName():String {
-	/**debug:worker**/	use namespace pureLegsCore;
-	/**debug:worker**/
-	/**debug:worker**/		if (_isWorkersSupported) {
-	/**debug:worker**/			var retVal:String = Worker.current.getSharedProperty("$_wmn_$");
-	/**debug:worker**/			Worker.current.setSharedProperty("$_wmn_$", retVal);
-	/**debug:worker**/			return retVal;
-	/**debug:worker**/		} else {
-	/**debug:worker**/			return moduleName;
-	/**debug:worker**/		}
-	/**debug:worker**/	}
+	/**
+	 * Sends message for other framework actors to react to.
+	 * @param    type    type of the message. (Commands and handle functions must be mapped to type to be triggered.)
+	 * @param    params    Object that will be send to Command execute() or to handle function as parameter.
+	 */
+	public function sendWorkerMessage(remoteWorkerModuleName:String, type:String, params:Object = null):void {
+		use namespace pureLegsCore;
+
+		// log the action
+		CONFIG::debug {
+			MvcExpress.debug(new TraceModuleBase_sendWorkerMessage(moduleName, this, type, params, true));
+		}
+		//
+		WorkerManager.sendWorkerMessage(moduleName, remoteWorkerModuleName, type, params);
+		//
+		// clean up logging
+		CONFIG::debug {
+			MvcExpress.debug(new TraceModuleBase_sendWorkerMessage(moduleName, this, type, params, false));
+		}
+	}
 
 	//----------------------------------
 	//    Extension checking: INTERNAL, DEBUG ONLY.

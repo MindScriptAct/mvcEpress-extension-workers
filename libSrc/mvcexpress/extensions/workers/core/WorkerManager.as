@@ -66,11 +66,15 @@ public class WorkerManager {
 	// registry of all workers.
 	static private var $workerRegistry:Dictionary = new Dictionary()
 
+	/* all messengers by remote worker module name */
+	static private var workerMessengers:Dictionary = new Dictionary(); //* of WorkerMessenger by String{moduleName} */
+
 	//  messenger  waiting for remote worker to be initialized. (All messages send while waiting will be stacked, and send then remote module is ready.)
 	static private var $pendingWorkerMessengers:Dictionary = new Dictionary();
 
 	// store messageChannels so they don't get garbage collected while they are waiting for remote worker to be ready.
 	static private var $tempChannelStorage:Vector.<Object> = new <Object>[];
+
 
 	// TEMP...
 	// debug ids, for tracing.
@@ -122,7 +126,8 @@ public class WorkerManager {
 	 * @private
 	 */
 	static pureLegsCore function startWorker(mainModuleName:String, workerModuleClass:Class, remoweModuleName:String, workerSwfBytes:ByteArray = null
-											 /**debug:worker**/, debug_objectID:int = 0):void {
+											 /**debug:worker**/, debug_objectID:int = 0 //
+			):void {
 		use namespace pureLegsCore;
 
 		// TODO : check extended form workerModule class.
@@ -160,7 +165,7 @@ public class WorkerManager {
 
 				//
 				connectRemoteWorker(remoteWorker, mainModuleName
-						/**debug:worker**/, debug_objectID
+						/**debug:worker**/, debug_objectID //
 				);
 				//
 				remoteWorker.start();
@@ -183,7 +188,8 @@ public class WorkerManager {
 	 * @private
 	 */
 	static pureLegsCore function initWorker(moduleName:String
-											/**debug:worker**/, debug_objectID:int):Boolean {
+											/**debug:worker**/, debug_objectID:int //
+			):Boolean {
 		use namespace pureLegsCore;
 
 		/**debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
@@ -249,7 +255,7 @@ public class WorkerManager {
 				}
 
 				setUpRemoteWorkerCommunication(moduleName
-						/**debug:worker**/, moduleName, debug_objectID
+						/**debug:worker**/, moduleName, debug_objectID //
 				);
 			}
 		}
@@ -261,7 +267,8 @@ public class WorkerManager {
 	 * @param workerModuleName
 	 */
 	static pureLegsCore function terminateWorker(workerModuleName:String
-												 /**debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0):void {
+												 /**debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0 //
+			):void {
 		use namespace pureLegsCore;
 
 		/**debug:worker**/trace("STOP worker :", workerModuleName);
@@ -334,7 +341,8 @@ public class WorkerManager {
 
 
 	static private function setUpRemoteWorkerCommunication(remoteModuleName:String
-														   /**debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0):void {
+														   /**debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0 //
+			):void {
 		// get all workers
 		var workers:* = WorkerDomainClass.current.listWorkers();
 		/**debug:worker**/trace("      [" + debug_mainModuleName + "]" + "setUpWorkerCommunication " + workers
@@ -387,7 +395,11 @@ public class WorkerManager {
 	}
 
 
-	static pureLegsCore function sendWorkerMessage(type:String, params:Object = null):void {
+	//----------------------------
+	// messages
+	//----------------------------
+
+	static pureLegsCore function sendWorkerMessageToAllChannels(type:String, params:Object = null):void {
 		trace("........WorkerManager.sendWorkerMessage()", type, params);
 
 		use namespace pureLegsCore;
@@ -403,9 +415,9 @@ public class WorkerManager {
 		}
 	}
 
+
 	static private function handleChannelMessage(event:Event):void {
 		use namespace pureLegsCore;
-
 
 		var channel:Object = event.target;
 
@@ -456,6 +468,7 @@ public class WorkerManager {
 				// handle special message for registering class alias.
 				var classQualifiedName:String = channel.receive(true) as String;
 				registerClassNameAlias(classQualifiedName);
+
 			} else if (communicationType == SEND_WORKER_MESSAGE_TYPE) {
 				// handle worker to worker communication.
 				var messageType:String = channel.receive(true) as String;
@@ -467,13 +480,81 @@ public class WorkerManager {
 				// TODO : rething if getting moduleName from worker valid here.(error scenarios?)
 				var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 				//WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
-				wip_handleReceivedWorkerMessage(moduleName, messageTypeSplit[0], messageTypeSplit[1], params);
+				handleReceivedWorkerMessage(moduleName, messageTypeSplit[0], messageTypeSplit[1], params);
+
 			} else {
 				throw Error("WorkerManager can't handle communicationType:" + communicationType + " This channel designed to be used by framework only.");
 			}
 		}
 	}
 
+	private static function handleReceivedWorkerMessage(fromModule:String, toModule:String, type:String, params:Object):void {
+		trace("...WorkerManager.wip_handleReceivedWorkerMessage()", fromModule, toModule, type, params);
+		// from outside to this...
+
+		use namespace pureLegsCore;
+
+		// get worker messenger, and trigger send.
+		var workerMessenger:Messenger = workerMessengers[toModule];
+		trace("....WorkerManager. .vorkerMessenger:", workerMessenger);
+		if (workerMessenger) {
+			workerMessenger.send(toModule + "_^~_" + type, params);
+		}
+	}
+
+
+	//----------------------------------
+	//	worker messenger handling.
+	//----------------------------------
+
+	private static function getWorkerMessenger(remoteModuleName:String):WorkerMessenger {
+		/**debug:worker**/trace("  WorkerManager.getWorkerMessenger(" + remoteModuleName + ")");
+
+		var workerMesanger:WorkerMessenger = workerMessengers[remoteModuleName];
+		if (!workerMesanger) {
+			use namespace pureLegsCore;
+
+			Messenger.allowInstantiation = true;
+			workerMesanger = new WorkerMessenger("$worker_" + remoteModuleName);
+			Messenger.allowInstantiation = false;
+			workerMessengers[remoteModuleName] = workerMesanger;
+		}
+		return workerMesanger;
+	}
+
+
+	static pureLegsCore function sendWorkerMessage(fromModule:String, toModule:String, type:String, params:Object):void {
+		// from this to outside.
+
+		var workerMessenger:WorkerMessenger = workerMessengers[toModule];
+		if (workerMessenger) {
+			workerMessenger.workerSend(fromModule + "_^~_" + type, params);
+		}
+
+	}
+
+	static pureLegsCore function addWorkerHandler(moduleName:String, remoteModuleName:String, type:String, handler:Function):HandlerVO {
+
+
+		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
+		if (!workerMessenger) {
+			workerMessenger = getWorkerMessenger(remoteModuleName);
+		}
+		return workerMessenger.addHandler(remoteModuleName + "_^~_" + type, handler);
+
+	}
+
+	static pureLegsCore function removeWorkerHandler(remoteModuleName:String, type:String, handler:Function):void {
+		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
+		if (workerMessenger) {
+			workerMessenger.removeHandler(remoteModuleName + "_^~_" + type, handler);
+		}
+	}
+
+
+	//------------------------------
+	//	class alias handling.
+	//------------------------------
 
 	static private function registerClassNameAlias(classQualifiedName:String):void {
 		use namespace pureLegsCore;
@@ -513,7 +594,7 @@ public class WorkerManager {
 
 
 	//---------------------------------
-	// Debug functions.
+	// DEBUG functions.
 	//---------------------------------
 
 	/**debug:worker**/static private function debug_workerStateHandler(event:Event):void {
@@ -524,69 +605,5 @@ public class WorkerManager {
 		/**debug:worker**/
 	}
 
-
-	// FIXME : rename.
-	static pureLegsCore function wip_sendWorkerMessage(fromModule:String, toModule:String, type:String, params:Object):void {
-		// from this to outside.
-
-		var workerMessenger:WorkerMessenger = workerMessengers[toModule];
-		if (workerMessenger) {
-			workerMessenger.workerSend(fromModule + "_^~_" + type, params);
-		}
-
-	}
-
-	// FIXME : rename, move.
-	private static function wip_handleReceivedWorkerMessage(fromModule:String, toModule:String, type:String, params:Object):void {
-		trace("...WorkerManager.wip_handleReceivedWorkerMessage()", fromModule, toModule, type, params);
-		// from outside to this...
-
-		use namespace pureLegsCore;
-
-		// get worker messenger, and trigger send.
-		var workerMessenger:Messenger = workerMessengers[toModule];
-		trace("....WorkerManager. .vorkerMessenger:", workerMessenger);
-		if (workerMessenger) {
-			workerMessenger.send(toModule + "_^~_" + type, params);
-		}
-	}
-
-
-	/* all messengers by remote worker module name */
-	static private var workerMessengers:Dictionary = new Dictionary(); //* of WorkerMessenger by String{moduleName} */
-
-
-	private static function getWorkerMessenger(remoteModuleName:String):WorkerMessenger {
-		/**debug:worker**/trace("  WorkerManager.getWorkerMessenger(" + remoteModuleName + ")");
-
-		var workerMesanger:WorkerMessenger = workerMessengers[remoteModuleName];
-		if (!workerMesanger) {
-			use namespace pureLegsCore;
-
-			Messenger.allowInstantiation = true;
-			workerMesanger = new WorkerMessenger("$worker_" + remoteModuleName);
-			Messenger.allowInstantiation = false;
-			workerMessengers[remoteModuleName] = workerMesanger;
-		}
-		return workerMesanger;
-	}
-
-	public static function wip_addWorkerHandler(moduleName:String, remoteModuleName:String, type:String, handler:Function):HandlerVO {
-
-
-		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
-		if (!workerMessenger) {
-			workerMessenger = getWorkerMessenger(remoteModuleName);
-		}
-		return workerMessenger.addHandler(remoteModuleName + "_^~_" + type, handler);
-
-	}
-
-	public static function wip_removeWorkerHandler(remoteModuleName:String, type:String, handler:Function):void {
-		var workerMessenger:WorkerMessenger = workerMessengers[remoteModuleName];
-		if (workerMessenger) {
-			workerMessenger.removeHandler(remoteModuleName + "_^~_" + type, handler);
-		}
-	}
 }
 }

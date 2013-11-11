@@ -3,6 +3,8 @@ import constants.Messages;
 import constants.TestConsts;
 import constants.WorkerIds;
 
+import flash.system.Worker;
+
 import flash.utils.setTimeout;
 
 import mvcexpress.extensions.workers.core.WorkerManager;
@@ -83,7 +85,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 
 		trace("                                             \\/");
 
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendString();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendString();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
@@ -93,7 +95,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 	}
 
 	private function sendObject():void {
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObject();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObject();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
@@ -102,7 +104,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 	}
 
 	private function sendObjectSwap():void {
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectSwap();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectSwap();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
@@ -112,7 +114,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 	}
 
 	private function sendObjectNest():void {
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectNest();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectNest();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
@@ -153,7 +155,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 
 	private function sendString2():void {
 
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendString2();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendString2();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
@@ -163,7 +165,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 	}
 
 	private function sendObject2():void {
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObject2();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObject2();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
@@ -173,7 +175,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 	}
 
 	private function sendObjectSwap2():void {
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectSwap2();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectSwap2();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 
@@ -183,7 +185,7 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 	}
 
 	private function sendObjectNest2():void {
-		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectNest2();", "Debug module name: " + view.debug_getModuleName()
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>MainWorkerTestModule:sendObjectNest2();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
 		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "MainWorkerTestModule:sendString();");
 

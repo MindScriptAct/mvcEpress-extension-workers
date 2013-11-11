@@ -35,7 +35,7 @@ public class PooledCommandWorker extends PooledCommand {
 			MvcExpress.debug(new TraceCommand_sendWorkerMessage(messenger.moduleName, this, type, params, true));
 		}
 		//
-		WorkerManager.wip_sendWorkerMessage(messenger.moduleName, remoteWorkerModuleName, type, params);
+		WorkerManager.sendWorkerMessage(messenger.moduleName, remoteWorkerModuleName, type, params);
 		//
 		// clean up logging the action
 		CONFIG::debug {

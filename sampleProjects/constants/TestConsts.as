@@ -1,6 +1,6 @@
 package constants {
 public class TestConsts {
-	public static const START_DELAY:int = 2000;
+	public static const START_DELAY:int = 900;
 
 
 

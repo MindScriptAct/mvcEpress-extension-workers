@@ -40,7 +40,7 @@ public class MediatorWorker extends Mediator {
 			MvcExpress.debug(new TraceMediator_sendWorkerMessage(moduleName, this, type, params, true));
 		}
 		//
-		WorkerManager.wip_sendWorkerMessage(moduleName, remoteWorkerModuleName, type, params);
+		WorkerManager.sendWorkerMessage(moduleName, remoteWorkerModuleName, type, params);
 		//
 		// clean up logging the action
 		CONFIG::debug {
@@ -61,7 +61,7 @@ public class MediatorWorker extends Mediator {
 	protected function addWorkerHandler(remoteWorkerModuleName:String, type:String, handler:Function):void {
 		use namespace pureLegsCore;
 
-		handlerVoRegistry[handlerVoRegistry.length] = WorkerManager.wip_addWorkerHandler(moduleName, remoteWorkerModuleName, type, handler);
+		handlerVoRegistry[handlerVoRegistry.length] = WorkerManager.addWorkerHandler(moduleName, remoteWorkerModuleName, type, handler);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class MediatorWorker extends Mediator {
 	protected function removeWorkerHandler(remoteWorkerModuleName:String, type:String, handler:Function):void {
 		use namespace pureLegsCore;
 
-		WorkerManager.wip_removeWorkerHandler(remoteWorkerModuleName, type, handler);
+		WorkerManager.removeWorkerHandler(remoteWorkerModuleName, type, handler);
 	}
 
 	//----------------------------------
