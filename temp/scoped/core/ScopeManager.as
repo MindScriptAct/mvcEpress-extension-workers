@@ -41,7 +41,7 @@ public class ScopeManager {
 	/** sends scoped message
 	 * @private */
 	static pureLegsCore function sendScopeMessage(moduleName:String, scopeName:String, type:String, params:Object, checkPermisions:Boolean = true):void {
-		trace("...ScopeManager.sendScopeMessage()", moduleName, scopeName, type, params);
+		//debug:worker**/trace("...ScopeManager.sendScopeMessage()", moduleName, scopeName, type, params);
 
 		use namespace pureLegsCore;
 
@@ -60,7 +60,7 @@ public class ScopeManager {
 
 		// get scoped messenger, and trigger send.
 		var scopeMessenger:Messenger = scopedMessengers[scopeName];
-		trace("....ScopeManager. .scopeMessenger:", scopeMessenger);
+		//debug:worker**/trace("....ScopeManager. .scopeMessenger:", scopeMessenger);
 		if (scopeMessenger) {
 			scopeMessenger.send(scopeName + "_^~_" + type, params);
 		}
@@ -404,7 +404,7 @@ public class ScopeManager {
 	 * @param customMessangerClass
 	 */
 	static pureLegsCore function getScopeMessenger(scopeName:String, customMessangerClass:Class = null):Messenger {
-		/**debug:worker**/trace("  ScopeManager.getScopeMessenger(" + scopeName + ", " + customMessangerClass + ")")
+		//debug:worker**/trace("  ScopeManager.getScopeMessenger(" + scopeName + ", " + customMessangerClass + ")")
 
 		var scopeMesanger:Messenger = scopedMessengers[scopeName];
 
@@ -428,7 +428,7 @@ public class ScopeManager {
 			Messenger.allowInstantiation = false;
 			scopedMessengers[scopeName] = scopeMesanger;
 		}
-		/**debug:worker**/trace("  -ScopeManager created this messenger:" + scopeMesanger);
+		//debug:worker**/trace("  -ScopeManager created this messenger:" + scopeMesanger);
 		return scopeMesanger;
 	}
 

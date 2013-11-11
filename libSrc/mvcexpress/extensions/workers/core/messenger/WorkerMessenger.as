@@ -22,6 +22,7 @@ public class WorkerMessenger extends Messenger {
 	private var isReady:Boolean;// = false;
 
 	// messages are stored here if messenger is requested to send message while it is not ready.
+	private var pendingDestinationModules:Vector.<String> = new <String>[];
 	private var pendingTypes:Vector.<String> = new <String>[];
 	private var pendingParams:Vector.<Object> = new <Object>[];
 
@@ -34,8 +35,8 @@ public class WorkerMessenger extends Messenger {
 	}
 
 	// send message
-	public function workerSend(type:String, params:Object = null):void {
-		trace("......WorkerMessenger.send()", type, params, "(isReady:" + isReady + ")");
+	public function workerSend(destinationModule:String, type:String, params:Object = null):void {
+		//debug:worker**/trace("......WorkerMessenger.send()", type, params, "(isReady:" + isReady + ")");
 
 		// messenger is not ready until worker is ready.
 		if (isReady) {
@@ -53,9 +54,10 @@ public class WorkerMessenger extends Messenger {
 			use namespace pureLegsCore;
 
 			// send message to other workers.
-			WorkerManager.sendWorkerMessageToAllChannels(type, params);
+			WorkerManager.sendWorkerMessageToAllChannels(destinationModule, type, params);
 		} else {
 			// messenger is not ready, push to pending vector and wait for it to be ready.
+			pendingDestinationModules.push(destinationModule);
 			pendingTypes.push(type);
 			pendingParams.push(params);
 		}
@@ -63,13 +65,12 @@ public class WorkerMessenger extends Messenger {
 
 	// make messenger ready.
 	pureLegsCore function ready():void {
-
-		trace("............................. worker messenger ready!", pendingTypes, pendingParams, pureLegsCore::moduleName);
+		//debug:worker**/trace("............................. worker messenger ready!", pendingTypes, pendingParams, pureLegsCore::moduleName);
 		isReady = true;
 
 		// send all waiting messages.
 		while (pendingTypes.length) {
-			workerSend(pendingTypes.pop(), pendingParams.pop());
+			workerSend(pendingDestinationModules.pop(), pendingTypes.pop(), pendingParams.pop());
 		}
 	}
 
