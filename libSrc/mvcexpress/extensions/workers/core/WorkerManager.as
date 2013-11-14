@@ -78,7 +78,7 @@ public class WorkerManager {
 
 	// TEMP...
 	// debug ids, for tracing.
-	//debug:worker**/static public const debug_coreId:int = Math.random() * 100000000;
+	/**debug:worker**/static public const debug_coreId:int = Math.random() * 100000000;
 
 
 	/**
@@ -120,13 +120,13 @@ public class WorkerManager {
 	 * Starts background worker.
 	 *        If workerSwfBytes property is not provided - rootSwfBytes will be used.
 	 * @param workerModuleClass
-	 * @param remoweModuleName
+	 * @param remoteModuleName
 	 * @param workerSwfBytes
 	 *
 	 * @private
 	 */
-	static pureLegsCore function startWorker(mainModuleName:String, workerModuleClass:Class, remoweModuleName:String, workerSwfBytes:ByteArray = null
-											 //debug:worker**/, debug_objectID:int = 0 //
+	static pureLegsCore function startWorker(mainModuleName:String, workerModuleClass:Class, remoteModuleName:String, workerSwfBytes:ByteArray = null
+											 /**debug:worker**/, debug_objectID:int = 0 //
 			):void {
 		use namespace pureLegsCore;
 
@@ -134,8 +134,8 @@ public class WorkerManager {
 
 		if (_isSupported) {
 			//
-			//debug:worker**/trace("      [" + mainModuleName + "]" + "WorkerManager: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
-			//debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
+			/**debug:worker**/trace("      [" + mainModuleName + "]" + "WorkerManager: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
+			/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			//trace("WorkerClass.isSupported:", WorkerClass.isSupported);
 
@@ -148,10 +148,10 @@ public class WorkerManager {
 				} else {
 					throw Error("Worker needs swf bytes to be constructed. You can pass it as 'workerSwfBytes' or set it from Main class with: WorkerManager.setRootSwfBytes(this.loaderInfo.bytes);");
 				}
-				$workerRegistry[remoweModuleName] = remoteWorker;
+				$workerRegistry[remoteModuleName] = remoteWorker;
 
 				// TEMP :  debug
-				//debug:worker**/remoteWorker.addEventListener(Event.WORKER_STATE, debug_workerStateHandler);
+				/**debug:worker**/remoteWorker.addEventListener("channelMessage", debug_workerStateHandler);
 
 				remoteWorker.setSharedProperty(REMOTE_MODULE_CLASS_NAME_KEY, getQualifiedClassName(workerModuleClass));
 
@@ -160,12 +160,12 @@ public class WorkerManager {
 				remoteWorker.setSharedProperty(CLASS_ALIAS_NAMES_KEY, classAliasNames);
 
 				// init custom worker messenger
-				var messengerWorker:WorkerMessenger = getWorkerMessenger(remoweModuleName);
-				$pendingWorkerMessengers[remoweModuleName] = messengerWorker;
+				var messengerWorker:WorkerMessenger = getWorkerMessenger(remoteModuleName);
+				$pendingWorkerMessengers[remoteModuleName] = messengerWorker;
 
 				//
 				connectRemoteWorker(remoteWorker, mainModuleName
-						//debug:worker**/, debug_objectID //
+						/**debug:worker**/, debug_objectID //
 				);
 				//
 				remoteWorker.start();
@@ -174,7 +174,13 @@ public class WorkerManager {
 				throw Error("Starting other workers only possible from main(primordial) worker.)");
 			}
 		} else {
-			throw  Error("TODO");
+			var remoteModule:Object = new workerModuleClass();
+
+			var mainMessenger:WorkerMessenger = getWorkerMessenger(mainModuleName);
+			mainMessenger.ready();
+			var remoteMessenger:WorkerMessenger = getWorkerMessenger(remoteModuleName);
+			remoteMessenger.ready();
+
 		}
 	}
 
@@ -188,12 +194,12 @@ public class WorkerManager {
 	 * @private
 	 */
 	static pureLegsCore function initWorker(moduleName:String
-											//debug:worker**/, debug_objectID:int //
+											/**debug:worker**/, debug_objectID:int //
 			):Boolean {
 		use namespace pureLegsCore;
 
-		//debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
-		//debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: CONSTRUCT, 'primordial:", WorkerClass.current.isPrimordial
+		/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		if (WorkerClass.current.isPrimordial) { // check if primordial.
 			var rootModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
@@ -215,14 +221,14 @@ public class WorkerManager {
 			// check if child must be created.
 			var childModuleClassDefinition:String = WorkerClass.current.getSharedProperty(REMOTE_MODULE_CLASS_NAME_KEY);
 
-			//debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: should init child module?:", childModuleClassDefinition
-			//debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
+			/**debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: should init child module?:", childModuleClassDefinition
+			/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			if (childModuleClassDefinition) {
 				// NOT PRIMORDIAL, COPY OF THE MAIN.
 
-				//debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: moduleClass:", childModuleClassDefinition
-				//debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
+				/**debug:worker**/trace("      [" + moduleName + "]" + "WorkerManager: moduleClass:", childModuleClassDefinition
+				/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 				WorkerClass.current.setSharedProperty(REMOTE_MODULE_CLASS_NAME_KEY, null);
 
@@ -255,7 +261,7 @@ public class WorkerManager {
 				}
 
 				setUpRemoteWorkerCommunication(moduleName
-						//debug:worker**/, moduleName, debug_objectID //
+						/**debug:worker**/, moduleName, debug_objectID //
 				);
 			}
 		}
@@ -267,11 +273,11 @@ public class WorkerManager {
 	 * @param workerModuleName
 	 */
 	static pureLegsCore function terminateWorker(workerModuleName:String
-												 //debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0 //
+												 /**debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0 //
 			):void {
 		use namespace pureLegsCore;
 
-		//debug:worker**/trace("STOP worker :", workerModuleName);
+		/**debug:worker**/trace("STOP worker :", workerModuleName);
 
 		// todo : decide what to do, if current module name is sent.
 		// todo : decide what to do if current worker is not primordial. (remote worker tries to terminate itself.)
@@ -288,7 +294,7 @@ public class WorkerManager {
 						var thisToWorker:Object = $sendMessageChannels.splice(i, 1)[0];
 						thisToWorker.close();
 						var workerToThis:Object = $receiveMessageChannels.splice(i, 1)[0];
-						workerToThis.removeEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
+						workerToThis.removeEventListener("channelMessage", handleChannelMessage);
 						workerToThis.close();
 
 						$channelReadyWorkerNames.splice(i, 1);
@@ -316,8 +322,8 @@ public class WorkerManager {
 
 		// get all running workers
 		var workers:* = WorkerDomainClass.current.listWorkers();
-		//debug:worker**/trace("      [" + debug_mainModuleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
-		//debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("      [" + debug_mainModuleName + "]" + "connectChildWorker " + remoteWorker, "with", workers
+		/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
 		for (var i:int = 0; i < workers.length; i++) {
 			var worker:Object = workers[i];
@@ -339,7 +345,7 @@ public class WorkerManager {
 				remoteWorker.setSharedProperty("remoteToWorker_" + workerModuleName, remoteToWorker);
 
 				//Listen to the response from our worker
-				remoteToWorker.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
+				remoteToWorker.addEventListener("channelMessage", handleChannelMessage);
 
 			}
 		}
@@ -347,12 +353,12 @@ public class WorkerManager {
 
 
 	static private function setUpRemoteWorkerCommunication(remoteModuleName:String
-														   //debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0 //
+														   /**debug:worker**/, debug_mainModuleName:String = null, debug_objectID:int = 0 //
 			):void {
 		// get all workers
 		var workers:* = WorkerDomainClass.current.listWorkers();
-		//debug:worker**/trace("      [" + debug_mainModuleName + "]" + "setUpWorkerCommunication " + workers
-		//debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("      [" + debug_mainModuleName + "]" + "setUpWorkerCommunication " + workers
+		/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
 		//
 		var thisWorker:Object = WorkerClass.current;
 		for (var i:int = 0; i < workers.length; i++) {
@@ -363,7 +369,7 @@ public class WorkerManager {
 
 					var workerModuleName:String = worker.getSharedProperty(WORKER_MODULE_NAME_KEY);
 					//worker.setSharedProperty(WORKER_MODULE_NAME_KEY, workerModuleName);
-//					//debug:worker**/trace("...processisng..." + workerModuleName);
+//					/**debug:worker**/trace("...processisng..." + workerModuleName);
 					// handle communication permissions
 					use namespace pureLegsCore;
 
@@ -381,13 +387,13 @@ public class WorkerManager {
 						$receiveMessageChannels.push(workerToThis);
 						$channelReadyWorkerNames.push(workerModuleName);
 
-						workerToThis.addEventListener(Event.CHANNEL_MESSAGE, handleChannelMessage);
+						workerToThis.addEventListener("channelMessage", handleChannelMessage);
 
 						worker.setSharedProperty("thisToWorker_" + remoteModuleName, thisToWorker);
 						worker.setSharedProperty("workerToThis_" + remoteModuleName, workerToThis);
 
 
-						//debug:worker**/trace("INIT_REMOTE_WORKER !!! ", remoteModuleName);
+						/**debug:worker**/trace("INIT_REMOTE_WORKER !!! ", remoteModuleName);
 						thisToWorker.send(INIT_REMOTE_WORKER_TYPE);
 						thisToWorker.send(remoteModuleName);
 					} else {
@@ -405,22 +411,23 @@ public class WorkerManager {
 	// messages
 	//----------------------------
 
-	static pureLegsCore function sendWorkerMessageToAllChannels(destinationModule:String, type:String, params:Object = null):void {
-		//debug:worker**/trace("........WorkerManager.sendWorkerMessage()", type, params);
+	static pureLegsCore function sendWorkerMessageToRemoteChannel(destinationModule:String, type:String, params:Object = null):void {
+		/**debug:worker**/trace("........WorkerManager.sendWorkerMessage()", type, params);
 
 		use namespace pureLegsCore;
 
-		var msgChannel:Object = $sendMessageChannelsRegistry[destinationModule];
-
-		//for (var i:int = 0; i < $sendMessageChannels.length; i++) {
-		//var msgChannel:Object = $sendMessageChannels[i];
-		//trace("   " + msgChannel);
-		msgChannel.send(SEND_WORKER_MESSAGE_TYPE);
-		msgChannel.send(type);
-		if (params) {
-			msgChannel.send(params);
+		if (_isSupported) {
+			var msgChannel:Object = $sendMessageChannelsRegistry[destinationModule];
+			msgChannel.send(SEND_WORKER_MESSAGE_TYPE);
+			msgChannel.send(type);
+			if (params) {
+				msgChannel.send(params);
+			}
+		} else {
+			var messageTypeSplit:Array = type.split("_^~_");
+			var remoteMessenger:WorkerMessenger = getWorkerMessenger(messageTypeSplit[0]);
+			remoteMessenger.send(type, params);
 		}
-		//}
 	}
 
 
@@ -433,16 +440,16 @@ public class WorkerManager {
 			var communicationType:Object = channel.receive();
 
 
-			//debug:worker**/var thisModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
-			//debug:worker**/trace("  [" + thisModuleName + "]" + "handleChannelMessage : ", communicationType
-			//debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + "" + "> ");
+			/**debug:worker**/var thisModuleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+			/**debug:worker**/trace("  [" + thisModuleName + "]" + "handleChannelMessage : ", communicationType
+			/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + "" + "> ");
 
 			if (communicationType == INIT_REMOTE_WORKER_TYPE) {
 				// handle special communication for initialization of new worker.
 				var remoteModuleName:String = channel.receive(true);
 
-				//debug:worker**/trace("      [" + thisModuleName + "]" + "handle child module init! ", remoteModuleName
-				//debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
+				/**debug:worker**/trace("      [" + thisModuleName + "]" + "handle child module init! ", remoteModuleName
+				/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 
 				var thisWorker:Object = WorkerClass.current;
 
@@ -484,7 +491,7 @@ public class WorkerManager {
 				//trace("       HANDLE SIMPLE MESSAGE!", messageType, params);
 				var messageTypeSplit:Array = messageType.split("_^~_");
 
-				//debug:worker**/trace("................ hendle remote send message..:", messageType, params);
+				/**debug:worker**/trace("................ hendle remote send message..:", messageType, params);
 				// TODO : rething if getting moduleName from worker valid here.(error scenarios?)
 				var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
 				//WorkerClass.current.setSharedProperty(WORKER_MODULE_NAME_KEY, moduleName);
@@ -497,14 +504,14 @@ public class WorkerManager {
 	}
 
 	private static function handleReceivedWorkerMessage(sourceModule:String, destinationModule:String, type:String, params:Object):void {
-		//debug:worker**/trace("...WorkerManager.wip_handleReceivedWorkerMessage()", sourceModule, destinationModule, type, params);
+		/**debug:worker**/trace("...WorkerManager.wip_handleReceivedWorkerMessage()", sourceModule, destinationModule, type, params);
 		// from outside to this...
 
 		use namespace pureLegsCore;
 
 		// get worker messenger, and trigger send.
 		var workerMessenger:Messenger = workerMessengers[destinationModule];
-		//debug:worker**/trace("....WorkerManager. .vorkerMessenger:", workerMessenger);
+		/**debug:worker**/trace("....WorkerManager. .vorkerMessenger:", workerMessenger);
 		if (workerMessenger) {
 			workerMessenger.send(destinationModule + "_^~_" + type, params);
 		}
@@ -516,7 +523,7 @@ public class WorkerManager {
 	//----------------------------------
 
 	private static function getWorkerMessenger(remoteModuleName:String):WorkerMessenger {
-		//debug:worker**/trace("  WorkerManager.getWorkerMessenger(" + remoteModuleName + ")");
+		/**debug:worker**/trace("  WorkerManager.getWorkerMessenger(" + remoteModuleName + ")");
 
 		var workerMesanger:WorkerMessenger = workerMessengers[remoteModuleName];
 		if (!workerMesanger) {
@@ -624,11 +631,12 @@ public class WorkerManager {
 	// DEBUG functions.
 	//---------------------------------
 
-	//debug:worker**/static private function debug_workerStateHandler(event:Event):void {
-	//debug:worker**/    var childWorker:Object = event.target;
-	//debug:worker**/    var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
-	//debug:worker**/    trace("      [" + moduleName + "]" + "WorkerManager: workerStateHandler- " + childWorker.state
-	//debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
-	//debug:worker**/}
+	/**debug:worker**/static private function debug_workerStateHandler(event:Event):void {
+		/**debug:worker**/    var childWorker:Object = event.target;
+		/**debug:worker**/    var moduleName:String = WorkerClass.current.getSharedProperty(WORKER_MODULE_NAME_KEY);
+		/**debug:worker**/    trace("      [" + moduleName + "]" + "WorkerManager: workerStateHandler- " + childWorker.state
+		/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
+		/**debug:worker**/
+	}
 }
 }

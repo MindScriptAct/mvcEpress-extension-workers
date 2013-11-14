@@ -4,7 +4,6 @@ import childTest.CpuIntensiveCommand;
 
 import constants.WorkerMessage;
 
-import flash.system.Worker;
 import flash.utils.setTimeout;
 
 import mvcexpress.core.traceObjects.commandMap.TraceCommandMap_execute;
@@ -33,10 +32,9 @@ public class MainTestModule extends ModuleWorker {
 		mediatorMap.mediateWith(mainTest, MainTestMediator);
 
 
-		commandMapWorker.workerMap(WorkerIds.CHILD_WORKER, WorkerMessage.TEST2, HandlePrimeFoundCommand)
+		commandMapWorker.workerMap(WorkerIds.CHILD_WORKER, WorkerMessage.CHECKING_NUMBER, HandlePrimeFoundCommand)
 
-		setTimeout(startModule, 500)
-
+		setTimeout(startModule, 500);
 
 	}
 

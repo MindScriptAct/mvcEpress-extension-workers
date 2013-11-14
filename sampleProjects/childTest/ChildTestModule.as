@@ -1,5 +1,4 @@
 package childTest {
-import flash.system.Worker;
 
 import mvcexpress.extensions.workers.modules.ModuleWorker;
 

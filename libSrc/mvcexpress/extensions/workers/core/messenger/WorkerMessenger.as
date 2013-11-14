@@ -36,7 +36,7 @@ public class WorkerMessenger extends Messenger {
 
 	// send message
 	public function workerSend(destinationModule:String, type:String, params:Object = null):void {
-		//debug:worker**/trace("......WorkerMessenger.send()", type, params, "(isReady:" + isReady + ")");
+		/**debug:worker**/trace("......WorkerMessenger.send()", type, params, "(isReady:" + isReady + ")");
 
 		// messenger is not ready until worker is ready.
 		if (isReady) {
@@ -54,7 +54,7 @@ public class WorkerMessenger extends Messenger {
 			use namespace pureLegsCore;
 
 			// send message to other workers.
-			WorkerManager.sendWorkerMessageToAllChannels(destinationModule, type, params);
+			WorkerManager.sendWorkerMessageToRemoteChannel(destinationModule, type, params);
 		} else {
 			// messenger is not ready, push to pending vector and wait for it to be ready.
 			pendingDestinationModules.push(destinationModule);
@@ -65,7 +65,7 @@ public class WorkerMessenger extends Messenger {
 
 	// make messenger ready.
 	pureLegsCore function ready():void {
-		//debug:worker**/trace("............................. worker messenger ready!", pendingTypes, pendingParams, pureLegsCore::moduleName);
+		/**debug:worker**/trace("............................. worker messenger ready!", pendingTypes, pendingParams, pureLegsCore::moduleName);
 		isReady = true;
 
 		// send all waiting messages.

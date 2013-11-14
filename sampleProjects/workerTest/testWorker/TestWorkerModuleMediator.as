@@ -63,8 +63,8 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 	////////////////////////////////
 
 	private function sendString():void {
-		//debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendString();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
-		//debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendString();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN, "TEST2 > MAIN");
@@ -74,8 +74,8 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 	//*
 
 	private function sendObject():void {
-		//debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObject();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
-		//debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObject();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT, new TestDataVO("TEST2 >> MAIN"));
@@ -83,8 +83,8 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 	}
 
 	private function sendObjectSwap():void {
-		//debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectSwap();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
-		//debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectSwap();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT_SWAP, new TestDataSwapVO("TEST2 >>> MAIN"));
@@ -93,8 +93,8 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 
 
 	private function sendObjectNest():void {
-		//debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectNest();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
-		//debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
+		/**debug:worker**/trace("[" + view.moduleName + "]" + ">>TestWorkerModule:sendObjectNest();", "Debug module name: " + Worker.current.getSharedProperty("$_wmn_$")
+		/**debug:worker**/ + "	[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> ");
 		//MonsterDebugger.log("[" + ModuleWorkerBase.coreId + "]" + "<" + objectID + "> " + "[" + moduleName + "]" + "TestWorkerModule:traceModule();");
 
 		sendWorkerMessage(WorkerIds.MAIN_WORKER, Messages.TEST_MAIN_OBJECT_NEST, new TestDataNestVO("TEST2 >>>> MAIN"));
@@ -108,22 +108,22 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 	//*
 	private function handleWorkerString(params:Object):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker**/trace("9: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received string:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("9: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received string:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObject(params:MainDataVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker**/trace("11: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("11: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectSwap(params:MainDataSwapTestVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker**/trace("13: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received swapped object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("13: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received swapped object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	private function handleWorkerObjectNest(params:MainDataNestVO):void {
 		//		trace("[" + ModuleWorkerBase.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]", "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received message:", params);
-		//debug:worker**/trace("15: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received nested object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
+		/**debug:worker**/trace("15: " + params, "!!!!!!!!!!!!!!!! TestWorkerModuleMediator received nested object:", "[" + WorkerManager.debug_coreId + "]" + "<" + view.debug_objectID + "> " + "[" + view.moduleName + "]");
 	}
 
 	override protected function onRemove():void {

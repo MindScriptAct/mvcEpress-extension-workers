@@ -21,7 +21,7 @@ public class ModuleWorker extends ModuleCore {
 	protected var commandMapWorker:CommandMapWorker;
 
 	// TEMP... for Debug only..
-	//debug:worker**/public var debug_objectID:int = Math.random() * 100000000;
+	/**debug:worker**/public var debug_objectID:int = Math.random() * 100000000;
 
 	/**
 	 * CONSTRUCTOR. ModuleName must be provided.
@@ -29,8 +29,8 @@ public class ModuleWorker extends ModuleCore {
 	 */
 	public function ModuleWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
 
-		//debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: try to create module."
-		//debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+		/**debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: try to create module."
+		/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 		use namespace pureLegsCore;
 
@@ -48,7 +48,7 @@ public class ModuleWorker extends ModuleCore {
 
 		if (_isWorkersSupported) {
 			canCreateModule = WorkerManager.initWorker(moduleName
-					//debug:worker**/, debug_objectID
+					/**debug:worker**/, debug_objectID
 			);
 		} else {
 			trace("TODO - implement scenario then workers are not supported.");
@@ -64,8 +64,8 @@ public class ModuleWorker extends ModuleCore {
 		}
 
 		if (canCreateModule) {
-			//debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: Create module!"
-			//debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
+			/**debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: Create module!"
+			/**debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
 
 			if (!commandMapClass) {
 				commandMapClass = CommandMapWorker;
@@ -90,7 +90,7 @@ public class ModuleWorker extends ModuleCore {
 		use namespace pureLegsCore;
 
 		WorkerManager.startWorker(moduleName, workerModuleClass, workerModuleName, workerSwfBytes
-				//debug:worker**/, debug_objectID
+				/**debug:worker**/, debug_objectID
 		);
 	}
 
@@ -102,7 +102,7 @@ public class ModuleWorker extends ModuleCore {
 		use namespace pureLegsCore;
 
 		WorkerManager.terminateWorker(workerModuleName
-				//debug:worker**/, moduleName, debug_objectID
+				/**debug:worker**/, moduleName, debug_objectID
 		);
 	}
 

@@ -33,15 +33,15 @@ public class MainTestMediator extends MediatorWorker {
 		primeTest.text = "...";
 		primeTest.y = 110;
 		view.addChild(primeTest);
-		addHandler(WorkerMessage.TEST2, handlePrimeDataTest);
-		addWorkerHandler(WorkerIds.CHILD_WORKER, WorkerMessage.TEST2, handlePrimeDataTest);
+		addHandler(WorkerMessage.CHECKING_NUMBER, handlePrimeDataTest);
+		addWorkerHandler(WorkerIds.CHILD_WORKER, WorkerMessage.CHECKING_NUMBER, handlePrimeDataTest);
 
 		primeFound = new FlexTextField();
 		primeFound.text = "waiting for data...";
 		primeFound.y = 130;
 		view.addChild(primeFound);
-		addHandler(WorkerMessage.TEST1, handlePrimeData);
-		addWorkerHandler(WorkerIds.CHILD_WORKER, WorkerMessage.TEST1, handlePrimeData);
+		addHandler(WorkerMessage.PRIME_FOUND, handlePrimeData);
+		addWorkerHandler(WorkerIds.CHILD_WORKER, WorkerMessage.PRIME_FOUND, handlePrimeData);
 
 		animaton = new Sprite();
 		animaton.graphics.lineStyle(2, 0xFF0000);
