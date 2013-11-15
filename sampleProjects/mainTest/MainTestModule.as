@@ -44,17 +44,19 @@ public class MainTestModule extends ModuleWorker {
 
 		/*
 
+
+
 		trace("is started?", isWorkerCreated(WorkerIds.CHILD_WORKER));
 
 		trace("list:", listWorkers());
 
 		terminateWorker(WorkerIds.CHILD_WORKER);
 
-		startWorker(Child2TestModule, WorkerIds.CHILD_WORKER);
+		startWorker(ChildTestModule, WorkerIds.CHILD_WORKER);
 
 		//commandMap.execute(CpuIntensiveCommand);
 
-		*/
+		//*/
 
 	}
 }

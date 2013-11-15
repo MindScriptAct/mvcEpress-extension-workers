@@ -54,9 +54,7 @@ dynamic public class CommandWorker extends Command {
 	public function terminateWorker(workerModuleName:String):void {
 		use namespace pureLegsCore;
 
-		WorkerManager.terminateWorker(workerModuleName
-				/**debug:worker**/, messenger.moduleName
-		);
+ 		WorkerManager.terminateWorker(messenger.moduleName, workerModuleName);
 	}
 
 	//-------------
