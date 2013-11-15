@@ -27,7 +27,7 @@ public class WorkerManager {
 
 
 	// true if workers are supported.
-	private static var _isSupported:Boolean;
+	private static var _isWorkersSupported:Boolean;
 
 	// stores worker classes dynamically.
 	public static var WorkerClass:Class;
@@ -84,8 +84,8 @@ public class WorkerManager {
 	/**
 	 * True if workers are supported.
 	 */
-	public static function get isSupported():Boolean {
-		return _isSupported;
+	public static function get isWorkersSupported():Boolean {
+		return _isWorkersSupported;
 	}
 
 
@@ -110,10 +110,10 @@ public class WorkerManager {
 		}
 
 		if (WorkerClass && WorkerDomainClass && WorkerClass.isSupported) {
-			_isSupported = true;
+			_isWorkersSupported = true;
 		}
 
-		return _isSupported;
+		return _isWorkersSupported;
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class WorkerManager {
 
 		// TODO : check extended form workerModule class.
 
-		if (_isSupported) {
+		if (_isWorkersSupported) {
 			//
 			/**debug:worker**/trace("      [" + mainModuleName + "]" + "WorkerManager: startWorkerModule: " + workerModuleClass, "isPrimordial:" + WorkerClass.current.isPrimordial
 			/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + debug_objectID + "> ");
@@ -140,6 +140,11 @@ public class WorkerManager {
 			//trace("WorkerClass.isSupported:", WorkerClass.isSupported);
 
 			if (WorkerClass.current.isPrimordial) {
+
+				if ($workerRegistry[remoteModuleName]) {
+					throw Error("WorkerModule with name:" + remoteModuleName + " is already started. Please terminate it before starting new one.");
+				}
+
 				var remoteWorker:Object;
 				if (workerSwfBytes) {
 					remoteWorker = WorkerDomainClass.current.createWorker(workerSwfBytes);
@@ -282,7 +287,7 @@ public class WorkerManager {
 		// todo : decide what to do, if current module name is sent.
 		// todo : decide what to do if current worker is not primordial. (remote worker tries to terminate itself.)
 
-		if (_isSupported) {
+		if (_isWorkersSupported) {
 			var worker:Object = $workerRegistry[workerModuleName];
 			if (worker) {
 
@@ -314,6 +319,22 @@ public class WorkerManager {
 				delete $workerRegistry[workerModuleName]
 			}
 		}
+	}
+
+
+	static pureLegsCore function isWorkerCreated(workerModuleName:String):Boolean {
+		return ($workerRegistry[workerModuleName] != null);
+	}
+
+	static pureLegsCore function listWorkers():String {
+		var retVal:String = "";
+		for (var workerName:String in $workerRegistry) {
+			if (retVal != "") {
+				retVal += ",";
+			}
+			retVal += workerName;
+		}
+		return retVal;
 	}
 
 
@@ -416,7 +437,7 @@ public class WorkerManager {
 
 		use namespace pureLegsCore;
 
-		if (_isSupported) {
+		if (_isWorkersSupported) {
 			var msgChannel:Object = $sendMessageChannelsRegistry[destinationModule];
 			msgChannel.send(SEND_WORKER_MESSAGE_TYPE);
 			msgChannel.send(type);
@@ -638,5 +659,7 @@ public class WorkerManager {
 		/**debug:worker**/ + "[" + debug_coreId + "]" + "<" + "debug_objectID" + "> ");
 		/**debug:worker**/
 	}
+
+
 }
 }

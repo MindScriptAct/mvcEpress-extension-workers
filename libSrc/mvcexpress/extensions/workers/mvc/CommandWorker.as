@@ -1,5 +1,7 @@
 // Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 package mvcexpress.extensions.workers.mvc {
+import flash.utils.ByteArray;
+
 import mvcexpress.MvcExpress;
 import mvcexpress.core.namespace.pureLegsCore;
 import mvcexpress.extensions.workers.core.CommandMapWorker;
@@ -28,17 +30,77 @@ dynamic public class CommandWorker extends Command {
 	/** Instance of commandMap, typed as CommandMapWorker. (shortcut for 'commandMap as CommandMapWorker') */
 	public var commandMapWorker:CommandMapWorker;
 
+	//-------------------------
+	// start/terminate worker
+	//-------------------------
+
+	/**
+	 * Starts background worker.
+	 *        If workerSwfBytes property is not provided - rootSwfBytes will be used.
+	 * @param workerModuleClass
+	 * @param workerModuleName
+	 * @param workerSwfBytes    bytes of loaded swf file.
+	 */
+	public function startWorker(workerModuleClass:Class, workerModuleName:String, workerSwfBytes:ByteArray = null):void {
+		use namespace pureLegsCore;
+
+		WorkerManager.startWorker(messenger.moduleName, workerModuleClass, workerModuleName, workerSwfBytes);
+	}
+
+	/**
+	 * terminates background worker and dispose worker module.
+	 * @param workerModuleName
+	 */
+	public function terminateWorker(workerModuleName:String):void {
+		use namespace pureLegsCore;
+
+		WorkerManager.terminateWorker(workerModuleName
+				/**debug:worker**/, messenger.moduleName
+		);
+	}
+
+	//-------------
+	// check running workers
+	//-------------
+
+	/**
+	 * Returns true if workers are supported.
+	 */
+	public static function get isWorkersSupported():Boolean {
+		return WorkerManager.isWorkersSupported;
+	}
+
+	/**
+	 * Checks if worker is created with given name.
+	 * @param workerModuleName
+	 */
+	public function isWorkerCreated(workerModuleName:String):Boolean {
+		use namespace pureLegsCore;
+
+		return WorkerManager.isWorkerCreated(workerModuleName);
+	}
+
+
+	/**
+	 * Gives string with list of all running workers.
+	 * @return
+	 */
+	public function listWorkers():String {
+		use namespace pureLegsCore;
+
+		return WorkerManager.listWorkers();
+	}
+
 	//----------------------------------
-	//     MESSAGING
+	//   Worker MESSAGING
 	//----------------------------------
 
 	/**
-	 * Sends message from this worker to remote worker specified by worker name.
-	 * @param    remoteWorkerModuleName    name of remote worker module, to send message to.
-	 * @param    type        type of the message for Commands or Mediator's handle function to react to.
-	 * @param    params        Object that will be passed to Command execute() function and to handle functions.
+	 * Sends message for other framework actors to react to.
+	 * @param    type    type of the message. (Commands and handle functions must be mapped to type to be triggered.)
+	 * @param    params    Object that will be send to Command execute() or to handle function as parameter.
 	 */
-	protected function sendWorkerMessage(remoteWorkerModuleName:String, type:String, params:Object = null):void {
+	public function sendWorkerMessage(remoteWorkerModuleName:String, type:String, params:Object = null):void {
 		use namespace pureLegsCore;
 
 		// log the action
@@ -48,7 +110,7 @@ dynamic public class CommandWorker extends Command {
 		//
 		WorkerManager.sendWorkerMessage(messenger.moduleName, remoteWorkerModuleName, type, params);
 		//
-		// clean up logging the action
+		// clean up logging
 		CONFIG::debug {
 			MvcExpress.debug(new TraceCommand_sendWorkerMessage(messenger.moduleName, this, type, params, false));
 		}

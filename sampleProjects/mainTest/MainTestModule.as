@@ -1,16 +1,14 @@
 package mainTest {
-import childTest.ChildTestModule;
-import childTest.CpuIntensiveCommand;
+import child2Test.Child2TestModule;
 
+import childTest.ChildTestModule;
+
+import constants.WorkerIds;
 import constants.WorkerMessage;
 
 import flash.utils.setTimeout;
 
-import mvcexpress.core.traceObjects.commandMap.TraceCommandMap_execute;
-
 import mvcexpress.extensions.workers.modules.ModuleWorker;
-
-import constants.WorkerIds;
 
 //public class MainTestModule extends ModuleScoped {
 public class MainTestModule extends ModuleWorker {
@@ -42,7 +40,21 @@ public class MainTestModule extends ModuleWorker {
 		//var childModule:ChildTestModule = new ChildTestModule();
 
 		startWorker(ChildTestModule, WorkerIds.CHILD_WORKER);
+
+
+		/*
+
+		trace("is started?", isWorkerCreated(WorkerIds.CHILD_WORKER));
+
+		trace("list:", listWorkers());
+
+		terminateWorker(WorkerIds.CHILD_WORKER);
+
+		startWorker(Child2TestModule, WorkerIds.CHILD_WORKER);
+
 		//commandMap.execute(CpuIntensiveCommand);
+
+		*/
 
 	}
 }

@@ -77,6 +77,10 @@ public class ModuleWorker extends ModuleCore {
 
 	}
 
+	//-------------------------
+	// start/terminate worker
+	//-------------------------
+
 	/**
 	 * Starts background worker.
 	 *        If workerSwfBytes property is not provided - rootSwfBytes will be used.
@@ -106,6 +110,37 @@ public class ModuleWorker extends ModuleCore {
 		);
 	}
 
+	//-------------
+	// check running workers
+	//-------------
+
+	/**
+	 * Returns true if workers are supported.
+	 */
+	public static function get isWorkersSupported():Boolean {
+		return _isWorkersSupported;
+	}
+
+	/**
+	 * Checks if worker is created with given name.
+	 * @param workerModuleName
+	 */
+	public function isWorkerCreated(workerModuleName:String):Boolean {
+		use namespace pureLegsCore;
+
+		return WorkerManager.isWorkerCreated(workerModuleName);
+	}
+
+
+	/**
+	 * Gives string with list of all running workers.
+	 * @return
+	 */
+	public function listWorkers():String {
+		use namespace pureLegsCore;
+
+		return WorkerManager.listWorkers();
+	}
 
 	//----------------------------------
 	//   Worker MESSAGING

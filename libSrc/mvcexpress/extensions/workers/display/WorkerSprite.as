@@ -34,7 +34,7 @@ public class WorkerSprite extends Sprite {
 	private function doInit(event:Event = null):void {
 		removeEventListener(Event.ADDED_TO_STAGE, init);
 		if (_isWorkersSupported) {
-			if (WorkerManager.WorkerClass.Worker.current.isPrimordial) {
+			if (WorkerManager.WorkerClass.current.isPrimordial) {
 				WorkerManager.setRootSwfBytes(this.loaderInfo.bytes);
 				init();
 			} else {
