@@ -33,11 +33,9 @@ public class ModuleCore {
 	pureLegsCore var messenger:Messenger;
 
 	/** Handles application Proxies. */
-	// BUG : FIX TO PROTECTED
-	public var proxyMap:ProxyMap;
+	protected var proxyMap:ProxyMap;
 	/** Handles application Mediators. */
-	// BUG : FIX TO PROTECTED
-	public var mediatorMap:MediatorMap;
+	protected var mediatorMap:MediatorMap;
 	/** Handles application Commands. */
 	public var commandMap:CommandMap;
 
