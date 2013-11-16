@@ -119,8 +119,6 @@ public class Messenger {
 	public function send(type:String, params:Object = null):void {
 		use namespace pureLegsCore;
 
-		///debug:worker**/trace("...Messenger.send()", type, params, "[" + moduleName + "]");
-
 		// debug this action
 		CONFIG::debug {
 			MvcExpress.debug(new TraceMessenger_send(moduleName, type, params));

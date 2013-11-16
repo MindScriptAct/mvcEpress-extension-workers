@@ -36,8 +36,6 @@ public class WorkerMessenger extends Messenger {
 
 	// send message
 	public function workerSend(destinationModule:String, type:String, params:Object = null):void {
-		///debug:worker**/trace("......WorkerMessenger.send()", type, params, "(isReady:" + isReady + ")");
-
 		// messenger is not ready until worker is ready.
 		if (isReady) {
 			// handle parameters types. (register class alias if needed).
@@ -65,7 +63,6 @@ public class WorkerMessenger extends Messenger {
 
 	// make messenger ready.
 	pureLegsCore function ready():void {
-		///debug:worker**/trace("............................. worker messenger ready!", pendingTypes, pendingParams, pureLegsCore::moduleName);
 		isReady = true;
 
 		// send all waiting messages.

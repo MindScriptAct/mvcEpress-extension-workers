@@ -20,18 +20,11 @@ public class ModuleWorker extends ModuleCore {
 	/** Instance of commandMap, typed as CommandMapWorker. (shortcut for 'commandMap as CommandMapWorker') */
 	protected var commandMapWorker:CommandMapWorker;
 
-	// TEMP... for Debug only..
-	///debug:worker**/public var debug_objectID:int = Math.random() * 100000000;
-
 	/**
 	 * CONSTRUCTOR. ModuleName must be provided.
 	 * @inheritDoc
 	 */
 	public function ModuleWorker(moduleName:String, mediatorMapClass:Class = null, proxyMapClass:Class = null, commandMapClass:Class = null, messengerClass:Class = null) {
-
-		///debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: try to create module."
-		///debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
-
 		use namespace pureLegsCore;
 
 		CONFIG::debug {
@@ -47,26 +40,10 @@ public class ModuleWorker extends ModuleCore {
 		var canCreateModule:Boolean = true;
 
 		if (_isWorkersSupported) {
-			canCreateModule = WorkerManager.initWorker(moduleName
-					///debug:worker**/, debug_objectID
-			);
-		} else {
-			trace("TODO - implement scenario then workers are not supported.");
-			//if (ModuleScopedWorker.canInitChildModule) {
-			//
-			//	// todo : get this name better.
-			//	var workerModuleName:String = WorkerIds.MAIN_WORKER;
-			//
-			//	ScopeManager.registerScope(debug_moduleName, workerModuleName, true, true, false);
-			//	ScopeManager.registerScope(debug_moduleName, debug_moduleName, true, true, false);
-			//	ScopeManager.registerScope(workerModuleName, workerModuleName, true, true, false);
-			//}
+			canCreateModule = WorkerManager.initWorker(moduleName);
 		}
 
 		if (canCreateModule) {
-			///debug:worker**/trace("     [" + moduleName + "]" + "ModuleWorker: Create module!"
-			///debug:worker**/ + "[" + WorkerManager.debug_coreId + "]" + "<" + debug_objectID + "> ");
-
 			if (!commandMapClass) {
 				commandMapClass = CommandMapWorker;
 			}
@@ -74,7 +51,6 @@ public class ModuleWorker extends ModuleCore {
 
 			commandMapWorker = commandMap as CommandMapWorker;
 		}
-
 	}
 
 	//-------------------------
@@ -93,9 +69,7 @@ public class ModuleWorker extends ModuleCore {
 		// todo : implement optional module parameters for extendability.
 		use namespace pureLegsCore;
 
-		WorkerManager.startWorker(moduleName, workerModuleClass, workerModuleName, workerSwfBytes
-				///debug:worker**/, debug_objectID
-		);
+		WorkerManager.startWorker(moduleName, workerModuleClass, workerModuleName, workerSwfBytes);
 	}
 
 	/**
@@ -105,9 +79,7 @@ public class ModuleWorker extends ModuleCore {
 	public function terminateWorker(workerModuleName:String):void {
 		use namespace pureLegsCore;
 
-		WorkerManager.terminateWorker(moduleName, workerModuleName
-				///debug:worker**/, debug_objectID
-		);
+		WorkerManager.terminateWorker(moduleName, workerModuleName);
 	}
 
 	//-------------
