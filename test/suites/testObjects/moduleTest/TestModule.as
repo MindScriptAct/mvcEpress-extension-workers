@@ -2,7 +2,6 @@ package suites.testObjects.moduleTest {
 import mvcexpress.modules.ModuleSprite;
 
 /**
- * COMMENT : todo
  * @author Raimundas Banevicius (http://www.mindscriptact.com/)
  */
 public class TestModule extends ModuleSprite {

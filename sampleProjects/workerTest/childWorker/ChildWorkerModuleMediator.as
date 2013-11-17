@@ -17,7 +17,6 @@ import workerTest.mainWorker.data.MainDataSwapTestVO;
 import workerTest.mainWorker.data.MainDataVO;
 
 /**
- * TODO:CLASS COMMENT
  * @author Deril
  */
 public class ChildWorkerModuleMediator extends MediatorWorker {

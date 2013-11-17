@@ -20,7 +20,6 @@ import workerTest.testWorker.data.TestDataSwapTestVO;
 import workerTest.testWorker.data.TestDataVO;
 
 /**
- * TODO:CLASS COMMENT
  * @author Deril
  */
 public class MainWorkerModuleMediator extends MediatorWorker {
@@ -71,7 +70,6 @@ public class MainWorkerModuleMediator extends MediatorWorker {
 		addWorkerHandler(WorkerIds.TEST_WORKER, Messages.TEST_MAIN_CALC, view.handleChildCalc);
 
 
-		// todo : fix or remove.
 		sendWorkerMessage(WorkerIds.CHILD_WORKER, Messages.MAIN_CHILD_CALC, 100);
 		sendWorkerMessage(WorkerIds.TEST_WORKER, Messages.MAIN_TEST_CALC, 100);
 

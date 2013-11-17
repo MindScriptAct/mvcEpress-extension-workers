@@ -18,7 +18,6 @@ import workerTest.testWorker.data.TestDataSwapVO;
 import workerTest.testWorker.data.TestDataVO;
 
 /**
- * TODO:CLASS COMMENT
  * @author Deril
  */
 public class TestWorkerModuleMediator extends MediatorWorker {
@@ -122,7 +121,6 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 	}
 
 	override protected function onRemove():void {
-//		trace("TODO - implement TestWorkerModuleMediator function: onRemove().");
 
 		clearTimeout(to1);
 		clearTimeout(to2);

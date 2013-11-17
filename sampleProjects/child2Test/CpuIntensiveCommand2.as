@@ -8,7 +8,6 @@ import constants.WorkerIds;
 import constants.WorkerMessage;
 
 /**
- * TODO:CLASS COMMENT
  * @author rbanevicius
  */
 public class CpuIntensiveCommand2 extends CommandWorker {

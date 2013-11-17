@@ -2,7 +2,6 @@ package mainTest {
 import mvcexpress.mvc.Command;
 
 /**
- * TODO:CLASS COMMENT
  * @author rbanevicius
  */
 public class HandlePrimeFoundCommand extends Command {

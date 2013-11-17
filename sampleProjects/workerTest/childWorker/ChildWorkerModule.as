@@ -9,7 +9,6 @@ import constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
 
 /**
- * TODO:CLASS COMMENT
  * @author rbanevicius
  */
 public class ChildWorkerModule extends ModuleWorker {
@@ -22,7 +21,7 @@ public class ChildWorkerModule extends ModuleWorker {
 		//MonsterDebugger.initialize(this);
 		/**debug:worker**/trace("  -[" + moduleName + "]" + "ChildWorkerModule:onInit();");
 
-		// ??? why this is needed?
+		// modules will have diferent classes maped to same aliase. (objects will be swaped..)
 		registerClassAlias("workerTest.mainWorker.data.MainDataSwapVO", MainDataSwapTestVO);
 
 

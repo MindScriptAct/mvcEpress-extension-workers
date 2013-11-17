@@ -9,7 +9,6 @@ import constants.WorkerIds;
 import workerTest.mainWorker.data.MainDataSwapTestVO;
 
 /**
- * TODO:CLASS COMMENT
  * @author rbanevicius
  */
 public class TestWorkerModule extends ModuleWorker {

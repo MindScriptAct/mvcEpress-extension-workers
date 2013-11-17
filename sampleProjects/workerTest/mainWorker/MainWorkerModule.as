@@ -3,11 +3,9 @@ import constants.TestConsts;
 import constants.WorkerIds;
 
 import flash.net.registerClassAlias;
-import flash.system.Worker;
 import flash.text.TextField;
 import flash.utils.setTimeout;
 
-import mvcexpress.extensions.workers.core.WorkerManager;
 import mvcexpress.extensions.workers.modules.ModuleWorker;
 
 import workerTest.WorkerTestMain;
@@ -29,24 +27,6 @@ public class MainWorkerModule extends ModuleWorker {
 		registerClassAlias("workerTest.childWorker.data.ChildDataSwapVO", ChildDataSwapTestVO);
 		registerClassAlias("workerTest.testWorker.data.TestDataSwapVO", TestDataSwapTestVO);
 
-		CONFIG::debug {
-			if (Worker.current.isPrimordial) {
-				//registerScope(WorkerIds.MAIN_WORKER, true, true);
-				//registerScope(WorkerIds.CHILD_WORKER, true, true);
-				//registerScope(WorkerIds.TEST_WORKER, true, true);
-			}
-		}
-
-
-		startWorker(ChildWorkerModule, WorkerIds.CHILD_WORKER);
-
-		startWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
-
-		mediatorMap.mediateWith(this, MainWorkerModuleMediator);
-
-
-		setTimeout(doStopTestModule, TestConsts.START_DELAY + 16000 + 200);
-		setTimeout(doStartTestModule, TestConsts.START_DELAY + 32000 + 200);
 	}
 
 
@@ -65,6 +45,17 @@ public class MainWorkerModule extends ModuleWorker {
 		debugTextField = new TextField();
 		debugTextField.text = "...";
 		main.addChild(debugTextField);
+
+
+		startWorker(ChildWorkerModule, WorkerIds.CHILD_WORKER);
+
+		startWorker(TestWorkerModule, WorkerIds.TEST_WORKER);
+
+		mediatorMap.mediateWith(this, MainWorkerModuleMediator);
+
+		setTimeout(doStopTestModule, TestConsts.START_DELAY + 16000 + 200);
+		setTimeout(doStartTestModule, TestConsts.START_DELAY + 32000 + 200);
+
 	}
 
 	public function handleChildCalc(debugData:String):void {

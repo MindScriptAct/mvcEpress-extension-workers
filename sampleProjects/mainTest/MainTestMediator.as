@@ -14,7 +14,6 @@ import constants.WorkerIds;
 import constants.WorkerMessage;
 
 /**
- * TODO:CLASS COMMENT
  * @author rbanevicius
  */
 public class MainTestMediator extends MediatorWorker {
