@@ -1,6 +1,7 @@
 package workerTest {
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.utils.ByteArray;
 
 import mvcexpress.extensions.workers.core.WorkerManager;
 
@@ -23,9 +24,9 @@ public class WorkerTestMain extends Sprite {
 
 		///
 
-		WorkerManager.setRootSwfBytes(this.loaderInfo.bytes);
 
 		module = new MainWorkerModule();
+		module.setRootSwfBytes(this.loaderInfo.bytes);
 		module.start(this);
 
 	}

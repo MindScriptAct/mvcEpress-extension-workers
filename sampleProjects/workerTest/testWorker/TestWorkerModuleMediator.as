@@ -39,7 +39,7 @@ public class TestWorkerModuleMediator extends MediatorWorker {
 //
 		to1 = setTimeout(sendString, TestConsts.START_DELAY + 1000 + 8000);
 		to2 = setTimeout(sendObject, TestConsts.START_DELAY + 3000 + 8000);
-		if (WorkerManager.isWorkersSupported) {
+		if (WorkerManager.isSupported) {
 			to3 = setTimeout(sendObjectSwap, TestConsts.START_DELAY + 5000 + 8000);
 		}
 		to4 = setTimeout(sendObjectNest, TestConsts.START_DELAY + 7000 + 8000);

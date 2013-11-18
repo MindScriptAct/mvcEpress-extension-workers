@@ -33,7 +33,7 @@ public class ChildWorkerModuleMediator extends MediatorWorker {
 
 		setTimeout(sendString, TestConsts.START_DELAY + 1000);
 		setTimeout(sendObject, TestConsts.START_DELAY + 3000);
-		if (WorkerManager.isWorkersSupported) {
+		if (WorkerManager.isSupported) {
 			setTimeout(sendObjectSwap, TestConsts.START_DELAY + 5000);
 		}
 		setTimeout(sendObjectNest, TestConsts.START_DELAY + 7000);

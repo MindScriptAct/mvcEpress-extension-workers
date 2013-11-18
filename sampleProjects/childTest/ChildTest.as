@@ -1,19 +1,10 @@
 package childTest {
-import flash.display.Sprite;
-import flash.events.Event;
+import mvcexpress.extensions.workers.display.WorkerSprite;
 
-public class ChildTest extends Sprite {
-
-	public function ChildTest():void {
-		if (stage) {
-			init();
-		} else {
-			addEventListener(Event.ADDED_TO_STAGE, init);
-		}
-	}
+public class ChildTest extends WorkerSprite {
 
 
-	private function init(event:Event = null):void {
+	override protected function init():void {
 		trace("ChildTest");
 
 		var module:ChildTestModule = new ChildTestModule();

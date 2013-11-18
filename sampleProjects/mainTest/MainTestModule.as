@@ -24,18 +24,15 @@ public class MainTestModule extends ModuleWorker {
 	}
 
 	override protected function onDispose():void {
-
 	}
 
 	public function start(mainTest:MainTest):void {
 
 		mediatorMap.mediateWith(mainTest, MainTestMediator);
 
-
 		commandMapWorker.workerMap(WorkerIds.CHILD_WORKER, WorkerMessage.CHECKING_NUMBER, HandlePrimeFoundCommand)
 
 		setTimeout(startModule, 500);
-
 	}
 
 	private function startModule():void {
@@ -50,8 +47,6 @@ public class MainTestModule extends ModuleWorker {
 
 		/*
 
-
-
 		 trace("is started?", isWorkerCreated(WorkerIds.CHILD_WORKER));
 
 		 trace("list:", listWorkers());
@@ -60,9 +55,7 @@ public class MainTestModule extends ModuleWorker {
 
 		 startWorker(ChildTestModule, WorkerIds.CHILD_WORKER);
 
-
 		 //*/
-
 	}
 
 	private function handleChildLoadCompleate(event:Event):void {

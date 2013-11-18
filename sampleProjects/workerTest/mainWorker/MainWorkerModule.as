@@ -4,8 +4,11 @@ import constants.WorkerIds;
 
 import flash.net.registerClassAlias;
 import flash.text.TextField;
+import flash.utils.ByteArray;
 import flash.utils.setTimeout;
 
+import mvcexpress.core.namespace.pureLegsCore;
+import mvcexpress.extensions.workers.core.WorkerManager;
 import mvcexpress.extensions.workers.modules.ModuleWorker;
 
 import workerTest.WorkerTestMain;
@@ -60,6 +63,12 @@ public class MainWorkerModule extends ModuleWorker {
 
 	public function handleChildCalc(debugData:String):void {
 		debugTextField.text += "\n" + debugData;
+	}
+
+	public function setRootSwfBytes(rootSwfBytes:ByteArray):void {
+		use namespace pureLegsCore;
+
+		WorkerManager.setRootSwfBytes(rootSwfBytes);
 	}
 }
 }
