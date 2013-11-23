@@ -27,6 +27,9 @@ public class WorkerManager {
 	static public var doAutoRegisterClasses:Boolean = true;
 
 
+	// flag to do worker support check.
+	pureLegsCore static var needWorkerSupportCheck:Boolean = true;
+
 	// true if workers are supported.
 	private static var _isSupported:Boolean;
 
@@ -91,7 +94,28 @@ public class WorkerManager {
 	 * True if workers are supported.
 	 */
 	public static function get isSupported():Boolean {
+		use namespace pureLegsCore;
+
+		if (needWorkerSupportCheck) {
+			checkWorkerSupport();
+		}
 		return _isSupported;
+	}
+
+	/**
+	 * True if current worker is primordial.
+	 */
+	public static function get isPrimordial():Boolean {
+		use namespace pureLegsCore;
+
+		if (needWorkerSupportCheck) {
+			checkWorkerSupport();
+		}
+
+		if (_isSupported) {
+			return WorkerClass.current.isPrimordial
+		}
+		return true;
 	}
 
 
@@ -167,7 +191,7 @@ public class WorkerManager {
 				} else if ($primordialSwfBytes) {
 					remoteWorker = WorkerDomainClass.current.createWorker($primordialSwfBytes);
 				} else {
-					throw Error("Worker needs swf bytes to be constructed. You can pass it as 'workerSwfBytes' or set it from Main class with: WorkerManager.setRootSwfBytes(this.loaderInfo.bytes);");
+					throw Error("Worker needs swf bytes to be constructed. You can pass it to startWorker() as 'workerSwfBytes' parameter or set it from ModuleWorker class with: setRootSwfBytes(loaderInfo.bytes);");
 				}
 				$workerRegistry[remoteModuleName] = remoteWorker;
 
@@ -635,6 +659,7 @@ public class WorkerManager {
 			scopeMessenger.removeHandler(remoteModuleName + "_^~_" + type, handleCommandExecute);
 		}
 	}
+
 
 }
 }
