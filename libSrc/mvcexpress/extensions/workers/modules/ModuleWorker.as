@@ -70,8 +70,7 @@ public class ModuleWorker extends ModuleCore {
 	 */
 	public function startWorker(workerModuleClass:Class, workerModuleName:String, workerSwfBytes:ByteArray = null):void {
 		use namespace pureLegsCore;
-
-		// todo : implement optional module parameters for extendability.
+		// DOIT : implement optional module parameters for extendability.
 		WorkerManager.startWorker(moduleName, workerModuleClass, workerModuleName, workerSwfBytes);
 	}
 
